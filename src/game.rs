@@ -934,6 +934,11 @@ pub fn known_anticheat_exe(exe: &Path) -> Option<&'static str> {
         "wow.exe" | "wowclassic.exe" => Some("Blizzard Warden (World of Warcraft)"),
         "valorant.exe" | "valorant-win64-shipping.exe" => Some("Riot Vanguard"),
         "leagueclient.exe" | "league of legends.exe" => Some("Riot Vanguard"),
+        // Roblox's Hyperion anti-tamper refuses any DLL it did not load itself,
+        // and the game is not a DLSS title to begin with (#135, #136).
+        "robloxplayerbeta.exe" | "robloxplayerlauncher.exe" | "robloxstudiobeta.exe" => {
+            Some("Roblox Hyperion anti-tamper")
+        }
         _ => None,
     }
 }
@@ -2371,6 +2376,17 @@ mod tests {
             );
         }
         assert_eq!(known_anticheat_exe(Path::new("wowzers.exe")), None);
+    }
+
+    #[test]
+    fn roblox_is_refused_by_exe_name() {
+        for n in ["RobloxPlayerBeta.exe", "robloxplayerlauncher.exe"] {
+            assert_eq!(
+                known_anticheat_exe(Path::new(n)),
+                Some("Roblox Hyperion anti-tamper"),
+                "{n}"
+            );
+        }
     }
 
     /// dinput8.dll is a proxy slot, not a product. The RTX 20/30 frame-gen mods

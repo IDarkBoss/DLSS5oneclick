@@ -34,6 +34,43 @@ pub struct Settings {
     /// Games page order: newest install first. Off = alphabetical.
     #[serde(default)]
     pub sort_newest: bool,
+    /// The API and DLSS-path dropdowns on the Setup page, per game (the exe's
+    /// path, lower-cased), so a forced choice survives closing the app (#137).
+    #[serde(default)]
+    pub game_overrides: std::collections::BTreeMap<String, GameOverride>,
+}
+
+/// What the Setup page's "Force ..." dropdowns were set to for one game:
+/// `dx11`/`dx12` and `feeder`/`native`.
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+pub struct GameOverride {
+    #[serde(default)]
+    pub api: Option<String>,
+    #[serde(default)]
+    pub mode: Option<String>,
+}
+
+impl Settings {
+    fn override_key(exe: &std::path::Path) -> String {
+        exe.to_string_lossy().to_lowercase()
+    }
+
+    pub fn game_override(&self, exe: &std::path::Path) -> GameOverride {
+        self.game_overrides
+            .get(&Self::override_key(exe))
+            .cloned()
+            .unwrap_or_default()
+    }
+
+    /// Remember a game's dropdowns; a game back on Auto/Auto is forgotten.
+    pub fn set_game_override(&mut self, exe: &std::path::Path, o: GameOverride) {
+        let key = Self::override_key(exe);
+        if o == GameOverride::default() {
+            self.game_overrides.remove(&key);
+        } else {
+            self.game_overrides.insert(key, o);
+        }
+    }
 }
 
 fn default_quality() -> String {
@@ -96,6 +133,7 @@ impl Default for Settings {
             advanced_open: false,
             renodx_stable_only: false,
             sort_newest: false,
+            game_overrides: Default::default(),
         }
     }
 }
@@ -138,6 +176,7 @@ impl Settings {
             advanced_open: false,
             renodx_stable_only: false,
             sort_newest: false,
+            game_overrides: Default::default(),
         }
     }
 
@@ -150,7 +189,9 @@ impl Settings {
             self.renodx_stable_only,
             self.sort_newest,
         );
+        let game_overrides = std::mem::take(&mut self.game_overrides);
         *self = Self::feeder_stock();
+        self.game_overrides = game_overrides;
         self.advanced_open = advanced_open;
         self.renodx_stable_only = renodx_stable_only;
         self.sort_newest = sort_newest;
@@ -266,6 +307,35 @@ mod tests {
         let back: Settings = serde_json::from_str(&t).unwrap();
         assert_eq!(back.quality, "auto");
         assert_eq!(back.overlay.evaluate_stride, 1);
+    }
+
+    #[test]
+    fn a_forced_api_is_kept_per_game_and_survives_reset() {
+        let exe = std::path::Path::new(r"C:\Games\Some Game\Game.exe");
+        let mut s = Settings::default();
+        assert_eq!(s.game_override(exe), GameOverride::default());
+        s.set_game_override(
+            exe,
+            GameOverride {
+                api: Some("dx12".into()),
+                mode: None,
+            },
+        );
+        let json = serde_json::to_string(&s).unwrap();
+        let back: Settings = serde_json::from_str(&json).unwrap();
+        assert_eq!(back.game_override(exe).api.as_deref(), Some("dx12"));
+        // The path is matched without regard to case.
+        let other = std::path::Path::new(r"c:\games\some game\game.exe");
+        assert_eq!(back.game_override(other).api.as_deref(), Some("dx12"));
+        // Resetting the Feeder defaults leaves it alone; Auto/Auto forgets it.
+        let mut back = back;
+        back.reset_to_feeder_defaults();
+        assert_eq!(back.game_override(exe).api.as_deref(), Some("dx12"));
+        back.set_game_override(exe, GameOverride::default());
+        assert!(back.game_overrides.is_empty());
+        // Old settings files without the key still load.
+        let old: Settings = serde_json::from_str(r#"{"quality":"auto"}"#).unwrap();
+        assert!(old.game_overrides.is_empty());
     }
 
     #[test]

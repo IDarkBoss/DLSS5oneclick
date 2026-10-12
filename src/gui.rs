@@ -397,7 +397,42 @@ impl App {
         self.inspect_resolved();
     }
 
+    /// The API / DLSS-path dropdowns belong to the game: set them from what
+    /// was saved for this exe, and clear them when it has nothing saved, so
+    /// one game's forced choice never leaks into the next (#137).
+    fn apply_saved_overrides(&self) {
+        let o = self
+            .resolved_exe
+            .as_ref()
+            .map(|e| self.settings.game_override(e))
+            .unwrap_or_default();
+        match o.api.as_deref() {
+            Some(v) => std::env::set_var(game::API_ENV, v),
+            None => std::env::remove_var(game::API_ENV),
+        }
+        match o.mode.as_deref() {
+            Some(v) => std::env::set_var(game::MODE_ENV, v),
+            None => std::env::remove_var(game::MODE_ENV),
+        }
+    }
+
+    /// Save the dropdowns as they stand for the open game.
+    fn save_overrides(&mut self) {
+        let Some(exe) = self.resolved_exe.clone() else {
+            return;
+        };
+        let o = crate::settings::GameOverride {
+            api: std::env::var(game::API_ENV).ok().filter(|v| !v.is_empty()),
+            mode: std::env::var(game::MODE_ENV).ok().filter(|v| !v.is_empty()),
+        };
+        self.settings.set_game_override(&exe, o);
+        let _ = self.settings.save();
+    }
+
     fn inspect_resolved(&mut self) {
+        if self.resolved_exe != self.renodx_for {
+            self.apply_saved_overrides();
+        }
         self.status = self
             .resolved_exe
             .as_ref()
@@ -3302,6 +3337,7 @@ impl eframe::App for App {
                                 });
                             if choice != before && !self.running {
                                 game::set_mode_override(choice);
+                                self.save_overrides();
                                 self.inspect_resolved();
                             }
                             // API: same idea. Unknown is assumed DX12, and a
@@ -3329,6 +3365,7 @@ impl eframe::App for App {
                                 });
                             if api != api_before && !self.running {
                                 game::set_api_override(api);
+                                self.save_overrides();
                                 self.inspect_resolved();
                             }
                         }
