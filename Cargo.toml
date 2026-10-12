@@ -11,7 +11,7 @@ build = "build.rs"
 winresource = "0.1"
 
 [dependencies]
-eframe = "0.36"
+eframe = { version = "0.36", features = ["persistence"] }
 rfd = "0.17"
 reqwest = { version = "0.13", features = ["blocking", "json"] }
 serde = { version = "1", features = ["derive"] }

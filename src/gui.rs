@@ -651,10 +651,23 @@ impl App {
     /// "Try the next setup": one rung down this game's ladder. A change of
     /// engine takes the old one out first, since both load as dxgi.dll.
     fn try_next_setup(&mut self) {
+        self.step_setup(true);
+    }
+
+    /// One rung back, for a "Not working?" press that went too far (#137).
+    fn try_previous_setup(&mut self) {
+        self.step_setup(false);
+    }
+
+    fn step_setup(&mut self, forward: bool) {
         let Some(st) = self.status.as_ref().and_then(|r| r.as_ref().ok()) else {
             return;
         };
-        let Some((n, next)) = setup::next(st) else {
+        let Some((n, next)) = (if forward {
+            setup::next(st)
+        } else {
+            setup::previous(st)
+        }) else {
             return;
         };
         let switch = setup::current(st).map(|c| c.engine) != Some(next.engine);
@@ -3514,6 +3527,21 @@ impl eframe::App for App {
                         // Offered once something is installed: the answer to
                         // "it did not work" is the next rung, not a menu.
                         if g.complete() && !self.advanced {
+                            if let Some((_, pv)) = setup::previous(g) {
+                                let b = egui::Button::new(
+                                    RichText::new(format!(
+                                        "Go back to the previous setup: {}",
+                                        setup::label(&pv)
+                                    ))
+                                    .font(t::plex_medium(12.0))
+                                    .color(t::TEXT_SOFT),
+                                )
+                                .stroke(Stroke::new(1.0, t::BORDER_STRONG))
+                                .corner_radius(CornerRadius::same(8));
+                                if ui.add_enabled(!self.running, b).clicked() {
+                                    self.try_previous_setup();
+                                }
+                            }
                             if let Some((_, nx)) = setup::next(g) {
                                 let b = egui::Button::new(
                                     RichText::new(format!(

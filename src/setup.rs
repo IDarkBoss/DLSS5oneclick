@@ -236,6 +236,15 @@ pub fn next(st: &GameStatus) -> Option<(usize, Setup)> {
     ladder(st).get(n).copied().map(|s| (n, s))
 }
 
+/// The rung before this one, so a step too far can be undone (#137).
+pub fn previous(st: &GameStatus) -> Option<(usize, Setup)> {
+    if hand_chosen(st) {
+        return None;
+    }
+    let n = level(st).checked_sub(1)?;
+    ladder(st).get(n).copied().map(|s| (n, s))
+}
+
 /// The consumer and add-on build values a setup puts in the environment the
 /// install steps read.
 pub fn env_values(s: &Setup) -> (&'static str, Option<&'static str>) {
@@ -339,6 +348,8 @@ mod tests {
         );
         assert_eq!(current(&st), Some(DLSS5_NEWEST));
         assert_eq!(next(&st), Some((1, SF)));
+        // The first rung has nothing to go back to.
+        assert_eq!(previous(&st), None);
     }
 
     /// What is in the folder decides the rung, so Install and Update refresh
@@ -355,6 +366,7 @@ mod tests {
         fs::write(&m, installer::RENODX_CLASSIC_TAG).unwrap();
         assert_eq!(current(&st), Some(DLSS5_CLASSIC));
         assert_eq!(next(&st), Some((4, OPTI)));
+        assert_eq!(previous(&st), Some((2, DLSS5_STEADY)));
         fs::write(&m, "renodx-dlss5-6.5.3").unwrap();
         assert_eq!(current(&st), Some(DLSS5_NEWEST));
         st.dlss5_addon = false;
