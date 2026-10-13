@@ -2886,16 +2886,28 @@ fn rtxmfg_install(
     {
         return Ok(vec![format!("{proxy} already current (RTXMFG {tag})")]);
     }
-    let url = net::github_asset_url_html(client, RTXMFG_REPO, &tag, r#"RTXMFG-[^"]+\.zip"#)?;
+    let url = net::github_asset_url_html(
+        client,
+        RTXMFG_REPO,
+        &tag,
+        r#"(?:RTXMFG|MFGUnlocker)-[^"]+\.zip"#,
+    )?;
     let zip_path = work.join("rtxmfg.zip");
     net::download(client, &url, &zip_path, "Universal RTXMFG", progress)?;
     let f = fs::File::open(&zip_path)?;
     let mut zip = zip::ZipArchive::new(f).context("RTXMFG download is not a valid zip")?;
     let member = zip
         .file_names()
-        .find(|n| net::file_name(n).eq_ignore_ascii_case("RTXMFG.dll"))
+        .find(|n| {
+            let f = net::file_name(n);
+            f.eq_ignore_ascii_case("MFGUnlocker.dll") || f.eq_ignore_ascii_case("RTXMFG.dll")
+        })
         .map(str::to_owned)
-        .ok_or_else(|| anyhow!("the RTXMFG release has no RTXMFG.dll - layout changed upstream"))?;
+        .ok_or_else(|| {
+            anyhow!(
+                "the MFG release has no MFGUnlocker.dll or RTXMFG.dll - layout changed upstream"
+            )
+        })?;
     net::extract_member(&mut zip, &member, &dest)?;
     let len = fs::metadata(&dest)?.len();
     let side = if with_dlss5 { "\nwith-dlss5" } else { "" };
