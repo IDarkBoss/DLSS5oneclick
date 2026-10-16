@@ -294,7 +294,7 @@ pub enum Engine {
     MfgAddon,
 }
 
-const RTXMFG_REPO: &str = "dashdogy/RTX40MFG-Unlock";
+const RTXMFG_REPO: &str = "dashdogy/MFG-Unlocker";
 
 /// Set (to anything) to put Universal RTXMFG beside the DLSS 5 setup as well.
 pub const RTXMFG_WITH_ENV: &str = "DLSS5ONECLICK_RTXMFG";

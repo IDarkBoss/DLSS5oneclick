@@ -106,19 +106,25 @@ pub fn github_asset_url_html(
         client,
         &format!("https://github.com/{repo}/releases/expanded_assets/{tag}"),
     )?;
+    asset_url_from_html(&html, repo, tag, name_re)
+}
+
+/// The owner/repo in the asset links is whatever the repo is called now: a
+/// renamed repo (dashdogy/RTX40MFG-Unlock -> MFG-Unlocker) still answers on
+/// its old name, but its page links the new one.
+fn asset_url_from_html(html: &str, repo: &str, tag: &str, name_re: &str) -> Result<String> {
     let re = regex::Regex::new(&format!(
-        r#"/{}/releases/download/{}/({})"#,
-        regex::escape(repo),
+        r#"/(?P<repo>[^/"]+/[^/"]+)/releases/download/{}/(?P<name>{})"#,
         regex::escape(tag),
         name_re
     ))
     .unwrap();
     let m = re
-        .captures(&html)
+        .captures(html)
         .ok_or_else(|| anyhow!("no asset matching {name_re} in {repo} {tag}"))?;
     Ok(format!(
-        "https://github.com/{repo}/releases/download/{tag}/{}",
-        &m[1]
+        "https://github.com/{}/releases/download/{tag}/{}",
+        &m["repo"], &m["name"]
     ))
 }
 
@@ -448,6 +454,25 @@ pub fn file_name(member: &str) -> &str {
 
 #[cfg(test)]
 mod tests {
+
+    /// A renamed repo answers on its old name but links its new one (#138).
+    #[test]
+    fn asset_url_follows_a_renamed_repo() {
+        let html = r#"<a href="/dashdogy/MFG-Unlocker/releases/download/v1.5.0/MFGUnlocker-v1.5.0.zip">z</a>
+<a href="/dashdogy/MFG-Unlocker/releases/download/v1.5.0/SHA256SUMS.txt">s</a>"#;
+        let url = super::asset_url_from_html(
+            html,
+            "dashdogy/RTX40MFG-Unlock",
+            "v1.5.0",
+            r#"(?:RTXMFG|MFGUnlocker)-[^"]+\.zip"#,
+        )
+        .unwrap();
+        assert_eq!(
+            url,
+            "https://github.com/dashdogy/MFG-Unlocker/releases/download/v1.5.0/MFGUnlocker-v1.5.0.zip"
+        );
+        assert!(super::asset_url_from_html(html, "o/r", "v9", r#"[^"]+\.zip"#).is_err());
+    }
 
     /// The cache key has to separate two releases of the same file name, and
     /// has to refuse a URL whose contents move under it (#42).
