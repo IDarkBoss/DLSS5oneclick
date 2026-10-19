@@ -982,6 +982,12 @@ pub fn game_ships_dlss(game_dir: &Path) -> bool {
     if walk(game_dir, 4) {
         return true;
     }
+    // Unreal game with the exe at the project root (a Game Pass launch stub):
+    // the plugins sit at Engine\Plugins\<Plugin>\Binaries\ThirdParty\Win64,
+    // deeper than the scan above reaches.
+    if walk(&game_dir.join("Engine").join("Plugins"), 7) {
+        return true;
+    }
     // Unreal: exe in <Project>/Binaries/Win64, DLSS in
     // <Project>/Plugins/NVIDIA/DLSS/Binaries/ThirdParty/Win64 (or Engine/Plugins/...).
     let unreal_root = game_dir
@@ -2700,6 +2706,32 @@ mod tests {
         let empty = t.path().join("empty");
         fs::create_dir_all(&empty).unwrap();
         assert!(resolve_target(&empty).is_err());
+    }
+
+    /// Gears of War: E-Day from Game Pass. The readable exe is the launch stub
+    /// at the root of Content\; the game's own DLSS and Streamline runtimes sit
+    /// under Engine\Plugins\<Plugin>\Binaries\ThirdParty\Win64, six folders down,
+    /// out of reach of the four-level scan, so a native DLSS game read as "no
+    /// DLSS, Feeder path".
+    #[test]
+    fn engine_plugins_beside_a_launch_stub_count_as_native_dlss() {
+        std::env::set_var("DLSS5ONECLICK_SKIP_GPU_CHECK", "1");
+        let t = tempfile::tempdir().unwrap();
+        let content = t.path().join("Content");
+        fs::create_dir_all(&content).unwrap();
+        fs::write(content.join("MicrosoftGame.config"), "<Game/>").unwrap();
+        let exe = make_pe(&content.join("gamelaunchhelper.exe"), PE_X64);
+        assert_eq!(inspect(&exe).unwrap().mode, Mode::Feeder);
+        let plugin = content
+            .join("Engine")
+            .join("Plugins")
+            .join("DLSS")
+            .join("Binaries")
+            .join("ThirdParty")
+            .join("Win64");
+        fs::create_dir_all(&plugin).unwrap();
+        fs::write(plugin.join(DLSS_DLL), b"x").unwrap();
+        assert_eq!(inspect(&exe).unwrap().mode, Mode::Native);
     }
 
     #[test]
