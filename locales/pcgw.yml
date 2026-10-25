@@ -1,0 +1,16 @@
+# pcgw 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+# 「无法构建 HTTP 客户端 / cannot build HTTP client」与 net.rs 逐字相同，
+# 复用 locales/net.yml 的 net.err_client，不在此重复。
+_version: 2
+pcgw.err_unreachable:
+  en: "PCGamingWiki is not reachable"
+  zh-CN: "无法访问 PCGamingWiki"
+pcgw.err_page_request:
+  en: "PCGamingWiki page request failed"
+  zh-CN: "PCGamingWiki 页面请求失败"
+pcgw.err_bad_json:
+  en: "PCGamingWiki answered with something that is not JSON"
+  zh-CN: "PCGamingWiki 返回的内容不是 JSON"
+pcgw.err_no_wikitext:
+  en: "PCGamingWiki page has no wikitext"
+  zh-CN: "PCGamingWiki 页面不含 wikitext"

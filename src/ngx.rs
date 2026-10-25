@@ -8,6 +8,8 @@
 //! `0xBAD00001` (FeatureNotSupported) on hardware that is otherwise fine —
 //! the failure two reporters hit on an RTX 4070 and an RTX 5080.
 
+use std::borrow::Cow;
+
 /// `(installed, full path)` from the NGX Core registry key.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NgxCore {
@@ -90,31 +92,20 @@ fn version_key(v: &str) -> Option<(u32, u32)> {
 
 /// One line for a report: driver number, NGX Core state and where it points.
 pub fn describe() -> String {
-    let driver = match crate::gpu::nvidia_driver() {
-        Some(v) => format!("NVIDIA driver {v}; "),
-        None => String::new(),
-    };
-    format!("{driver}{}", describe_core())
+    match crate::gpu::nvidia_driver() {
+        Some(v) => format!("{}{}", t!("ngx.driver_prefix", v = v), describe_core()),
+        None => describe_core(),
+    }
 }
 
 fn describe_core() -> String {
     match ngx_core() {
         Some(c) if c.installed && std::path::Path::new(&c.path).is_dir() => {
-            format!("NGX Core installed ({})", c.path)
+            t!("ngx.core_installed", path = c.path).into_owned()
         }
-        Some(c) if c.installed => format!(
-            "NGX Core registered but its folder is missing: {} — reinstall the NVIDIA driver \
-             (Custom install, keep every component)",
-            c.path
-        ),
-        Some(_) => "NGX Core is registered as NOT installed — reinstall the NVIDIA driver \
-             (Custom install, keep every component; NVCleanstall and \"minimal\" installs drop it)"
-            .to_owned(),
-        None => "NGX Core is not registered on this system (no HKLM\\SOFTWARE\\NVIDIA \
-             Corporation\\Global\\NGXCore) — the NVIDIA driver was installed without it, so no \
-             DLSS-based tool can start. Reinstall the driver with a Custom install and keep \
-             every component."
-            .to_owned(),
+        Some(c) if c.installed => t!("ngx.core_folder_missing", path = c.path).into_owned(),
+        Some(_) => t!("ngx.core_not_installed").into_owned(),
+        None => t!("ngx.core_not_registered").into_owned(),
     }
 }
 
@@ -176,11 +167,11 @@ pub fn file_version(_path: &std::path::Path) -> Option<String> {
 
 /// How that version string reads to a user: ShortFuse's multi-generation build
 /// or NVIDIA's original.
-pub fn model_build(version: &str) -> &'static str {
+pub fn model_build(version: &str) -> Cow<'static, str> {
     if version.to_ascii_uppercase().contains(".SF") {
-        "ShortFuse .SF build (adds Ada/Turing paths)"
+        t!("ngx.model_build_sf")
     } else {
-        "NVIDIA original build"
+        t!("ngx.model_build_nvidia")
     }
 }
 

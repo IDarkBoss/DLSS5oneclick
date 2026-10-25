@@ -17,13 +17,14 @@ use anyhow::{anyhow, Context, Result};
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde_json::Value;
+use std::borrow::Cow;
 use std::fs;
 use std::path::Path;
 
 pub const GAMES_INDEX_URL: &str =
-    "https://github.com/clshortfuse/renodx/releases/download/snapshot/games-index.json";
+    "https://gh-proxy.org/github.com/clshortfuse/renodx/releases/download/snapshot/games-index.json";
 pub const SNAPSHOT_DOWNLOAD: &str =
-    "https://github.com/clshortfuse/renodx/releases/download/snapshot/";
+    "https://gh-proxy.org/github.com/clshortfuse/renodx/releases/download/snapshot/";
 pub const WIKI_MODS_URL: &str = "https://raw.githubusercontent.com/wiki/clshortfuse/renodx/Mods.md";
 
 /// The mod matched to a game.
@@ -41,19 +42,19 @@ pub struct Mod {
 
 impl Mod {
     /// Who publishes the file about to be downloaded, shown before it is.
-    pub fn source_label(&self) -> String {
+    pub fn source_label(&self) -> Cow<'static, str> {
         match self.url.as_deref() {
-            Some(u) if u.starts_with(SNAPSHOT_DOWNLOAD) => "clshortfuse snapshot build".to_owned(),
-            Some(u) => format!("{}'s fork", url_owner(u)),
-            None => "no download".to_owned(),
+            Some(u) if u.starts_with(SNAPSHOT_DOWNLOAD) => t!("renodx.source_snapshot"),
+            Some(u) => t!("renodx.source_fork", owner = url_owner(u)),
+            None => t!("renodx.source_none"),
         }
     }
 
-    pub fn status_label(&self) -> &'static str {
+    pub fn status_label(&self) -> Cow<'static, str> {
         match self.status {
-            "stable" => "working",
-            "wip" => "in progress — may have issues",
-            _ => "status unknown",
+            "stable" => t!("renodx.status_stable"),
+            "wip" => t!("renodx.status_wip"),
+            _ => t!("renodx.status_unknown"),
         }
     }
 }
@@ -283,12 +284,16 @@ pub fn resolve(index: &Value, wiki: &[WikiRow], game_dir: &Path, exe: &Path) -> 
                 None if r.url.is_some() => (
                     format!("{SNAPSHOT_DOWNLOAD}{file}"),
                     file,
-                    format!("{} The wiki's link points outside GitHub's renodx forks; the project's snapshot build is installed instead.", r.note).trim().to_owned(),
+                    t!("renodx.note_wiki_offsite", note = r.note)
+                        .trim()
+                        .to_owned(),
                 ),
                 None => (
                     format!("{SNAPSHOT_DOWNLOAD}{file}"),
                     file,
-                    format!("{} Wiki lists this mod on Nexus/Discord; the snapshot build is installed instead.", r.note).trim().to_owned(),
+                    t!("renodx.note_wiki_nexus", note = r.note)
+                        .trim()
+                        .to_owned(),
                 ),
             };
             Mod {
@@ -311,9 +316,9 @@ pub fn resolve(index: &Value, wiki: &[WikiRow], game_dir: &Path, exe: &Path) -> 
 
 /// Network lookup for one game.
 pub fn lookup(client: &Client, exe: &Path) -> Result<Option<Mod>> {
-    let dir = exe.parent().context("exe has no parent")?;
+    let dir = exe.parent().context(t!("renodx.err_no_parent"))?;
     let index: Value = serde_json::from_str(&net::get_text(client, GAMES_INDEX_URL)?)
-        .context("games-index.json is not valid JSON")?;
+        .context(t!("renodx.err_bad_index"))?;
     // The wiki is best-effort: status and fork links; the index alone still installs.
     let wiki = net::get_text(client, WIKI_MODS_URL)
         .map(|md| parse_wiki(&md))
@@ -353,39 +358,38 @@ pub fn install(
     m: &Mod,
     progress: net::Progress,
 ) -> Result<Vec<String>> {
-    let dir = exe.parent().context("exe has no parent")?;
-    let url = m.url.as_deref().ok_or_else(|| {
-        anyhow!(
-            "the RenoDX mod for {} is only published on Nexus Mods / Discord; download it by hand and drop the .addon64 next to the game exe",
-            m.title
-        )
-    })?;
+    let dir = exe.parent().context(t!("renodx.err_no_parent"))?;
+    let url = m
+        .url
+        .as_deref()
+        .ok_or_else(|| anyhow!("{}", t!("renodx.err_nexus_only", title = m.title)))?;
     let foreign = foreign_mods(dir, Some(&m.file));
     if !foreign.is_empty() {
         anyhow::bail!(
-            "this game already has a RenoDX mod ({}); ReShade loads only one \"RenoDX\" add-on and two would fight over the same settings. Remove it first.",
-            foreign.join(", ")
+            "{}",
+            t!("renodx.err_foreign_mod", mods = foreign.join(", "))
         );
     }
     let dest = dir.join(&m.file);
     if dest.is_file() {
-        progress(100, "RenoDX mod already installed");
+        progress(100, &t!("renodx.already_installed"));
     } else {
         net::download(
             client,
             url,
             &dest,
-            &format!("RenoDX: {}", m.title),
+            &t!("renodx.download_label", title = m.title),
             progress,
         )?;
     }
     fs::write(dir.join(crate::game::RENODX_MANIFEST), &m.file)?;
-    Ok(vec![format!(
-        "{} ({}, {})",
-        m.file,
-        m.title,
-        m.status_label()
-    )])
+    let summary = t!(
+        "renodx.summary",
+        file = m.file,
+        title = m.title,
+        status = m.status_label()
+    );
+    Ok(vec![summary.into_owned()])
 }
 
 #[cfg(test)]
@@ -476,7 +480,7 @@ mod tests {
         let m = resolve(&ix, &[], &dir, &dir.join("AtlasFallen.exe")).unwrap();
         assert_eq!(
             m.url.as_deref(),
-            Some("https://github.com/clshortfuse/renodx/releases/download/snapshot/renodx-atlasfallen.addon64")
+            Some("https://gh-proxy.org/github.com/clshortfuse/renodx/releases/download/snapshot/renodx-atlasfallen.addon64")
         );
         assert_eq!(m.status, "unknown");
     }
@@ -585,7 +589,7 @@ mod tests {
         let m = resolve(&ix, &wiki, &d, &d.join("AtlasFallen.exe")).unwrap();
         assert_eq!(
             m.url.as_deref(),
-            Some("https://github.com/clshortfuse/renodx/releases/download/snapshot/renodx-atlasfallen.addon64")
+            Some("https://gh-proxy.org/github.com/clshortfuse/renodx/releases/download/snapshot/renodx-atlasfallen.addon64")
         );
         assert!(m.note.contains("outside GitHub"), "{}", m.note);
         assert_eq!(m.source_label(), "clshortfuse snapshot build");

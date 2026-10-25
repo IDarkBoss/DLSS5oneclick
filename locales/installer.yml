@@ -1,0 +1,533 @@
+# installer 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+installer.step_reshade:
+  en: "ReShade (add-on build)"
+  zh-CN: "ReShade（附加组件版）"
+installer.step_dgvoodoo:
+  en: "dgVoodoo 2.87.5 (DX9 → D3D11)"
+  zh-CN: "dgVoodoo 2.87.5（DX9 → D3D11）"
+installer.step_headers:
+  en: "ReShade shader headers"
+  zh-CN: "ReShade 着色器头文件"
+installer.step_feeder:
+  en: "DLSS5-Feeder"
+  zh-CN: "DLSS5-Feeder"
+installer.step_lumenite:
+  en: "LumeniteFX motion vectors"
+  zh-CN: "LumeniteFX 运动矢量"
+installer.step_dlss5:
+  en: "DLSS 5 add-on + models"
+  zh-CN: "DLSS 5 附加组件 + 模型"
+installer.step_dlssnr_only:
+  en: "DLSS 5 model (nvngx_dlssnr.dll)"
+  zh-CN: "DLSS 5 模型（nvngx_dlssnr.dll）"
+installer.step_bridge:
+  en: "DLSS 5 DX11 bridge"
+  zh-CN: "DLSS 5 DX11 桥接"
+installer.step_mfg:
+  en: "RTX 40 multi-frame generation add-on"
+  zh-CN: "RTX 40 多帧生成附加组件"
+installer.step_upstream:
+  en: "Neural Upstream add-on (experimental)"
+  zh-CN: "Neural Upstream 附加组件（实验性）"
+installer.step_config:
+  en: "ReShade config"
+  zh-CN: "ReShade 配置"
+installer.step_feeder_cleanup:
+  en: "Remove DLSS5-Feeder (game has native DLSS)"
+  zh-CN: "移除 DLSS5-Feeder（游戏自带原生 DLSS）"
+installer.step_dlss5_cleanup:
+  en: "Remove the RenoDX DLSS 5 add-on (another neural add-on replaces it)"
+  zh-CN: "移除 RenoDX DLSS 5 附加组件（由其他神经附加组件取代）"
+installer.step_sf:
+  en: "ShortFuse DLSS add-on"
+  zh-CN: "ShortFuse DLSS 附加组件"
+installer.step_sf_cleanup:
+  en: "Remove the ShortFuse DLSS add-on (another neural add-on replaces it)"
+  zh-CN: "移除 ShortFuse DLSS 附加组件（由其他神经附加组件取代）"
+installer.step_replaced_cleanup:
+  en: "Remove add-ons ShortFuse's replaces (Neural Upstream, DX11 bridge)"
+  zh-CN: "移除被 ShortFuse 取代的附加组件（Neural Upstream、DX11 桥接）"
+installer.step_reframework:
+  en: "REFramework (RE Engine needs it before ReShade)"
+  zh-CN: "REFramework（RE 引擎需要在 ReShade 之前加载）"
+installer.step_renodx:
+  en: "RenoDX HDR mod for this game"
+  zh-CN: "本游戏的 RenoDX HDR 模组"
+installer.step_host_reshade:
+  en: "64-bit ReShade for the host64 helper"
+  zh-CN: "供 host64 辅助进程使用的 64 位 ReShade"
+installer.step_gpu_pref:
+  en: "GPU preference"
+  zh-CN: "GPU 偏好设置"
+installer.step_reshade_via_opti:
+  en: "ReShade loaded by OptiScaler (ReShade64.dll)"
+  zh-CN: "由 OptiScaler 加载的 ReShade（ReShade64.dll）"
+installer.step_rtxmfg_with:
+  en: "Universal RTXMFG (beside DLSS 5)"
+  zh-CN: "Universal RTXMFG（与 DLSS 5 并存）"
+installer.step_rtxmfg:
+  en: "Universal RTXMFG (multi-frame generation only)"
+  zh-CN: "Universal RTXMFG（仅多帧生成）"
+installer.step_rtxmfg_cleanup:
+  en: "Remove Universal RTXMFG (this route takes over)"
+  zh-CN: "移除 Universal RTXMFG（本路线将接管）"
+installer.step_aio:
+  en: "DLSS5 ReShade AIO (standalone add-on)"
+  zh-CN: "DLSS5 ReShade AIO（独立附加组件）"
+installer.step_aio_runtime:
+  en: "NVIDIA DLSS + frame-generation runtimes"
+  zh-CN: "NVIDIA DLSS + 帧生成运行时"
+installer.step_aio_cleanup:
+  en: "Remove the standalone AIO add-on (another consumer replaces it)"
+  zh-CN: "移除独立 AIO 附加组件（由其他消费端取代）"
+installer.step_opti:
+  en: "OptiScaler + DLSS Neural Rendering"
+  zh-CN: "OptiScaler + DLSS 神经渲染"
+installer.missing_headers:
+  en: "reshade-shaders/Shaders headers (ReShade.fxh…)"
+  zh-CN: "reshade-shaders/Shaders 头文件（ReShade.fxh 等）"
+installer.missing_lumenite:
+  en: "LumeniteFX shaders"
+  zh-CN: "LumeniteFX 着色器"
+installer.missing_consumer:
+  en: "DLSS 5 neural consumer add-on"
+  zh-CN: "DLSS 5 神经渲染消费端附加组件"
+installer.missing_bridge:
+  en: "dx11 bridge add-on"
+  zh-CN: "DX11 桥接附加组件"
+installer.comp_sf_addon:
+  en: "ShortFuse DLSS add-on"
+  zh-CN: "ShortFuse DLSS 附加组件"
+installer.comp_dlss5_addon:
+  en: "DLSS 5 add-on"
+  zh-CN: "DLSS 5 附加组件"
+installer.stale_enable_hooks:
+  en: "ReShade.ini EnableHooks=1 → automatic (the 0.14.3 setting can crash some games at start)"
+  zh-CN: "ReShade.ini EnableHooks=1 → 自动（0.14.3 写入的该设置可能导致某些游戏启动时崩溃）"
+installer.stale_opti_unknown:
+  en: "OptiScaler unknown version → %{want}"
+  zh-CN: "OptiScaler 版本未知 → %{want}"
+installer.stale_mfg:
+  en: "RTX 40 MFG unlock add-on → newest build"
+  zh-CN: "RTX 40 MFG 解锁附加组件 → 最新构建"
+installer.stale_bridge:
+  en: "DX11 bridge add-on → newest build"
+  zh-CN: "DX11 桥接附加组件 → 最新构建"
+installer.err_opti_name_taken:
+  en: "ReShade is installed as dxgi.dll in this game; OptiScaler needs that name. Run Remove (or Remove incl. ReShade) first, then install with the OptiScaler engine"
+  zh-CN: "该游戏的 ReShade 已占用 dxgi.dll 这个文件名，而 OptiScaler 也需要它。请先执行移除（或连同 ReShade 一起移除），再用 OptiScaler 引擎安装。"
+installer.lookup_opti:
+  en: "Looking up latest OptiScaler DLSS-NR release"
+  zh-CN: "正在查询最新的 OptiScaler DLSS-NR 版本"
+installer.opti_present_left:
+  en: "OptiScaler present (not placed by this tool, left as is)"
+  zh-CN: "已存在 OptiScaler（非本工具安装，保持原样）"
+installer.opti_current_settings:
+  en: "OptiScaler already current (%{tag}), settings applied"
+  zh-CN: "OptiScaler 已是最新（%{tag}），设置已应用"
+installer.opti_outdated:
+  en: "OptiScaler %{have} is out, %{want} available"
+  zh-CN: "OptiScaler %{have} 已过时，%{want} 可用"
+installer.opti_unchecked_settings:
+  en: "OptiScaler present (could not check for a newer one), settings applied"
+  zh-CN: "已存在 OptiScaler（无法检查是否有更新版本），设置已应用"
+installer.opti_refreshing:
+  en: "OptiScaler version not recorded, refreshing"
+  zh-CN: "OptiScaler 版本未记录，正在刷新"
+installer.err_no_assets:
+  en: "%{repo} has no release asset"
+  zh-CN: "%{repo} 没有发行资产"
+installer.err_no_release_repo:
+  en: "no %{repo} release found"
+  zh-CN: "未找到 %{repo} 的发行版"
+installer.err_bad_zip:
+  en: "%{name} download is not a valid zip"
+  zh-CN: "%{name} 下载的不是有效的 zip 文件"
+installer.err_opti_layout:
+  en: "the OptiScaler release had no OptiScaler.dll — layout changed upstream"
+  zh-CN: "OptiScaler 发行包中没有 OptiScaler.dll — 上游布局已变化"
+installer.removed_unused:
+  en: "removed %{file}, which this build does not use"
+  zh-CN: "已移除 %{file}（当前构建不再使用该文件）"
+installer.lookup_reshade:
+  en: "Looking up latest ReShade"
+  zh-CN: "正在查询最新版 ReShade"
+installer.host_reshade_current:
+  en: "host64/dxgi.dll already current (%{ver})"
+  zh-CN: "host64/dxgi.dll 已是最新（%{ver}）"
+installer.host_reshade_offline:
+  en: "host64/dxgi.dll present (reshade.me could not be reached, so not refreshed)"
+  zh-CN: "host64/dxgi.dll 已存在（无法访问 reshade.me，未刷新）"
+installer.host_reshade_refreshing:
+  en: "host64 ReShade %{ver} is out, refreshing"
+  zh-CN: "host64 ReShade %{ver} 已发布，正在刷新"
+installer.host_reshade_present:
+  en: "host64/dxgi.dll present (not placed by this tool)"
+  zh-CN: "host64/dxgi.dll 已存在（非本工具安装）"
+installer.dl_reshade_host64:
+  en: "ReShade (64-bit, host64)"
+  zh-CN: "ReShade（64 位，host64）"
+installer.err_no_opti_ini:
+  en: "%{ini} not found — install the OptiScaler engine first"
+  zh-CN: "未找到 %{ini} — 请先安装 OptiScaler 引擎"
+installer.opti_reshade_set:
+  en: "ReShade64.dll + LoadReshade already set"
+  zh-CN: "ReShade64.dll + LoadReshade 已设置"
+installer.reframework_present:
+  en: "REFramework already present"
+  zh-CN: "REFramework 已存在"
+installer.err_zip_no_member:
+  en: "%{zip} has no %{file}"
+  zh-CN: "%{zip} 中没有 %{file}"
+installer.lookup_renodx_mod:
+  en: "Looking up the RenoDX mod for this game"
+  zh-CN: "正在查询本游戏的 RenoDX 模组"
+installer.err_no_renodx_mod:
+  en: "no RenoDX mod is published for this game"
+  zh-CN: "该游戏没有已发布的 RenoDX 模组"
+installer.err_no_tag_prefix:
+  en: "no release with tag prefix '%{prefix}' found"
+  zh-CN: "未找到标签前缀为 '%{prefix}' 的发行版"
+installer.enable_hooks_removed:
+  en: "EnableHooks=1 removed (the add-on picks the hooks itself)"
+  zh-CN: "已移除 EnableHooks=1（附加组件会自行选择钩子）"
+installer.err_no_stable_rhi:
+  en: "no stable %{prefix} release on github.com/%{repo}/releases"
+  zh-CN: "github.com/%{repo}/releases 上没有 %{prefix} 的稳定版发行版"
+installer.err_pin_not_found:
+  en: "DLSS 5 add-on build %{tag} not found on %{repo}"
+  zh-CN: "在 %{repo} 上未找到 DLSS 5 附加组件构建 %{tag}"
+installer.err_no_tag_prefix_rhi:
+  en: "no release with tag prefix '%{prefix}' found on github.com/%{repo}/releases"
+  zh-CN: "在 github.com/%{repo}/releases 上未找到标签前缀为 '%{prefix}' 的发行版"
+installer.err_no_reshade_link:
+  en: "ReShade add-on installer link not found on reshade.me"
+  zh-CN: "在 reshade.me 上未找到 ReShade 附加组件安装程序的链接"
+installer.err_reshade_no_archive:
+  en: "ReShade installer has no readable archive"
+  zh-CN: "ReShade 安装程序中没有可读取的压缩包"
+installer.err_setup_no_dll:
+  en: "%{path} does not contain %{dll}"
+  zh-CN: "%{path} 中不包含 %{dll}"
+installer.err_conf_outputapi:
+  en: "dgVoodoo.conf health check failed: OutputAPI must be d3d11_fl11_0"
+  zh-CN: "dgVoodoo.conf 健康检查失败：OutputAPI 必须为 d3d11_fl11_0"
+installer.err_conf_vram:
+  en: "dgVoodoo.conf health check failed: VRAM must be >= %{vram}"
+  zh-CN: "dgVoodoo.conf 健康检查失败：VRAM 必须 >= %{vram}"
+installer.err_reading:
+  en: "reading %{path}"
+  zh-CN: "读取 %{path}"
+installer.err_writing:
+  en: "writing %{path}"
+  zh-CN: "写入 %{path}"
+installer.err_dgvoodoo_member:
+  en: "dgVoodoo zip does not contain %{member} — unexpected release layout"
+  zh-CN: "dgVoodoo zip 中不含 %{member} — 发行版布局异常"
+installer.err_foreign_d3d9_short:
+  en: "a d3d9.dll that is not dgVoodoo is already present; remove or replace it, then Install again"
+  zh-CN: "已存在不是 dgVoodoo 的 d3d9.dll；请先移除或替换它，然后再安装"
+installer.err_dgvoodoo_undetected:
+  en: "wrote d3d9.dll + dgVoodoo.conf but dgVoodoo was not detected afterward"
+  zh-CN: "已写入 d3d9.dll + dgVoodoo.conf，但之后未检测到 dgVoodoo"
+installer.dgvoodoo_merging:
+  en: "dgVoodoo DLL present — merging conf"
+  zh-CN: "dgVoodoo DLL 已存在 — 正在合并配置"
+installer.err_foreign_d3d9_member:
+  en: "a d3d9.dll that is not dgVoodoo is already present; remove or replace it with dgVoodoo 2.87.5 (%{member}), then Install again"
+  zh-CN: "已存在不是 dgVoodoo 的 d3d9.dll；请先移除它或用 dgVoodoo 2.87.5 (%{member}) 替换，然后再安装"
+installer.dl_dgvoodoo:
+  en: "Downloading dgVoodoo %{tag}"
+  zh-CN: "正在下载 dgVoodoo %{tag}"
+installer.extracting:
+  en: "Extracting %{member}"
+  zh-CN: "正在解压 %{member}"
+installer.dgvoodoo_ready:
+  en: "dgVoodoo 2.87.5 ready"
+  zh-CN: "dgVoodoo 2.87.5 已就绪"
+installer.dgvoodoo_merged:
+  en: "dgVoodoo.conf (OutputAPI/VRAM merged)"
+  zh-CN: "dgVoodoo.conf（已合并 OutputAPI/VRAM）"
+installer.dgvoodoo_conf_merged:
+  en: "dgVoodoo conf merged"
+  zh-CN: "dgVoodoo 配置已合并"
+installer.err_proxy_not_reshade:
+  en: "%{dll} exists but is not ReShade (DXVK, Special K, another injector?). Remove it first."
+  zh-CN: "%{dll} 已存在但不是 ReShade（DXVK、Special K 或其他注入器？）。请先移除它。"
+installer.reshade_current:
+  en: "ReShade already current (%{ver})"
+  zh-CN: "ReShade 已是最新版（%{ver}）"
+installer.reshade_offline:
+  en: "ReShade present (reshade.me could not be reached, so not refreshed)"
+  zh-CN: "ReShade 已存在（无法访问 reshade.me，未刷新）"
+installer.reshade_refreshing:
+  en: "ReShade %{ver} is out, refreshing"
+  zh-CN: "ReShade %{ver} 已发布，正在刷新"
+installer.reshade_present_left:
+  en: "ReShade present (not placed by this tool, left as is)"
+  zh-CN: "ReShade 已存在（非本工具安装，保持原样）"
+installer.reshade_bitness_fixed:
+  en: "%{dll} was %{got}-bit in a %{want}-bit game and has been replaced"
+  zh-CN: "%{dll} 为 %{got} 位文件，而游戏为 %{want} 位，已被替换"
+installer.stray_addon_removed:
+  en: "%{file} removed (64-bit add-on in a 32-bit game)"
+  zh-CN: "%{file} 已移除（32 位游戏中的 64 位附加组件）"
+installer.headers_present:
+  en: "ReShade shader headers already present"
+  zh-CN: "ReShade 着色器头文件已存在"
+installer.lookup_feeder:
+  en: "Looking up latest DLSS5-Feeder"
+  zh-CN: "正在查询最新版 DLSS5-Feeder"
+installer.err_no_feeder_release:
+  en: "no DLSS5-Feeder release found"
+  zh-CN: "未找到 DLSS5-Feeder 发行版"
+installer.err_sha_mismatch:
+  en: "DLSS5-Feeder %{tag}: the downloaded zip's SHA-256 (%{have}) does not match the one printed on its release page (%{want}). Nothing was installed. Try again; if it repeats, something between you and github.com is altering the file."
+  zh-CN: "DLSS5-Feeder %{tag}：下载的 zip 的 SHA-256（%{have}）与其发行页公布的值（%{want}）不一致。未安装任何内容。请重试；若反复出现，说明你与 github.com 之间有什么东西在篡改该文件。"
+installer.sha_ok:
+  en: "DLSS5-Feeder %{tag}: SHA-256 matches the release page"
+  zh-CN: "DLSS5-Feeder %{tag}：SHA-256 与发行页一致"
+installer.err_feeder_no_helper:
+  en: "DLSS5-Feeder %{tag} has no %{file}: the 64-bit helper mode needs Feeder 1.18.0-beta.1 or newer"
+  zh-CN: "DLSS5-Feeder %{tag} 不含 %{file}：64 位辅助模式需要 Feeder 1.18.0-beta.1 或更新版本"
+installer.err_feeder_no_member:
+  en: "DLSS5-Feeder %{tag} has no %{file}"
+  zh-CN: "DLSS5-Feeder %{tag} 不含 %{file}"
+installer.err_feeder_zip_missing:
+  en: "DLSS5-Feeder %{tag} has no %{file}"
+  zh-CN: "DLSS5-Feeder %{tag} 中没有 %{file}"
+installer.feeder_current:
+  en: "DLSS5-Feeder already current (%{tag}%{note})"
+  zh-CN: "DLSS5-Feeder 已是最新版（%{tag}%{note}）"
+installer.removed_replaced_helper:
+  en: "%{file} removed (the helper add-on replaces it)"
+  zh-CN: "%{file} 已移除（由辅助附加组件取代）"
+installer.err_lumenite_layout:
+  en: "LumeniteFX archive layout changed; shaders or texture not found"
+  zh-CN: "LumeniteFX 压缩包布局已变化；未找到着色器或纹理"
+installer.lumenite_installed:
+  en: "LumeniteFX already installed"
+  zh-CN: "LumeniteFX 已安装"
+installer.err_not_zip_path:
+  en: "%{path} is not a valid zip"
+  zh-CN: "%{path} 不是有效的 zip 文件"
+installer.err_zip_lacks_member:
+  en: "%{path} does not contain %{member}"
+  zh-CN: "%{path} 中不含 %{member}"
+installer.lookup_dlss5:
+  en: "Looking up DLSS 5 add-on releases"
+  zh-CN: "正在查询 DLSS 5 附加组件发行版"
+installer.classic_pinned:
+  en: "%{tag}: this game's log reports the newer build faulting in the driver"
+  zh-CN: "%{tag}：本游戏的日志报告新版构建在驱动中出错"
+installer.already_current:
+  en: "%{name} already current (%{tag})"
+  zh-CN: "%{name} 已是最新版（%{tag}）"
+installer.out_refreshing:
+  en: "%{name}: %{tag} is out, refreshing"
+  zh-CN: "%{name}：%{tag} 已发布，正在刷新"
+installer.present_not_ours:
+  en: "%{name} present (not placed by this tool)"
+  zh-CN: "%{name} 已存在（非本工具安装）"
+installer.err_not_64bit:
+  en: "%{file} from %{repo} %{tag} is not a 64-bit Windows DLL"
+  zh-CN: "来自 %{repo} %{tag} 的 %{file} 不是 64 位 Windows DLL"
+installer.lookup_dlssnr:
+  en: "Looking up DLSS 5 model releases"
+  zh-CN: "正在查询 DLSS 5 模型发行版"
+installer.err_rtxmfg_api:
+  en: "Universal RTXMFG does not cover %{api}"
+  zh-CN: "Universal RTXMFG 不支持 %{api}"
+installer.err_rtxmfg_name_taken:
+  en: "%{proxy} already exists in this game and was not placed by this tool (ReShade, OptiScaler, DXVK or another mod), and RTXMFG has to take that name. Remove the other one first."
+  zh-CN: "%{proxy} 已存在于本游戏且并非本工具安装（ReShade、OptiScaler、DXVK 或其他模组），而 RTXMFG 必须使用该文件名。请先移除另一个。"
+installer.lookup_rtxmfg:
+  en: "Looking up Universal RTXMFG"
+  zh-CN: "正在查询 Universal RTXMFG"
+installer.rtxmfg_current:
+  en: "%{proxy} already current (RTXMFG %{tag})"
+  zh-CN: "%{proxy} 已是最新版（RTXMFG %{tag}）"
+installer.err_mfg_layout:
+  en: "the MFG release has no MFGUnlocker.dll or RTXMFG.dll - layout changed upstream"
+  zh-CN: "MFG 发行版中没有 MFGUnlocker.dll 或 RTXMFG.dll - 上游布局已变化"
+installer.lookup_aio:
+  en: "Looking up DLSS5 ReShade AIO releases"
+  zh-CN: "正在查询 DLSS5 ReShade AIO 发行版"
+installer.removed_for_aio:
+  en: "removed %{file} (the AIO replaces it)"
+  zh-CN: "已移除 %{file}（由 AIO 取代）"
+installer.aio_refreshing:
+  en: "DLSS5 ReShade AIO: %{tag} is out, refreshing"
+  zh-CN: "DLSS5 ReShade AIO：%{tag} 已发布，正在刷新"
+installer.err_aio_layout:
+  en: "the AIO release had no %{file} — layout changed upstream"
+  zh-CN: "AIO 发行版中没有 %{file} — 上游布局已变化"
+installer.lookup_name_releases:
+  en: "Looking up %{name} releases"
+  zh-CN: "正在查询 %{name} 发行版"
+installer.reshade_ini_written:
+  en: "ReShade.ini written"
+  zh-CN: "ReShade.ini 已写入"
+installer.removing_aio:
+  en: "Removing the standalone AIO add-on"
+  zh-CN: "正在移除独立 AIO 附加组件"
+installer.feeder_removed:
+  en: "DLSS5-Feeder removed; the add-on hooks the game's own DLSS"
+  zh-CN: "DLSS5-Feeder 已移除；附加组件将挂接游戏自带的 DLSS"
+installer.dlss5_removed_upstream:
+  en: "RenoDX DLSS 5 add-on removed; Neural Upstream replaces it"
+  zh-CN: "RenoDX DLSS 5 附加组件已移除；由 Neural Upstream 取代"
+installer.no_dlss5_to_remove:
+  en: "no RenoDX DLSS 5 add-on to remove"
+  zh-CN: "没有可移除的 RenoDX DLSS 5 附加组件"
+installer.lookup_sf:
+  en: "Looking up ShortFuse DLSS add-on releases"
+  zh-CN: "正在查询 ShortFuse DLSS 附加组件发行版"
+installer.err_sf_conflict:
+  en: "%{addon} is in this game but was not placed by this tool, and two neural add-ons cannot run together. Remove it by hand, or choose ShortFuse's add-on under Advanced."
+  zh-CN: "%{addon} 存在于本游戏但并非本工具安装，而两个神经渲染附加组件无法同时运行。请手动移除它，或在高级选项中选择 ShortFuse 附加组件。"
+installer.no_sf_to_remove:
+  en: "no ShortFuse add-on to remove"
+  zh-CN: "没有可移除的 ShortFuse 附加组件"
+installer.sf_removed:
+  en: "ShortFuse add-on removed"
+  zh-CN: "ShortFuse 附加组件已移除"
+installer.nothing_leftover:
+  en: "nothing left over for ShortFuse's add-on to replace"
+  zh-CN: "没有 ShortFuse 附加组件可取代的残留"
+installer.replaced_removed:
+  en: "add-ons ShortFuse's replaces removed"
+  zh-CN: "已移除被 ShortFuse 取代的附加组件"
+installer.removed_file:
+  en: "removed %{file}"
+  zh-CN: "已移除 %{file}"
+installer.bridge_not_needed:
+  en: "DX11 bridge not needed"
+  zh-CN: "无需 DX11 桥接"
+installer.bridge_builtin:
+  en: "no separate DX11 bridge: %{tag} bridges Direct3D 11 itself"
+  zh-CN: "无需单独的 DX11 桥接：%{tag} 自身即可桥接 Direct3D 11"
+installer.bridge_refreshing:
+  en: "dlss5-bridge changed upstream, refreshing"
+  zh-CN: "dlss5-bridge 上游已更新，正在刷新"
+installer.bridge_current:
+  en: "dlss5-bridge.addon64 already current"
+  zh-CN: "dlss5-bridge.addon64 已是最新版"
+installer.bridge_unchecked:
+  en: "dlss5-bridge.addon64 present (could not check for a newer one)"
+  zh-CN: "dlss5-bridge.addon64 已存在（无法检查是否有新版本）"
+installer.fetch_bridge:
+  en: "Fetching latest dlss5-bridge"
+  zh-CN: "正在获取最新版 dlss5-bridge"
+installer.mfg_refreshing:
+  en: "MFG unlock changed upstream, refreshing"
+  zh-CN: "MFG 解锁上游已更新，正在刷新"
+installer.already_current_no_tag:
+  en: "%{name} already current"
+  zh-CN: "%{name} 已是最新版"
+installer.present_unchecked:
+  en: "%{name} present (could not check for a newer one)"
+  zh-CN: "%{name} 已存在（无法检查是否有新版本）"
+installer.fetch_mfg:
+  en: "Fetching the RTX 40 MFG unlock"
+  zh-CN: "正在获取 RTX 40 MFG 解锁"
+installer.lookup_fg_runtime:
+  en: "Looking up frame-generation runtime releases"
+  zh-CN: "正在查询帧生成运行时发行版"
+installer.upstream_refreshing:
+  en: "neural-upstream changed upstream, refreshing"
+  zh-CN: "neural-upstream 上游已更新，正在刷新"
+installer.fetch_upstream:
+  en: "Fetching latest neural-upstream"
+  zh-CN: "正在获取最新版 neural-upstream"
+installer.upstream_preset:
+  en: "neural-upstream preset: %{name}"
+  zh-CN: "neural-upstream 画质档位：%{name}"
+installer.work_res_held_summary:
+  en: "%{summary} - work_resolution held at 100% (this game refused a smaller one)"
+  zh-CN: "%{summary} - work_resolution 保持在 100%（本游戏拒绝更小的值）"
+installer.work_res_held:
+  en: "work_resolution held at 100%: this game's log shows it refused a smaller one"
+  zh-CN: "work_resolution 保持在 100%：本游戏的日志显示它拒绝更小的值"
+installer.config_done:
+  en: "ReShade + feeder defaults (Optimize on first attach)"
+  zh-CN: "ReShade + feeder 默认值（首次挂接时优化）"
+installer.gpu_single:
+  en: "one GPU vendor on this machine, nothing to set"
+  zh-CN: "本机只有一家 GPU 供应商，无需设置"
+installer.gpu_set:
+  en: "%{name}: Windows GPU preference set to high performance"
+  zh-CN: "%{name}：Windows GPU 偏好已设为高性能"
+installer.gpu_already:
+  en: "%{name}: already set to the high-performance GPU"
+  zh-CN: "%{name}：已设置为高性能 GPU"
+installer.gpu_failed:
+  en: "%{name}: could not set the GPU preference (%{err})"
+  zh-CN: "%{name}：无法设置 GPU 偏好（%{err}）"
+installer.gpu_checked:
+  en: "GPU preference checked"
+  zh-CN: "GPU 偏好已检查"
+installer.err_rtxmfg_conflict:
+  en: "Universal RTXMFG and the OptiScaler build's own RTX 20/30/40 multi-frame generation unlock cannot run together; untick one of them."
+  zh-CN: "Universal RTXMFG 与 OptiScaler 版本自带的 RTX 20/30/40 多帧生成解锁无法同时运行；请取消勾选其中一个。"
+installer.err_mfgaddon_64bit:
+  en: "The RTX 40 MFG add-on is 64-bit only."
+  zh-CN: "RTX 40 MFG 附加组件仅支持 64 位。"
+installer.err_rtxmfg_64bit:
+  en: "Universal RTXMFG is 64-bit only."
+  zh-CN: "Universal RTXMFG 仅支持 64 位。"
+installer.err_rtxmfg_needs_sl:
+  en: "Universal RTXMFG needs a DirectX 11, DirectX 12 or Vulkan game with Streamline frame generation; this one is %{api}."
+  zh-CN: "Universal RTXMFG 需要带 Streamline 帧生成的 DirectX 11、DirectX 12 或 Vulkan 游戏；本游戏是 %{api}。"
+installer.err_aio_64bit:
+  en: "The standalone AIO engine is 64-bit only here; a 32-bit game takes the Feeder path."
+  zh-CN: "独立 AIO 引擎在此仅支持 64 位；32 位游戏请走 Feeder 路线。"
+installer.err_upstream_needs_dlss:
+  en: "Neural Upstream runs the network on the colour buffer the game hands its own DLSS, so it needs a game with DLSS of its own on the ReShade engine. This game has none - use the stable ReShade add-on."
+  zh-CN: "Neural Upstream 在游戏交给自身 DLSS 的颜色缓冲上运行网络，因此需要 ReShade 引擎下自带 DLSS 的游戏。本游戏没有 - 请使用稳定版 ReShade 附加组件。"
+installer.err_opti_64bit:
+  en: "The OptiScaler engine is 64-bit only; a 32-bit game takes the Feeder path."
+  zh-CN: "OptiScaler 引擎仅支持 64 位；32 位游戏请走 Feeder 路线。"
+installer.err_opti_needs_dlss:
+  en: "The OptiScaler engine needs a game with its own DLSS (its Neural Rendering pass reads the inputs the game hands to DLSS). This game has none — use the ReShade engine."
+  zh-CN: "OptiScaler 引擎需要自带 DLSS 的游戏（其神经渲染通道读取游戏交给 DLSS 的输入）。本游戏没有 — 请使用 ReShade 引擎。"
+installer.already_present:
+  en: "already present"
+  zh-CN: "已存在"
+installer.err_missing_after:
+  en: "Install finished but files are missing: %{files}. Not reporting success."
+  zh-CN: "安装已完成但缺少文件：%{files}。不报告成功。"
+installer.err_access_denied:
+  en: "%{msg}\n\nWindows refused to write in %{dir}. Close the game, then right-click dlss5oneclick.exe and Run as administrator — or take ownership of the game folder (Properties → Security), or move the game out of Program Files."
+  zh-CN: "%{msg}\n\nWindows 拒绝写入 %{dir}。请关闭游戏，然后右键点击 dlss5oneclick.exe 并选择“以管理员身份运行” — 或者取得游戏文件夹的所有权（属性 → 安全），或者把游戏移出 Program Files。"
+installer.err_no_parent:
+  en: "exe has no parent"
+  zh-CN: "exe 没有父目录"
+installer.dlssg_restored:
+  en: "%{dll} (the game's own restored)"
+  zh-CN: "%{dll}（已还原游戏自带版本）"
+installer.gpu_pref_cleared:
+  en: "Windows GPU preference for %{name}"
+  zh-CN: "%{name} 的 Windows GPU 偏好"
+installer.reshade_kept_foreign:
+  en: "ReShade left in place: the game still has add-ons this tool did not install (%{addons})"
+  zh-CN: "ReShade 已保留：游戏中仍有本工具未安装的附加组件（%{addons}）"
+installer.shaders_kept:
+  en: "reshade-shaders/ (left: shaders this tool did not install)"
+  zh-CN: "reshade-shaders/（保留：本工具未安装的着色器）"
+installer.err_writing_patched:
+  en: "writing patched %{path}"
+  zh-CN: "写入补丁后的 %{path}"
+installer.traa_applied:
+  en: "%{file} (UI protect, already applied)"
+  zh-CN: "%{file}（UI 保护，已应用）"
+installer.traa_skipped:
+  en: "%{file} (UI protect skipped: %{reason} layout changed)"
+  zh-CN: "%{file}（UI 保护已跳过：%{reason} 布局已变化）"
+installer.traa_patched:
+  en: "%{file} (UI protect patch)"
+  zh-CN: "%{file}（UI 保护补丁）"
+installer.vulkan_setup_txt:
+  en: "DLSS5oneclick — Vulkan Feeder kit (manual finish)\n================================================\nThis tool does NOT register ReShade as a Vulkan layer (that is why full\nInstall is refused). Files copied here still need ReShade's own setup.\n\n1. Run ReShade Setup → select this game exe → choose Vulkan → Addon support.\n2. In ReShade.ini next to the exe, under [ADDON]:\n     AddonPath=<this folder>\n3. Ensure dlss5-feed.addon64 and reshade-shaders/Shaders/DLSS5_Feed.fx are here\n   (already copied by «Copy Vulkan Feeder kit»).\n4. Also place a neural consumer (renodx-dlss5.addon64 + nvngx_dlssnr.dll) as for\n   a 64-bit D3D game, or use Deep Fried Chicken per Feeder docs.\n5. If dlss5-feed.log reports missing interop entry points, start the game via\n   run-with-feed-layer.bat from the DLSS5-Feeder repo layer/ folder.\n\nDo not expect dxgi.dll from this tool to load under Vulkan.\n"
+  zh-CN: "DLSS5oneclick — Vulkan Feeder 工具包（需手动完成）\n================================================\n本工具不会将 ReShade 注册为 Vulkan 层（这也是完整安装被拒绝的原因）。\n复制到这里的文件仍需通过 ReShade 自己的安装程序完成配置。\n\n1. 运行 ReShade Setup → 选择本游戏 exe → 选择 Vulkan → Addon support。\n2. 在 exe 旁的 ReShade.ini 的 [ADDON] 节下添加：\n     AddonPath=<此文件夹>\n3. 确保 dlss5-feed.addon64 和 reshade-shaders/Shaders/DLSS5_Feed.fx 已在这里\n   （已由「复制 Vulkan Feeder 工具包」复制）。\n4. 还需按 64 位 D3D 游戏的方式放置一个神经渲染消费端\n   （renodx-dlss5.addon64 + nvngx_dlssnr.dll），或按 Feeder 文档使用 Deep Fried Chicken。\n5. 如果 dlss5-feed.log 报告缺少互操作入口点，请通过 DLSS5-Feeder 仓库 layer/ 文件夹中的\n   run-with-feed-layer.bat 启动游戏。\n\n不要指望本工具的 dxgi.dll 会在 Vulkan 下加载。\n"

@@ -1,0 +1,11 @@
+# feeder_cfg 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+feeder_cfg.not_installed:
+  en: "not installed: %{cfg} missing"
+  zh-CN: "未安装：缺少 %{cfg}"
+feeder_cfg.read:
+  en: "read %{path}"
+  zh-CN: "读取 %{path}"
+feeder_cfg.write:
+  en: "write %{path}"
+  zh-CN: "写入 %{path}"

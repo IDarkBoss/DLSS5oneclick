@@ -1,0 +1,23 @@
+# ngx 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+ngx.driver_prefix:
+  en: "NVIDIA driver %{v}; "
+  zh-CN: "NVIDIA 驱动 %{v}；"
+ngx.core_installed:
+  en: "NGX Core installed (%{path})"
+  zh-CN: "NGX Core 已安装（%{path}）"
+ngx.core_folder_missing:
+  en: "NGX Core registered but its folder is missing: %{path} — reinstall the NVIDIA driver (Custom install, keep every component)"
+  zh-CN: "NGX Core 已注册但文件夹缺失：%{path} — 请重新安装 NVIDIA 驱动（自定义安装并保留全部组件）"
+ngx.core_not_installed:
+  en: "NGX Core is registered as NOT installed — reinstall the NVIDIA driver (Custom install, keep every component; NVCleanstall and \"minimal\" installs drop it)"
+  zh-CN: "NGX Core 已注册为未安装 — 请重新安装 NVIDIA 驱动（自定义安装并保留全部组件；NVCleanstall 和\"精简\"安装会丢弃它）"
+ngx.core_not_registered:
+  en: "NGX Core is not registered on this system (no HKLM\\SOFTWARE\\NVIDIA Corporation\\Global\\NGXCore) — the NVIDIA driver was installed without it, so no DLSS-based tool can start. Reinstall the driver with a Custom install and keep every component."
+  zh-CN: "本系统未注册 NGX Core（缺少 HKLM\\SOFTWARE\\NVIDIA Corporation\\Global\\NGXCore）— NVIDIA 驱动安装时未包含它，任何基于 DLSS 的工具都无法启动。请以自定义安装方式重装驱动并保留全部组件。"
+ngx.model_build_sf:
+  en: "ShortFuse .SF build (adds Ada/Turing paths)"
+  zh-CN: "ShortFuse .SF 版本（新增 Ada/Turing 路径）"
+ngx.model_build_nvidia:
+  en: "NVIDIA original build"
+  zh-CN: "NVIDIA 原版构建"

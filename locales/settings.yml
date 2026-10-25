@@ -1,0 +1,8 @@
+# settings 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+settings.create_dir:
+  en: "create %{path}"
+  zh-CN: "创建 %{path}"
+settings.write:
+  en: "write %{path}"
+  zh-CN: "写入 %{path}"

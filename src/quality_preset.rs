@@ -6,6 +6,7 @@
 
 use crate::game::{Api, GameStatus, Mode};
 use crate::gpu::{self, Tier};
+use std::borrow::Cow;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum QualityChoice {
@@ -16,12 +17,12 @@ pub enum QualityChoice {
 }
 
 impl QualityChoice {
-    pub fn label(self) -> &'static str {
+    pub fn label(self) -> Cow<'static, str> {
         match self {
-            QualityChoice::Auto => "Auto",
-            QualityChoice::Low => "Low",
-            QualityChoice::Medium => "Medium",
-            QualityChoice::High => "High",
+            QualityChoice::Auto => t!("quality_preset.choice.auto"),
+            QualityChoice::Low => t!("quality_preset.choice.low"),
+            QualityChoice::Medium => t!("quality_preset.choice.medium"),
+            QualityChoice::High => t!("quality_preset.choice.high"),
         }
     }
 
@@ -125,7 +126,7 @@ fn base_low() -> ResolvedQuality {
         lighting_strength: 1.0,
         detail_threshold: 0.028,
         detail_strength: 1.0,
-        summary: "Low: Lumenite MV, softer masks, work 70% + FSR expand".into(),
+        summary: t!("quality_preset.summary.low").into_owned(),
     }
 }
 
@@ -150,8 +151,7 @@ fn base_medium() -> ResolvedQuality {
         lighting_strength: 1.35,
         detail_threshold: 0.018,
         detail_strength: 1.40,
-        summary: "Medium: engine velocity hunt + Lumenite fallback, residual masks, work 85% + FSR"
-            .into(),
+        summary: t!("quality_preset.summary.medium").into_owned(),
     }
 }
 
@@ -181,8 +181,7 @@ fn base_high() -> ResolvedQuality {
         lighting_strength: 1.50,
         detail_threshold: 0.012,
         detail_strength: 1.55,
-        summary: "High: engine velocity + Optical Flow fallback, stronger masks, full resolution"
-            .into(),
+        summary: t!("quality_preset.summary.high").into_owned(),
     }
 }
 
@@ -222,7 +221,11 @@ fn apply_overrides(mut r: ResolvedQuality, o: &QualityOverrides) -> ResolvedQual
     if let Some(v) = o.detail_threshold {
         r.detail_threshold = v;
     }
-    r.summary = format!("{} (customized)", r.choice.label());
+    r.summary = t!(
+        "quality_preset.summary.customized",
+        choice = r.choice.label()
+    )
+    .into_owned();
     r
 }
 
@@ -248,9 +251,7 @@ pub fn resolve(
                 h.ofa_enabled = false;
                 h.enable_lumenite = true;
                 h.engine_velocity = true;
-                h.summary =
-                    "High: engine velocity + Lumenite (Optical Flow unavailable), stronger masks, full res"
-                        .into();
+                h.summary = t!("quality_preset.summary.high_no_ofa").into_owned();
             }
             h
         }
@@ -263,9 +264,7 @@ pub fn resolve(
                 a.appearance_threshold = 0.030;
                 a.lighting_threshold = 0.035;
                 a.detail_threshold = 0.015;
-                a.summary =
-                    "Auto: engine velocity + Optical Flow + residual masks (Feeder D3D11 + RTX) — recommendation only"
-                        .into();
+                a.summary = t!("quality_preset.summary.auto_ofa").into_owned();
                 a
             } else if matches!(st.api, Api::Dx12) {
                 let mut a = base_medium();
@@ -274,17 +273,13 @@ pub fn resolve(
                 a.enable_lumenite = true;
                 a.engine_velocity = true;
                 a.work_resolution = 100;
-                a.summary =
-                    "Auto: DX12 Feeder (no OFA) — Lumenite MV + velocity hunt; Optimize uses half-rate cost first"
-                        .into();
+                a.summary = t!("quality_preset.summary.auto_dx12").into_owned();
                 a
             } else {
                 let mut a = base_medium();
                 a.choice = QualityChoice::Auto;
                 a.engine_velocity = true;
-                a.summary =
-                    "Auto: Medium + engine velocity hunt (Optical Flow not applicable) — recommendation only"
-                        .into();
+                a.summary = t!("quality_preset.summary.auto_fallback").into_owned();
                 a
             }
         }
@@ -294,7 +289,11 @@ pub fn resolve(
     // RT-likely titles: slightly cheaper seed + stronger light stab (flicker proxy).
     if st.mode == Mode::Feeder && st.rt_likely && !r.customized {
         r.work_resolution = r.work_resolution.min(90);
-        r.summary = format!("{} · RT-likely seed (work≤90%)", r.summary);
+        r.summary = t!(
+            "quality_preset.summary.rt_suffix",
+            summary = r.summary.as_str()
+        )
+        .into_owned();
     }
     r
 }

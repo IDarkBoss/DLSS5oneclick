@@ -1,0 +1,41 @@
+# quality_preset 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+quality_preset.choice.auto:
+  en: "Auto"
+  zh-CN: "Auto"
+quality_preset.choice.low:
+  en: "Low"
+  zh-CN: "Low"
+quality_preset.choice.medium:
+  en: "Medium"
+  zh-CN: "Medium"
+quality_preset.choice.high:
+  en: "High"
+  zh-CN: "High"
+quality_preset.summary.low:
+  en: "Low: Lumenite MV, softer masks, work 70% + FSR expand"
+  zh-CN: "Low：Lumenite 运动矢量、更柔和的掩码、工作分辨率 70% + FSR 扩展"
+quality_preset.summary.medium:
+  en: "Medium: engine velocity hunt + Lumenite fallback, residual masks, work 85% + FSR"
+  zh-CN: "Medium：引擎运动矢量搜索 + Lumenite 兜底、残差掩码、工作分辨率 85% + FSR"
+quality_preset.summary.high:
+  en: "High: engine velocity + Optical Flow fallback, stronger masks, full resolution"
+  zh-CN: "High：引擎运动矢量 + 光流（Optical Flow）兜底、更强的掩码、全分辨率"
+quality_preset.summary.high_no_ofa:
+  en: "High: engine velocity + Lumenite (Optical Flow unavailable), stronger masks, full res"
+  zh-CN: "High：引擎运动矢量 + Lumenite（光流不可用）、更强的掩码、全分辨率"
+quality_preset.summary.auto_ofa:
+  en: "Auto: engine velocity + Optical Flow + residual masks (Feeder D3D11 + RTX) — recommendation only"
+  zh-CN: "Auto：引擎运动矢量 + 光流 + 残差掩码（Feeder D3D11 + RTX）— 仅供参考"
+quality_preset.summary.auto_dx12:
+  en: "Auto: DX12 Feeder (no OFA) — Lumenite MV + velocity hunt; Optimize uses half-rate cost first"
+  zh-CN: "Auto：DX12 Feeder（无 OFA）— Lumenite 运动矢量 + 速度搜索；Optimize 优先采用半代价档"
+quality_preset.summary.auto_fallback:
+  en: "Auto: Medium + engine velocity hunt (Optical Flow not applicable) — recommendation only"
+  zh-CN: "Auto：Medium + 引擎运动矢量搜索（光流不适用）— 仅供参考"
+quality_preset.summary.customized:
+  en: "%{choice} (customized)"
+  zh-CN: "%{choice}（已自定义）"
+quality_preset.summary.rt_suffix:
+  en: "%{summary} · RT-likely seed (work≤90%)"
+  zh-CN: "%{summary} · 疑似光追游戏种子（工作分辨率≤90%）"

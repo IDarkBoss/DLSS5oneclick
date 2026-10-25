@@ -1,0 +1,44 @@
+# net 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+net.err_client:
+  en: "cannot build HTTP client"
+  zh-CN: "无法构建 HTTP 客户端"
+net.err_api_disabled:
+  en: "API disabled by DLSS5ONECLICK_NO_API"
+  zh-CN: "API 已被 DLSS5ONECLICK_NO_API 禁用"
+net.err_request:
+  en: "request failed: %{target}"
+  zh-CN: "请求失败：%{target}"
+net.err_http:
+  en: "%{target}: HTTP %{status}"
+  zh-CN: "%{target}：HTTP %{status}"
+net.err_bad_json:
+  en: "bad JSON from %{url}"
+  zh-CN: "%{url} 返回的 JSON 无效"
+net.err_bad_body:
+  en: "bad body from %{url}"
+  zh-CN: "%{url} 返回的内容无效"
+net.err_no_asset:
+  en: "no asset matching %{re} in %{repo} %{tag}"
+  zh-CN: "%{repo} %{tag} 中没有匹配 %{re} 的资源"
+net.err_latest_no_tag:
+  en: "%{repo}: releases/latest did not land on a tag (%{url})"
+  zh-CN: "%{repo}：releases/latest 未跳转到任何标签（%{url}）"
+net.retrying:
+  en: "%{label}: retrying (%{attempt}/3)"
+  zh-CN: "%{label}：正在重试（%{attempt}/3）"
+net.cached:
+  en: "%{label} (cached)"
+  zh-CN: "%{label}（已缓存）"
+net.err_download:
+  en: "download failed: %{label}"
+  zh-CN: "下载失败：%{label}"
+net.progress_of:
+  en: "%{label}: %{done} / %{total}"
+  zh-CN: "%{label}：%{done} / %{total}"
+net.progress:
+  en: "%{label}: %{done}"
+  zh-CN: "%{label}：%{done}"
+net.err_zip_member:
+  en: "zip member missing: %{member}"
+  zh-CN: "zip 中缺少成员：%{member}"

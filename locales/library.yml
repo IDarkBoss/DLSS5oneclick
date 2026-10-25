@@ -1,0 +1,24 @@
+# library 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+# 商店名按术语表保留英文，两种语言值相同；仅 store_manual 两种语言不同。
+_version: 2
+library.store_steam:
+  en: "Steam"
+  zh-CN: "Steam"
+library.store_epic:
+  en: "Epic Games"
+  zh-CN: "Epic Games"
+library.store_gog:
+  en: "GOG"
+  zh-CN: "GOG"
+library.store_xbox:
+  en: "Xbox"
+  zh-CN: "Xbox"
+library.store_ea:
+  en: "EA app"
+  zh-CN: "EA app"
+library.store_ubi:
+  en: "Ubisoft Connect"
+  zh-CN: "Ubisoft Connect"
+library.store_manual:
+  en: "Added by you"
+  zh-CN: "手动添加"

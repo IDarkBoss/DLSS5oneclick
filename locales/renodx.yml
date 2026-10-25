@@ -1,0 +1,47 @@
+# renodx 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+renodx.source_snapshot:
+  en: "clshortfuse snapshot build"
+  zh-CN: "clshortfuse snapshot 构建"
+renodx.source_fork:
+  en: "%{owner}'s fork"
+  zh-CN: "%{owner} 的分支"
+renodx.source_none:
+  en: "no download"
+  zh-CN: "无下载链接"
+renodx.status_stable:
+  en: "working"
+  zh-CN: "可用"
+renodx.status_wip:
+  en: "in progress — may have issues"
+  zh-CN: "开发中——可能存在问题"
+renodx.status_unknown:
+  en: "status unknown"
+  zh-CN: "状态未知"
+renodx.note_wiki_offsite:
+  en: "%{note} The wiki's link points outside GitHub's renodx forks; the project's snapshot build is installed instead."
+  zh-CN: "%{note} 维基链接指向 GitHub renodx 分支之外的地址；已改为安装项目官方 snapshot 构建。"
+renodx.note_wiki_nexus:
+  en: "%{note} Wiki lists this mod on Nexus/Discord; the snapshot build is installed instead."
+  zh-CN: "%{note} 维基将此模组列于 Nexus/Discord；已改为安装 snapshot 构建。"
+renodx.err_no_parent:
+  en: "exe has no parent"
+  zh-CN: "exe 没有父目录"
+renodx.err_bad_index:
+  en: "games-index.json is not valid JSON"
+  zh-CN: "games-index.json 不是有效的 JSON"
+renodx.err_nexus_only:
+  en: "the RenoDX mod for %{title} is only published on Nexus Mods / Discord; download it by hand and drop the .addon64 next to the game exe"
+  zh-CN: "%{title} 的 RenoDX 模组仅在 Nexus Mods / Discord 发布；请手动下载，并把 .addon64 放到游戏 exe 旁边"
+renodx.err_foreign_mod:
+  en: "this game already has a RenoDX mod (%{mods}); ReShade loads only one \"RenoDX\" add-on and two would fight over the same settings. Remove it first."
+  zh-CN: "这款游戏已装有 RenoDX 模组（%{mods}）；ReShade 只加载一个 \"RenoDX\" 附加组件，两个会争抢同一组设置。请先移除。"
+renodx.already_installed:
+  en: "RenoDX mod already installed"
+  zh-CN: "RenoDX 模组已安装"
+renodx.download_label:
+  en: "RenoDX: %{title}"
+  zh-CN: "RenoDX：%{title}"
+renodx.summary:
+  en: "%{file} (%{title}, %{status})"
+  zh-CN: "%{file} (%{title}, %{status})"

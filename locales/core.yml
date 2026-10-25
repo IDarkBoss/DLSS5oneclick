@@ -1,0 +1,9 @@
+# i18n 框架自身的文案。_version: 2 = 每个 key 下按语言给值；
+# 本项目所有 locales/*.yml 一律用扁平点分 key，不使用嵌套。
+_version: 2
+core.language:
+  en: Language
+  zh-CN: 语言
+core.lang.hint:
+  en: "Changing this switches the whole interface; the choice is saved to settings.json. Default: follow Windows."
+  zh-CN: 切换后整个界面立即跟随；选择会保存到 settings.json。缺省跟随 Windows 界面语言。

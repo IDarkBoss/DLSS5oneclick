@@ -24,6 +24,7 @@
 //!
 //! Games with a known answer start further down (`PROFILES`).
 
+use std::borrow::Cow;
 use std::fs;
 
 use crate::game::{self, Api, GameStatus, Mode};
@@ -63,21 +64,21 @@ const OPTI: Setup = Setup {
     addon_tag: None,
 };
 
-/// Games whose reports settled the order, by exe name (lower case).
-/// Cyberpunk 2077: the ReShade route churned its feature and changed nothing;
-/// the OptiScaler engine worked for the reporter (#95). Dragon's Dogma 2: the
-/// newer DLSS 5 add-on crashed at the first evaluate where the older builds ran
-/// (#96).
+/// Games whose reports settled the order, by exe name (lower case). The third
+/// column is the reason's i18n key. Cyberpunk 2077: the ReShade route churned
+/// its feature and changed nothing; the OptiScaler engine worked for the
+/// reporter (#95). Dragon's Dogma 2: the newer DLSS 5 add-on crashed at the
+/// first evaluate where the older builds ran (#96).
 const PROFILES: &[(&str, &[Setup], &str)] = &[
     (
         "cyberpunk2077.exe",
         &[OPTI, DLSS5_NEWEST, SF, DLSS5_STEADY, DLSS5_CLASSIC],
-        "Cyberpunk 2077 works on the OptiScaler engine (#95)",
+        "setup.profile.cyberpunk",
     ),
     (
         "dd2.exe",
         &[DLSS5_STEADY, DLSS5_CLASSIC, SF, DLSS5_NEWEST, OPTI],
-        "Dragon's Dogma 2 crashed on newer DLSS 5 add-on builds (#96)",
+        "setup.profile.dd2",
     ),
 ];
 
@@ -176,15 +177,13 @@ pub fn legacy_default_sf(st: &GameStatus) -> bool {
 pub fn stale(st: &GameStatus, latest: &installer::Latest) -> Vec<String> {
     let mut v = installer::stale_components(st.game_dir(), latest);
     if legacy_default_sf(st) {
-        v.push(format!(
-            "ShortFuse's add-on \u{2192} DLSS 5 add-on {} (the new default)",
-            latest
-                .dlss5_pre
-                .as_deref()
-                .or(latest.dlss5.as_deref())
-                .unwrap_or("newest build")
-                .trim_start_matches(installer::DLSS5_PREFIX)
-        ));
+        let tag = latest
+            .dlss5_pre
+            .as_deref()
+            .or(latest.dlss5.as_deref())
+            .map(|t| t.trim_start_matches(installer::DLSS5_PREFIX).to_owned())
+            .unwrap_or_else(|| t!("setup.newest_build").into_owned());
+        v.push(t!("setup.stale.shortfuse_to_dlss5", tag = tag).into_owned());
     }
     v
 }
@@ -207,15 +206,17 @@ pub fn hand_label(st: &GameStatus) -> Option<String> {
         return None;
     }
     Some(if st.mfg_only {
-        "RTX 40 MFG add-on only (no DLSS 5)".to_owned()
+        t!("setup.label.mfg_addon").into_owned()
     } else if st.rtxmfg {
-        "Universal RTXMFG only (no DLSS 5)".to_owned()
+        t!("setup.label.mfg").into_owned()
     } else if st.upstream {
-        "ReShade + Neural Upstream".to_owned()
+        t!("setup.hand_label.upstream").into_owned()
     } else if st.aio && !st.opti {
-        "ReShade + standalone AIO".to_owned()
+        t!("setup.label.aio").into_owned()
     } else {
-        installed(st).map(|s| label(&s)).unwrap_or_default()
+        installed(st)
+            .map(|s| label(&s).into_owned())
+            .unwrap_or_default()
     })
 }
 
@@ -284,17 +285,17 @@ pub fn clear() {
 }
 
 /// What the setup is, in words.
-pub fn label(s: &Setup) -> String {
+pub fn label(s: &Setup) -> Cow<'static, str> {
     match (s.engine, s.consumer, s.addon_tag) {
-        (Engine::Opti, ..) => "OptiScaler with its built-in neural rendering pass".to_owned(),
-        (Engine::Aio, ..) => "ReShade + standalone AIO".to_owned(),
-        (Engine::Mfg, ..) => "Universal RTXMFG only (no DLSS 5)".to_owned(),
-        (Engine::MfgAddon, ..) => "RTX 40 MFG add-on only (no DLSS 5)".to_owned(),
-        (_, Consumer::ShortFuse, _) => "ReShade + ShortFuse's DLSS add-on".to_owned(),
-        (_, Consumer::Dlss5, None) => "ReShade + DLSS 5 add-on (newest build)".to_owned(),
-        (_, Consumer::Dlss5, Some(t)) => format!(
-            "ReShade + DLSS 5 add-on {}",
-            t.trim_start_matches(installer::DLSS5_PREFIX)
+        (Engine::Opti, ..) => t!("setup.label.opti"),
+        (Engine::Aio, ..) => t!("setup.label.aio"),
+        (Engine::Mfg, ..) => t!("setup.label.mfg"),
+        (Engine::MfgAddon, ..) => t!("setup.label.mfg_addon"),
+        (_, Consumer::ShortFuse, _) => t!("setup.label.sf"),
+        (_, Consumer::Dlss5, None) => t!("setup.label.dlss5_newest"),
+        (_, Consumer::Dlss5, Some(t)) => t!(
+            "setup.label.dlss5_tag",
+            tag = t.trim_start_matches(installer::DLSS5_PREFIX)
         ),
     }
 }
@@ -303,26 +304,24 @@ pub fn label(s: &Setup) -> String {
 pub fn reason(st: &GameStatus) -> String {
     let mut parts = Vec::new();
     if let Some((_, why)) = profile(st) {
-        parts.push(why.to_owned());
+        parts.push(t!(why).into_owned());
     }
     parts.push(
         match st.mode {
-            Mode::Native => "the game has its own DLSS",
-            Mode::Feeder => "the game has no DLSS of its own (the Feeder supplies it)",
+            Mode::Native => t!("setup.reason.native"),
+            Mode::Feeder => t!("setup.reason.feeder"),
         }
-        .to_owned(),
+        .into_owned(),
     );
-    parts.push(st.api.label().to_owned());
+    parts.push(st.api.label().into_owned());
     if st.is32() {
-        parts.push("32-bit".to_owned());
+        parts.push(t!("setup.reason.bitness32").into_owned());
     }
     if st.helper {
-        parts.push(
-            "64-bit DirectX 10: the Feeder's helper mode (beta, not yet run in a game)".to_owned(),
-        );
+        parts.push(t!("setup.reason.helper").into_owned());
     }
     if let Some((_, tier)) = &st.gpu {
-        parts.push(tier.label().to_owned());
+        parts.push(tier.label().into_owned());
     }
     parts.join(" · ")
 }

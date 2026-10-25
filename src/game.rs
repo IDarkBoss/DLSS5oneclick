@@ -2,6 +2,7 @@
 
 use crate::gpu;
 use anyhow::{bail, Context, Result};
+use std::borrow::Cow;
 use std::fs;
 use std::io::{Read, Seek, SeekFrom};
 use std::path::{Path, PathBuf};
@@ -112,25 +113,39 @@ pub const RESHADE_PRESET: &str = "ReShadePreset.ini";
 
 /// 64 or 32, read from the PE header's Machine field.
 pub fn exe_bitness(exe: &Path) -> Result<u8> {
-    let mut f = fs::File::open(exe).with_context(|| format!("cannot open {}", exe.display()))?;
+    let mut f = fs::File::open(exe)
+        .with_context(|| t!("game.err_open", path = exe.display().to_string()))?;
     let mut head = [0u8; 0x40];
     f.read_exact(&mut head)
-        .with_context(|| format!("{} is not a Windows executable", exe.display()))?;
+        .with_context(|| t!("game.err_not_pe", path = exe.display().to_string()))?;
     if &head[..2] != b"MZ" {
-        bail!("{} is not a Windows executable", exe.display());
+        bail!(
+            "{}",
+            t!("game.err_not_pe", path = exe.display().to_string())
+        );
     }
     let pe_off = u32::from_le_bytes([head[0x3C], head[0x3D], head[0x3E], head[0x3F]]);
     f.seek(SeekFrom::Start(pe_off as u64))?;
     let mut sig = [0u8; 6];
     f.read_exact(&mut sig)
-        .with_context(|| format!("{} has no PE header", exe.display()))?;
+        .with_context(|| t!("game.err_no_pe_header", path = exe.display().to_string()))?;
     if &sig[..4] != b"PE\0\0" {
-        bail!("{} has no PE header", exe.display());
+        bail!(
+            "{}",
+            t!("game.err_no_pe_header", path = exe.display().to_string())
+        );
     }
     match u16::from_le_bytes([sig[4], sig[5]]) {
         PE_X64 => Ok(64),
         PE_X86 => Ok(32),
-        m => bail!("{}: unsupported machine type 0x{m:04x}", exe.display()),
+        m => bail!(
+            "{}",
+            t!(
+                "game.err_machine",
+                path = exe.display().to_string(),
+                machine = format!("0x{m:04x}")
+            )
+        ),
     }
 }
 
@@ -213,14 +228,14 @@ pub enum Api {
 }
 
 impl Api {
-    pub fn label(self) -> &'static str {
+    pub fn label(self) -> Cow<'static, str> {
         match self {
-            Api::Dx9 => "DX9",
-            Api::Dx10 => "DX10",
-            Api::Dx11 => "DX11",
-            Api::Dx12 => "DX12",
-            Api::Vulkan => "Vulkan",
-            Api::Unknown => "API unknown, assuming DX12",
+            Api::Dx9 => t!("game.api_dx9"),
+            Api::Dx10 => t!("game.api_dx10"),
+            Api::Dx11 => t!("game.api_dx11"),
+            Api::Dx12 => t!("game.api_dx12"),
+            Api::Vulkan => t!("game.api_vulkan"),
+            Api::Unknown => t!("game.api_unknown"),
         }
     }
 }
@@ -1320,14 +1335,7 @@ impl GameStatus {
     /// perfectly well, so this refuses one engine, not the game (#46,
     /// Indiana Jones and the Great Circle, which worked until 0.11.8).
     pub fn reshade_engine_problem(&self) -> Option<String> {
-        (self.api == Api::Vulkan).then(|| {
-            "This is a Vulkan game, so the ReShade engine cannot reach it: ReShade hooks \
-             Vulkan through a registered layer, not through the dxgi.dll installed beside \
-             the exe, and nothing here would ever load. Use the OptiScaler engine, which \
-             does cover Vulkan. To use ReShade anyway, run its own setup, point it at this \
-             exe and choose Vulkan, then follow DLSS5-Feeder's Vulkan instructions."
-                .to_owned()
-        })
+        (self.api == Api::Vulkan).then(|| t!("game.reshade_vulkan_problem").into_owned())
     }
 
     pub fn is32(&self) -> bool {
@@ -1428,17 +1436,16 @@ pub fn game_pass_content_dir(d: &Path) -> Option<PathBuf> {
 /// What to tell the user about a Game Pass copy Windows has locked.
 fn game_pass_locked_message(content: &Path) -> String {
     let native = if game_pass_ships_dlss(content) {
-        "The game itself ships DLSS (nvngx_dlss.dll is in its folder), so it supports DLSS natively; only this install cannot be modified."
+        t!("game.gamepass_native")
     } else {
-        "No nvngx_dlss.dll anywhere in its folder, so this game has no DLSS of its own either."
+        t!("game.gamepass_no_dlss")
     };
-    format!(
-        "Game Pass / Microsoft Store copy ({}): Windows protects this install — the \
-         executable is locked or the folder refuses writes — so DLSS 5 cannot be \
-         installed on this copy. Some Store games are installed unprotected and work; \
-         this one is not. The same game from Steam, Epic or GOG works. {native}",
-        content.display()
+    t!(
+        "game.gamepass_locked",
+        path = content.display().to_string(),
+        native = native
     )
+    .into_owned()
 }
 
 /// Whether a file can be created in `d`: the one test that separates a
@@ -1477,9 +1484,12 @@ fn game_pass_ships_dlss(content: &Path) -> bool {
 
 pub fn inspect(exe: &Path) -> Result<GameStatus> {
     if !exe.is_file() {
-        bail!("game executable not found: {}", exe.display());
+        bail!(
+            "{}",
+            t!("game.err_exe_not_found", path = exe.display().to_string())
+        );
     }
-    let d = exe.parent().context("exe has no parent directory")?;
+    let d = exe.parent().context(t!("game.err_no_parent"))?;
     // Game Pass installs are protected: the real exe is often unreadable, the
     // folder refuses writes, and a dxgi.dll beside a packaged exe is never
     // loaded. Every one of them read as "no DLSS, Feeder path" here, because
@@ -1503,32 +1513,29 @@ pub fn inspect(exe: &Path) -> Result<GameStatus> {
     let anticheat = detect_anticheat(d).or_else(|| known_anticheat_exe(exe));
     if let Some(ac) = anticheat {
         if !ignore_anticheat() {
-            problems.push(format!(
-                "{ac} anti-cheat found in this game. ReShade add-on injection is what it detects: kick at best, ban at worst. Refused."
-            ));
+            problems.push(t!("game.prob_anticheat", ac = ac).into_owned());
         }
     }
     let gpu = gpu::best();
     let skip_gpu = skip_gpu_check();
     if let Some((g, t)) = &gpu {
         if !t.can_run() && !skip_gpu {
-            problems.push(format!(
-                "GPU is {} ({}): the DLSS 5 model runs on NVIDIA RTX only (it needs tensor cores and NGX). \
-                 Misdetected, or running through Remote Desktop? Tick the box below, or set {}=1.",
-                g.name,
-                t.label(),
-                SKIP_GPU_CHECK_ENV
-            ));
+            problems.push(
+                t!(
+                    "game.prob_gpu",
+                    name = g.name.as_str(),
+                    tier = t.label(),
+                    env = SKIP_GPU_CHECK_ENV
+                )
+                .into_owned(),
+            );
         }
     }
     // A d3d9.dll is usually a wrapper this tool cannot work behind — except
     // dgVoodoo2, which is exactly how a D3D9 game reaches D3D11 and then the
     // Feeder (verified working on Dead or Alive 5 Last Round, #17).
     if d.join("d3d9.dll").is_file() && !d.join(RESHADE_PROXY).is_file() && !is_dgvoodoo(d) {
-        problems.push(
-            "A d3d9.dll proxy is present that is not dgVoodoo2. DirectX 9 itself is not a dead              end -- DLSS 5 needs a D3D11/12 device, and dgVoodoo2 provides one, which is how a              D3D9 game can work here (#17, #37) -- but this tool cannot install behind another              wrapper. Replace it with dgVoodoo 2.87.5 (MS\\x86 or MS\\x64\\D3D9.dll plus              dgVoodoo.conf, OutputAPI = d3d11_fl11_0, VRAM >= 4096) and run Install again."
-                .into(),
-        );
+        problems.push(t!("game.prob_d3d9_proxy").into_owned());
     }
     let api_detected = detect_api(exe);
     let api = api_override().unwrap_or(api_detected);
@@ -1537,10 +1544,7 @@ pub fn inspect(exe: &Path) -> Result<GameStatus> {
     // is not a hard refuse. A foreign non-dgVoodoo d3d9.dll still blocks above.
     let is32 = bitness == 32;
     if is32 && api == Api::Dx12 {
-        problems.push(
-            "32-bit game on Direct3D 12: DLSS5-Feeder's 32-bit add-on covers Direct3D 9 (through dgVoodoo2), 10 and 11, but not 12."
-                .into(),
-        );
+        problems.push(t!("game.prob_32bit_dx12").into_owned());
     }
     let mode_detected = if !is32 && game_ships_dlss(d) {
         Mode::Native
@@ -1858,11 +1862,17 @@ fn resolve_target_with(
                     }
                     bail!("{}", game_pass_locked_message(&content));
                 }
-                bail!("no 64-bit game executable found in {}", input.display())
+                bail!(
+                    "{}",
+                    t!("game.err_no_exe", path = input.display().to_string())
+                );
             }
         };
     }
-    bail!("not found: {}", input.display())
+    bail!(
+        "{}",
+        t!("game.err_not_found", path = input.display().to_string())
+    )
 }
 
 /// True when ReShade/Feeder markers sit on a launcher folder but the preferred
@@ -1878,14 +1888,17 @@ pub fn install_folder_mismatch(preferred_exe: &Path) -> Option<String> {
     for _ in 0..4 {
         let Some(d) = cur else { break };
         if (d.join(RESHADE_PROXY).is_file() || d.join(FEEDER_MARKER).is_file()) && d != ship_dir {
-            return Some(format!(
-                "ReShade/Feeder found in {} but not next to {} — Install on the Shipping exe",
-                d.display(),
-                preferred_exe
-                    .file_name()
-                    .and_then(|n| n.to_str())
-                    .unwrap_or("game.exe")
-            ));
+            return Some(
+                t!(
+                    "game.prob_wrong_folder",
+                    dir = d.display().to_string(),
+                    exe = preferred_exe
+                        .file_name()
+                        .and_then(|n| n.to_str())
+                        .unwrap_or("game.exe")
+                )
+                .into_owned(),
+            );
         }
         cur = d.parent();
     }

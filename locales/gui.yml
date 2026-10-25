@@ -1,0 +1,884 @@
+# gui 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+
+# ── 页面标签与顶栏 ────────────────────────────────────────────
+gui.tab_games:
+  en: "Games"
+  zh-CN: "游戏"
+gui.tab_setup:
+  en: "Setup"
+  zh-CN: "安装"
+gui.tab_settings:
+  en: "Settings"
+  zh-CN: "设置"
+gui.tab_about:
+  en: "About"
+  zh-CN: "关于"
+gui.kofi:
+  en: "Buy me a Cup of Coffee"
+  zh-CN: "请我喝杯咖啡"
+gui.chip_leaked:
+  en: "LEAKED BUILD"
+  zh-CN: "泄露版"
+gui.chip_ready:
+  en: "Ready"
+  zh-CN: "就绪"
+
+# ── 游戏页 ────────────────────────────────────────────────────
+gui.games_scanning:
+  en: "scanning Steam, Epic, GOG and Xbox…"
+  zh-CN: "正在扫描 Steam、Epic、GOG 和 Xbox…"
+gui.games_summary:
+  en: "%{total} found · %{dx12} on DirectX 12"
+  zh-CN: "共找到 %{total} 个 · %{dx12} 个使用 DirectX 12"
+gui.btn_rescan:
+  en: "Rescan"
+  zh-CN: "重新扫描"
+gui.btn_add_folder:
+  en: "Add a folder"
+  zh-CN: "添加文件夹"
+gui.btn_add_game:
+  en: "Add a game"
+  zh-CN: "添加游戏"
+gui.btn_game_folder:
+  en: "Game folder…"
+  zh-CN: "游戏文件夹…"
+gui.dlg_pick_folder:
+  en: "Pick the game's install folder"
+  zh-CN: "选择游戏的安装文件夹"
+gui.filter_executables:
+  en: "Executables"
+  zh-CN: "可执行文件"
+gui.sort_newest:
+  en: "Sort: Newest"
+  zh-CN: "排序：最新优先"
+gui.sort_az:
+  en: "Sort: A-Z"
+  zh-CN: "排序：A-Z"
+gui.hover_sort:
+  en: "Switch between alphabetical and newest install first"
+  zh-CN: "在按字母排序与按安装时间从新到旧之间切换"
+gui.search:
+  en: "Search"
+  zh-CN: "搜索"
+gui.section_installed_by_tool:
+  en: "Installed by this tool"
+  zh-CN: "由本工具安装"
+gui.updating_more:
+  en: "Updating… %{count} more"
+  zh-CN: "正在更新… 还有 %{count} 个"
+gui.update_all:
+  en: "Update all (%{count})"
+  zh-CN: "全部更新（%{count}）"
+gui.hover_update_all:
+  en: "Update every game listed here that is out of date, one after another"
+  zh-CN: "依次更新此处列出的每一个已过期的游戏"
+gui.needs_update_count:
+  en: "%{count} need updating"
+  zh-CN: "%{count} 个需要更新"
+gui.ready_count:
+  en: "%{count} ready for DLSS 5"
+  zh-CN: "%{count} 个已为 DLSS 5 就绪"
+gui.no_games_found:
+  en: "No installed games found from Steam, Epic, GOG or Xbox."
+  zh-CN: "未在 Steam、Epic、GOG 或 Xbox 中找到已安装的游戏。"
+gui.no_games_hint:
+  en: "Use Add a folder to point at a game by hand."
+  zh-CN: "使用「添加文件夹」手动指定一个游戏。"
+
+# ── 游戏卡片 ──────────────────────────────────────────────────
+gui.card_badge_update:
+  en: "UPDATE"
+  zh-CN: "可更新"
+gui.card_dlss_own:
+  en: "DLSS own"
+  zh-CN: "自带 DLSS"
+gui.card_dlss_none:
+  en: "no DLSS"
+  zh-CN: "无 DLSS"
+gui.card_stale:
+  en: "stale"
+  zh-CN: "已过期"
+gui.card_ready:
+  en: "ready"
+  zh-CN: "已就绪"
+gui.card_partial:
+  en: "partial"
+  zh-CN: "部分安装"
+gui.card_updating_pct:
+  en: "Updating… %{pct}%"
+  zh-CN: "正在更新… %{pct}%"
+gui.card_finishing:
+  en: "Finishing…"
+  zh-CN: "正在收尾…"
+gui.btn_install:
+  en: "Install"
+  zh-CN: "安装"
+gui.btn_update:
+  en: "Update"
+  zh-CN: "更新"
+gui.btn_reinstall:
+  en: "Re-install"
+  zh-CN: "重新安装"
+gui.btn_forget:
+  en: "Forget this game"
+  zh-CN: "忘记此游戏"
+gui.hover_stale_list:
+  en: "\n\nOut of date:\n  %{list}"
+  zh-CN: "\n\n已过期：\n  %{list}"
+gui.cap_rt:
+  en: "RT-likely"
+  zh-CN: "疑似光追"
+gui.cap_unreal:
+  en: "Unreal"
+  zh-CN: "Unreal"
+gui.cap_unity:
+  en: "Unity"
+  zh-CN: "Unity"
+gui.cap_reengine:
+  en: "RE Engine"
+  zh-CN: "RE Engine"
+gui.sep_caps:
+  en: ", "
+  zh-CN: "、"
+gui.hover_caps_fmt:
+  en: "\nCaps: %{list}"
+  zh-CN: "\n特性：%{list}"
+gui.hover_warn_shaders:
+  en: "\nWarning: shaders missing"
+  zh-CN: "\n警告：着色器缺失"
+gui.hover_warn_fmt:
+  en: "\nWarning: %{w}"
+  zh-CN: "\n警告：%{w}"
+
+# ── 安装页：路径与游戏信息 ────────────────────────────────────
+gui.hint_exe:
+  en: "Game folder or the game's .exe"
+  zh-CN: "游戏文件夹或游戏的 .exe"
+gui.game_exe:
+  en: "Game exe"
+  zh-CN: "游戏 Exe"
+gui.exe_info:
+  en: "%{bits}-bit · %{api}%{gpu}"
+  zh-CN: "%{bits} 位 · %{api}%{gpu}"
+gui.mode_auto_native:
+  en: "Auto: native DLSS · renodx hooks game (Feeder Optimize N/A)"
+  zh-CN: "自动：原生 DLSS · RenoDX 挂钩游戏（Feeder Optimize 不可用）"
+gui.mode_auto_feeder:
+  en: "Auto: no DLSS · Feeder path + Optimize"
+  zh-CN: "自动：无 DLSS · Feeder 路径 + Optimize"
+gui.mode_force_native:
+  en: "Force native DLSS (Feeder Optimize N/A)"
+  zh-CN: "强制原生 DLSS（Feeder Optimize 不可用）"
+gui.mode_force_feeder:
+  en: "Force no-DLSS (Feeder + Optimize)"
+  zh-CN: "强制无 DLSS（Feeder + Optimize）"
+gui.api_auto_unknown:
+  en: "Auto: API unknown, assuming DX12"
+  zh-CN: "自动：API 未知，按 DX12 处理"
+gui.api_auto_dx11:
+  en: "Auto: DX11"
+  zh-CN: "自动：DX11"
+gui.api_auto_dx12:
+  en: "Auto: DX12"
+  zh-CN: "自动：DX12"
+gui.api_auto_dx9:
+  en: "Auto: DX9"
+  zh-CN: "自动：DX9"
+gui.api_auto_dx10:
+  en: "Auto: DX10"
+  zh-CN: "自动：DX10"
+gui.api_auto_vulkan:
+  en: "Auto: Vulkan"
+  zh-CN: "自动：Vulkan"
+gui.api_force_dx11:
+  en: "Force DX11"
+  zh-CN: "强制 DX11"
+gui.api_force_dx12:
+  en: "Force DX12"
+  zh-CN: "强制 DX12"
+gui.dgvoodoo_note:
+  en: "DirectX 9: Install will download dgVoodoo 2.87.5 into the game folder first (official GitHub release → d3d9.dll + dgVoodoo.conf), then continue with ReShade / Feeder."
+  zh-CN: "DirectX 9：安装会先把 dgVoodoo 2.87.5 下载到游戏文件夹 （官方 GitHub release → d3d9.dll + dgVoodoo.conf），然后继续 ReShade / Feeder 的安装。"
+gui.cap_native:
+  en: "Native DLSS (Feeder Optimize N/A)"
+  zh-CN: "原生 DLSS（Feeder Optimize 不可用）"
+gui.cap_unreal_likely:
+  en: "Unreal-likely"
+  zh-CN: "疑似 Unreal"
+gui.cap_unity_likely:
+  en: "Unity-likely"
+  zh-CN: "疑似 Unity"
+gui.cap_dx12_feeder:
+  en: "DX12 Feeder (Optimize, no OFA)"
+  zh-CN: "DX12 Feeder（Optimize，无 OFA）"
+gui.caps_fmt:
+  en: "Caps: %{list}"
+  zh-CN: "特性：%{list}"
+gui.gpu_override:
+  en: "That is not the card I game on — Remote Desktop, a virtual display, or a misread. Check anyway, at my own risk"
+  zh-CN: "这不是我用来玩游戏的显卡 —— 远程桌面、虚拟显示器或检测有误。仍要检查，风险自负"
+
+# ── 安装页：方案 ──────────────────────────────────────────────
+gui.setup_head:
+  en: "SETUP"
+  zh-CN: "方案"
+gui.setup_hand_fmt:
+  en: "chosen by hand: %{label}"
+  zh-CN: "手动选择：%{label}"
+gui.setup_step_fmt:
+  en: "option %{cur} of %{total}"
+  zh-CN: "第 %{cur} / %{total} 套"
+gui.setup_hand_below:
+  en: "chosen by hand below (Advanced)"
+  zh-CN: "已在下方手动选择（高级选项）"
+gui.setup_none_fits:
+  en: "none of this tool's setups fits this game"
+  zh-CN: "本工具没有适合这款游戏的方案"
+gui.btn_prev_setup_fmt:
+  en: "Go back to the previous setup: %{label}"
+  zh-CN: "回退到上一套方案：%{label}"
+gui.btn_next_setup_fmt:
+  en: "Not working? Try the next setup: %{label}"
+  zh-CN: "不生效？尝试下一套方案：%{label}"
+gui.btn_show_advanced:
+  en: "Show advanced options"
+  zh-CN: "显示高级选项"
+gui.btn_hide_advanced:
+  en: "Hide advanced options (back to the automatic setup)"
+  zh-CN: "隐藏高级选项（回到自动方案）"
+gui.btn_advanced_hand:
+  en: "Advanced options (this setup was chosen by hand)"
+  zh-CN: "高级选项（此方案为手动选择）"
+gui.renodx_classic:
+  en: "DLSS 5 add-on: install the classic build (4.55) — for a black screen, crash or driver reset"
+  zh-CN: "DLSS 5 附加组件：改装经典版 (4.55) —— 遇黑屏、崩溃或驱动重置时使用"
+gui.renodx_steady:
+  en: "DLSS 5 add-on: install 4.70 instead of the newest build — the last one with Enable Upscaling; the newer builds broke some games"
+  zh-CN: "DLSS 5 附加组件：改装 4.70 而非最新构建 —— 这是最后一个带 Enable Upscaling（启用超分辨率）的版本；更新的构建弄坏了一些游戏"
+gui.renodx_stable_only:
+  en: "DLSS 5 add-on: stable builds only — skip release candidates (8.5.0-rc and similar test builds) when installing or updating to the newest build"
+  zh-CN: "DLSS 5 附加组件：仅用稳定版 —— 安装或更新到最新构建时跳过候选版（RC，8.5.0-rc 及类似测试构建）"
+gui.ada_mfg:
+  en: "Unlock RTX 40 multi-frame generation (3X and above, up to 6X) — the game must have frame generation of its own"
+  zh-CN: "解锁 RTX 40 多帧生成（3X 及以上，最高 6X）—— 游戏本身必须自带帧生成"
+gui.anticheat_fmt:
+  en: "%{ac} is switched off for offline play in this game (GTA V: BattlEye unticked in the Rockstar Games Launcher, or -nobattleye) — install anyway, at my own risk"
+  zh-CN: "%{ac} 已在此游戏中为离线游玩关闭（GTA V：在 Rockstar Games Launcher 里取消勾选 BattlEye，或使用 -nobattleye）—— 仍要安装，风险自负"
+
+# ── 安装页：多帧生成 ──────────────────────────────────────────
+gui.mfg_head:
+  en: "MULTI-FRAME GENERATION"
+  zh-CN: "多帧生成"
+gui.mfg_only_rtxmfg:
+  en: "Multi-frame generation only · experimental: install Universal RTXMFG (dashdogy) and nothing else, no DLSS 5 and no ReShade. The game must have DLSS Frame Generation of its own; Backspace opens its menu"
+  zh-CN: "仅多帧生成 · 实验性：只安装 Universal RTXMFG（dashdogy），不装 DLSS 5 也不装 ReShade。游戏本身必须自带 DLSS 帧生成；按 Backspace 打开其菜单"
+gui.mfg_64bit_only:
+  en: "64-bit DirectX 11/12 and Vulkan games only."
+  zh-CN: "仅限 64 位 DirectX 11/12 与 Vulkan 游戏。"
+gui.mfg_only_addon:
+  en: "RTX 40 multi-frame generation add-on only (mavismmg): ReShade and that add-on, no DLSS 5. The game must have DLSS Frame Generation of its own"
+  zh-CN: "仅 RTX 40 多帧生成附加组件（mavismmg）：ReShade 加该附加组件，不带 DLSS 5。游戏本身必须自带 DLSS 帧生成"
+gui.mfg_rtxmfg_with:
+  en: "Also install Universal RTXMFG (dashdogy) beside DLSS 5 for multi-frame generation · experimental. Replaces the build's own RTX 40 unlock; the game must have DLSS Frame Generation of its own"
+  zh-CN: "在 DLSS 5 之外同时安装 Universal RTXMFG（dashdogy）以启用多帧生成 · 实验性。取代构建自带的 RTX 40 解锁；游戏本身必须自带 DLSS 帧生成"
+
+# ── 安装页：引擎卡片 ──────────────────────────────────────────
+gui.engine_head:
+  en: "INSTALL ENGINE"
+  zh-CN: "安装引擎"
+gui.engine_three_ways:
+  en: "— three ways to run DLSS 5 in this game, pick one"
+  zh-CN: "—— 在这款游戏中运行 DLSS 5 有三种方式，选其一"
+gui.engine_no_dlss:
+  en: "— this game has no DLSS of its own: the ReShade path, or the standalone AIO"
+  zh-CN: "—— 这款游戏没有自带 DLSS：走 ReShade 路线，或独立 AIO"
+gui.eng_reshade_title:
+  en: "ReShade + DLSS 5 add-on"
+  zh-CN: "ReShade + DLSS 5 附加组件"
+gui.eng_reshade_l1:
+  en: "The default. Works in every supported game."
+  zh-CN: "默认方案。所有支持的游戏都能用。"
+gui.eng_reshade_l2:
+  en: "In game: Home → Add-ons → DLSS 5 Neural Rendering."
+  zh-CN: "游戏内：Home → Add-ons → DLSS 5 Neural Rendering。"
+gui.eng_opti_title:
+  en: "OptiScaler (built-in NR pass)"
+  zh-CN: "OptiScaler（内置神经渲染通道）"
+gui.eng_opti_l1:
+  en: "Dagherbou's fork, no ReShade. Also swaps upscalers."
+  zh-CN: "Dagherbou 的分支，无需 ReShade。还能切换超分辨率方案。"
+gui.eng_opti_l2:
+  en: "In game: Insert → enable Neural Rendering."
+  zh-CN: "游戏内：按 Insert → 启用 Neural Rendering。"
+gui.eng_needs_own_dlss:
+  en: "Needs a game with its own DLSS — this one has none."
+  zh-CN: "需要游戏自带 DLSS —— 这款没有。"
+gui.eng_aio_title:
+  en: "ReShade + standalone AIO · experimental"
+  zh-CN: "ReShade + 独立 AIO · 实验性"
+gui.eng_aio_l1:
+  en: "kibblerz's all-in-one: neural rendering, super resolution, frame generation."
+  zh-CN: "kibblerz 的全能包：神经渲染、超分辨率、帧生成。"
+gui.eng_aio_l2:
+  en: "In game: Home → Add-ons → Standalone DLSS-NR + SR. Windowed mode recommended."
+  zh-CN: "游戏内：Home → Add-ons → Standalone DLSS-NR + SR。建议使用窗口模式。"
+gui.eng_64bit_only:
+  en: "64-bit games only."
+  zh-CN: "仅限 64 位游戏。"
+gui.eng_needs_reshade:
+  en: "Needs a game ReShade can reach from dxgi.dll."
+  zh-CN: "需要 ReShade 能通过 dxgi.dll 接入的游戏。"
+gui.card_state_selected:
+  en: "SELECTED"
+  zh-CN: "已选择"
+gui.card_state_choose:
+  en: "CHOOSE"
+  zh-CN: "选择"
+gui.card_state_unavailable:
+  en: "UNAVAILABLE"
+  zh-CN: "不可用"
+
+# ── 安装页：OptiScaler 构建 ───────────────────────────────────
+gui.opti_build_head:
+  en: "OPTISCALER BUILD"
+  zh-CN: "OPTISCALER 构建"
+gui.opti_build_stable:
+  en: "Stable"
+  zh-CN: "稳定版"
+gui.opti_build_presr:
+  en: "Pre-SR multipass · experimental"
+  zh-CN: "Pre-SR 多通道 · 实验性"
+gui.opti_stable_note:
+  en: "Dagherbou's build: the network runs after super resolution. The one most people are running."
+  zh-CN: "Dagherbou 的构建：网络在超分辨率之后运行。多数人在用的版本。"
+gui.opti_presr_note:
+  en: "wilsjo2's fork: the network runs BEFORE super resolution, on the smaller image, in 1-3 passes. Bigger download (about 160 MB) and barely tested here — report what you see."
+  zh-CN: "wilsjo2 的分支：网络在超分辨率之前、在更小的图像上以 1-3 个通道运行。下载更大（约 160 MB），此处几乎未测试 —— 见到什么请反馈。"
+gui.opti_ada_mfg:
+  en: "RTX 40 multi-frame generation — built into this build, no extra files. The game must have frame generation of its own."
+  zh-CN: "RTX 40 多帧生成 —— 内置于该构建，无需额外文件。游戏本身必须自带帧生成。"
+gui.ampere_mfg:
+  en: "Unlock multi-frame generation on this RTX 20/30 card (3X–4X) — the game must have DLSS frame generation of its own · experimental"
+  zh-CN: "在此 RTX 20/30 显卡上解锁多帧生成（3X–4X）—— 游戏本身必须自带 DLSS 帧生成 · 实验性"
+gui.ampere_mfg_note:
+  en: "Installs ShyVortex's OptiScaler build (wilsjo2's pre-SR fork plus sdli1995's Turing/Ampere unlock and the Streamline runtime) in place of the build above. One report of it failing on Forza Horizon 6 on RTX 20."
+  zh-CN: "改装 ShyVortex 的 OptiScaler 构建（wilsjo2 的 pre-SR 分支，加上 sdli1995 的 Turing/Ampere 解锁与 Streamline 运行时）以取代上方构建。有一例在 RTX 20 上运行 Forza Horizon 6 失败的报告。"
+gui.opti_fg:
+  en: "Frame generation (2X, FSR 3.1 inside OptiScaler) — any RTX card. Turn the game's own frame generation off; expect added latency."
+  zh-CN: "帧生成（2X，OptiScaler 内置 FSR 3.1）—— 任意 RTX 显卡可用。请关闭游戏自带帧生成；延迟会有所增加。"
+gui.model_res_head:
+  en: "MODEL RESOLUTION"
+  zh-CN: "模型分辨率"
+gui.model_res_note:
+  en: "— the frame stays full size; only the model's own work is done smaller"
+  zh-CN: "—— 画面保持全尺寸；仅模型自身的工作以较小尺寸进行"
+gui.model_cost_full:
+  en: "full cost"
+  zh-CN: "全量开销"
+gui.model_cost_half:
+  en: "about half the cost"
+  zh-CN: "约一半开销"
+gui.model_cost_quarter:
+  en: "about a quarter"
+  zh-CN: "约四分之一"
+gui.model_run_full:
+  en: "The model runs at full output resolution."
+  zh-CN: "模型以完整输出分辨率运行。"
+gui.model_run_half:
+  en: "Costs about half as much; the biggest single fps lever here."
+  zh-CN: "开销约为一半；此处提升帧率最有效的一档。"
+gui.model_run_quarter:
+  en: "Costs about a quarter; the model's contribution is softer."
+  zh-CN: "开销约四分之一；模型的贡献偏软。"
+gui.model_flicker_note:
+  en: "This OptiScaler build flickers and keeps settling after the camera stops at any model resolution below 100% (a known bug in the pre-SR fork it is built on). Pick 100% if you see that."
+  zh-CN: "该 OptiScaler 构建在模型分辨率低于 100% 时会闪烁、且镜头停止后画面仍在收敛（其所基于的 pre-SR 分支的已知缺陷）。遇到这种情况请选 100%。"
+
+# ── 安装页：神经附加组件 ──────────────────────────────────────
+gui.consumer_head:
+  en: "WHICH NEURAL ADD-ON"
+  zh-CN: "选择神经附加组件"
+gui.consumer_with_dlss:
+  en: "— all of them run DLSS 5; the DLSS 5 add-on is the default for a game with its own DLSS"
+  zh-CN: "—— 它们都能运行 DLSS 5；对自带 DLSS 的游戏，默认用 DLSS 5 附加组件"
+gui.consumer_no_dlss:
+  en: "— only the DLSS 5 add-on works in a game with no DLSS of its own"
+  zh-CN: "—— 对没有自带 DLSS 的游戏，只有 DLSS 5 附加组件可用"
+gui.eng_sf_title:
+  en: "ShortFuse's DLSS add-on"
+  zh-CN: "ShortFuse 的 DLSS 附加组件"
+gui.eng_sf_l1:
+  en: "From the author of RenoDX. Hooks the game's own DLSS in DX11 and DX12, so no bridge."
+  zh-CN: "出自 RenoDX 作者。在 DX11 与 DX12 下挂钩游戏自带 DLSS，因此无需桥接。"
+gui.eng_sf_l2:
+  en: "In game: Home → Add-ons → RenoDX DLSS."
+  zh-CN: "游戏内：Home → Add-ons → RenoDX DLSS。"
+gui.eng_sf_note:
+  en: "Needs a 64-bit game with its own DLSS."
+  zh-CN: "需要 64 位且自带 DLSS 的游戏。"
+gui.eng_stable_title:
+  en: "Default — RenoDX DLSS 5 add-on"
+  zh-CN: "默认 —— RenoDX DLSS 5 附加组件"
+gui.eng_stable_l1:
+  en: "Newest build. On 8.x it runs before the game's upscale (Render hook point), set for you."
+  zh-CN: "最新构建。在 8.x 上运行于游戏升采样之前（Render 挂钩点），已为你设好。"
+gui.eng_stable_l2:
+  en: "In game: Home → Add-ons → DLSS 5 Neural Rendering."
+  zh-CN: "游戏内：Home → Add-ons → DLSS 5 Neural Rendering。"
+gui.eng_up_title:
+  en: "Experimental — Neural Upstream"
+  zh-CN: "实验性 —— Neural Upstream"
+gui.eng_up_l1:
+  en: "Runs the network before the upscaler, at render resolution, so it costs less."
+  zh-CN: "在升采样器之前、以渲染分辨率运行网络，因此开销更低。"
+gui.eng_up_l2:
+  en: "Replaces the other add-ons. Read the warning below first."
+  zh-CN: "会替代其他附加组件。请先阅读下方警告。"
+gui.upstream_strength:
+  en: "HOW TRANSFORMATIVE"
+  zh-CN: "变换力度"
+gui.upstream_p1:
+  en: "Keeps the lighting work, holds back invented detail."
+  zh-CN: "保留光照处理，克制凭空生成的细节。"
+gui.upstream_p2:
+  en: "Half way: detail is enhanced but not rebuilt."
+  zh-CN: "折中：细节得到增强但不重建。"
+gui.upstream_p3:
+  en: "Everything the network wants to do. Its own default."
+  zh-CN: "网络想做的全部。它自己的默认。"
+gui.upstream_p4:
+  en: "Past what the network intends — detail starts looking drawn."
+  zh-CN: "超出网络的预期 —— 细节开始有描画感。"
+gui.upstream_p5:
+  en: "Deliberately overcooked: waxy skin, invented surfaces."
+  zh-CN: "刻意过火：皮肤发蜡、表面凭空生成。"
+gui.upstream_warn:
+  en: "EXPERIMENTAL. Using DLSS Frame Generation? Set this add-on to Quality in the ReShade overlay, so the network runs on every frame. At any lower setting it runs on one frame in two or three, the rendered frame interval alternates, and frame generation cannot pace through the swing: stutter and flashes that get worse the higher the multiplier. Its author tested it against GTA V Enhanced and Bright Memory: Infinite only."
+  zh-CN: "实验性。在用 DLSS 帧生成吗？请在 ReShade 悬浮层里把该附加组件设为 Quality（画质档位），让网络逐帧运行。任何更低的档位下它每两三帧才运行一次，渲染帧间隔随之交替，帧生成无法在这种波动中稳住节奏：卡顿与闪烁会随倍率提高而加重。其作者仅在 GTA V Enhanced 和 Bright Memory: Infinite 上测试过。"
+
+# ── 安装页：组件与 RenoDX ────────────────────────────────────
+gui.folder_head:
+  en: "WHAT IS IN THE GAME FOLDER"
+  zh-CN: "游戏文件夹里有什么"
+gui.tile_installed:
+  en: "installed"
+  zh-CN: "已安装"
+gui.tile_not_needed:
+  en: "not needed"
+  zh-CN: "非必需"
+gui.tile_missing:
+  en: "missing"
+  zh-CN: "缺失"
+gui.renodx_head:
+  en: "RENODX HDR MOD"
+  zh-CN: "RENODX HDR 模组"
+gui.renodx_installed_fmt:
+  en: "— installed: %{name} (Remove takes it out too)"
+  zh-CN: "—— 已安装：%{name}（移除时也会一并卸载）"
+gui.renodx_foreign_fmt:
+  en: "— already present, not installed by this tool: %{list} (left untouched; ReShade loads one RenoDX mod per game)"
+  zh-CN: "—— 已存在，但非本工具安装：%{list}（保持不动；ReShade 每个游戏只加载一个 RenoDX 模组）"
+gui.renodx_looking:
+  en: "— looking up clshortfuse/renodx for this game…"
+  zh-CN: "—— 正在为这款游戏查询 clshortfuse/renodx…"
+gui.renodx_not_found:
+  en: "— no RenoDX mod is published for this game."
+  zh-CN: "—— 这款游戏没有已发布的 RenoDX 模组。"
+gui.renodx_lookup_failed:
+  en: "— lookup failed: %{e}"
+  zh-CN: "—— 查询失败：%{e}"
+gui.renodx_also_fmt:
+  en: "Also install %{file} — %{status} — from %{source}"
+  zh-CN: "同时安装 %{file} —— %{status} —— 来自 %{source}"
+gui.renodx_hover:
+  en: "Game-specific HDR / tone-mapping mod from the RenoDX project. Loads beside the DLSS 5 add-on (different add-on name, different settings section). Turn Windows AutoHDR / RTX HDR off to avoid double tone mapping."
+  zh-CN: "来自 RenoDX 项目的游戏专属 HDR / 色调映射模组。与 DLSS 5 附加组件并行加载（附加组件名不同、设置节不同）。请关闭 Windows AutoHDR / RTX HDR，避免双重色调映射。"
+gui.renodx_reshade64:
+  en: "— ReShade goes in as ReShade64.dll, loaded by OptiScaler (LoadReshade=true)"
+  zh-CN: "—— ReShade 以 ReShade64.dll 装入，由 OptiScaler 加载（LoadReshade=true）"
+
+# ── 安装页：动作与状态 ────────────────────────────────────────
+gui.btn_install_dlss5:
+  en: "Install DLSS 5"
+  zh-CN: "安装 DLSS 5"
+gui.btn_remove:
+  en: "Remove"
+  zh-CN: "移除"
+gui.btn_diagnose:
+  en: "Diagnose"
+  zh-CN: "诊断"
+gui.hover_diagnose:
+  en: "Reads this game's ReShade and feed logs and says why neural rendering is or is not running. Play the game first."
+  zh-CN: "读取这款游戏的 ReShade 与 feed 日志，说明神经渲染为何在或不在运行。请先游玩一次游戏。"
+gui.btn_save_report:
+  en: "Save report"
+  zh-CN: "保存报告"
+gui.hover_save_report:
+  en: "Writes one zip to your Desktop with this game's logs, inis, folder listing and Diagnose output — attach it to a GitHub issue."
+  zh-CN: "在桌面生成一个 zip，内含这款游戏的日志、ini、文件夹清单与诊断输出 —— 请附到 GitHub issue 上。"
+gui.btn_vulkan_kit:
+  en: "Copy Vulkan Feeder kit"
+  zh-CN: "复制 Vulkan Feeder 工具包"
+gui.hover_vulkan_kit:
+  en: "Copies dlss5-feed.addon64 + DLSS5_Feed.fx + VULKAN-SETUP.txt. Does not register a Vulkan layer — finish with ReShade Setup."
+  zh-CN: "复制 dlss5-feed.addon64 + DLSS5_Feed.fx + VULKAN-SETUP.txt。不会注册 Vulkan 层 —— 请用 ReShade 安装程序完成收尾。"
+gui.vulkan_kit_fmt:
+  en: "Vulkan kit: %{files}"
+  zh-CN: "Vulkan 工具包：%{files}"
+gui.status_incomplete:
+  en: "Incomplete: missing %{list}"
+  zh-CN: "未完成：缺少 %{list}"
+gui.status_update_available:
+  en: "Update available: %{list}"
+  zh-CN: "有可用更新：%{list}"
+gui.status_all_set:
+  en: "Everything is in place."
+  zh-CN: "一切就绪。"
+gui.log_empty:
+  en: "Install log — empty"
+  zh-CN: "安装日志 —— 空"
+gui.log_errors_fmt:
+  en: "Install log — %{errors} error(s), %{steps} step(s)"
+  zh-CN: "安装日志 —— %{errors} 个错误、%{steps} 个步骤"
+gui.log_lines_fmt:
+  en: "Install log — %{count} line(s)"
+  zh-CN: "安装日志 —— %{count} 行"
+gui.after_install_hint:
+  en: "After install, in game: press Home for the ReShade overlay, open the DLSS 5 Neural Rendering panel and enable it. Keep MSAA/SSAA off. Check dlss5-feed.log next to the exe for 'feature ready'. Optional TRAA (LUMENITE: TRAA): keep it BELOW DLSS 5 Feed; Edge Detection=Geometric + Protect UI/text on — re-run install to patch TRAA if UI still smears."
+  zh-CN: "安装后进入游戏：按 Home 打开 ReShade 悬浮层，进入 DLSS 5 Neural Rendering 面板并启用。保持 MSAA/SSAA 关闭。查看 exe 旁的 dlss5-feed.log 是否出现 'feature ready'。可选 TRAA（LUMENITE: TRAA）：保持它在 DLSS 5 Feed 之下；Edge Detection=Geometric 并开启 Protect UI/text —— 若 UI 仍有拖影，重新运行安装以修补 TRAA。"
+
+# ── Feeder 调节项 ─────────────────────────────────────────────
+gui.knobs_offline_title:
+  en: "Feeder knobs (offline)"
+  zh-CN: "Feeder 调节项（离线）"
+gui.knobs_need_feeder:
+  en: "These appear once DLSS5-Feeder is installed in this game."
+  zh-CN: "在 DLSS5-Feeder 安装到此游戏后，这里才会显示调节项。"
+gui.knobs_need_game:
+  en: "Select a game first."
+  zh-CN: "请先选择一个游戏。"
+gui.knob_ofa:
+  en: "Optical Flow (ofa)"
+  zh-CN: "光流（Optical Flow / ofa）"
+gui.btn_write_cfg:
+  en: "Write cfg"
+  zh-CN: "写入 cfg"
+gui.btn_write_cfg_dirty:
+  en: "Write cfg *"
+  zh-CN: "写入 cfg *"
+gui.knobs_written:
+  en: "Wrote dlss5-feed.cfg + FX uniforms (Feeder reloads ~60 frames / next launch)"
+  zh-CN: "已写入 dlss5-feed.cfg 和 FX uniforms（Feeder 约在 60 帧后重载 / 或下次启动时生效）"
+gui.btn_reload_knobs:
+  en: "Reload from disk"
+  zh-CN: "从磁盘重新加载"
+
+# ── 设置页 ────────────────────────────────────────────────────
+gui.settings_intro:
+  en: "User install defaults — saved to settings.json and applied on new Install (optional: Apply to the game open on Setup). Separate from Feeder built-in defaults (what the add-on writes when no dlss5-feed.cfg exists)."
+  zh-CN: "用户安装默认值 — 保存到 settings.json，并在每次新安装时应用（可选：应用到安装页当前打开的游戏）。与 Feeder 内置默认值（不存在 dlss5-feed.cfg 时附加组件写入的值）相互独立。"
+gui.settings_quality_seed:
+  en: "Quality seed (user install)"
+  zh-CN: "画质种子（用户安装）"
+gui.settings_knobs_overrides:
+  en: "Feeder knobs (user install overrides)"
+  zh-CN: "Feeder 调节项（用户安装覆盖值）"
+gui.settings_knobs_hint:
+  en: "Unset sliders follow the quality seed. Explicit values override on Install."
+  zh-CN: "未设置的滑块跟随画质种子。显式设置的值在安装时覆盖。"
+gui.slider_reset_mode:
+  en: "reset_mode (0 off / 1 every / 2 adaptive)"
+  zh-CN: "reset_mode（0 关闭 / 1 每次重置 / 2 自适应）"
+gui.settings_overlay_ux:
+  en: "Overlay UX (user install)"
+  zh-CN: "悬浮层 UX（用户安装）"
+gui.btn_save_settings:
+  en: "Save settings.json"
+  zh-CN: "保存 settings.json"
+gui.btn_apply_defaults:
+  en: "Apply defaults to this game"
+  zh-CN: "将默认值应用到此游戏"
+gui.btn_reset_feeder:
+  en: "Reset to Feeder defaults"
+  zh-CN: "重置为 Feeder 默认值"
+gui.hover_reset_feeder:
+  en: "Restore form to Feeder stock: work_resolution=100, ofa off (grid 2 / perf 10), reset_mode=2 adaptive, light_stab off, engine_velocity on, overlay log_detail=1 / evaluate_stride=1 / log_frames=3, quality Auto."
+  zh-CN: "将表单恢复为 Feeder 出厂值：work_resolution=100、ofa 关闭（grid 2 / perf 10）、reset_mode=2 自适应、light_stab 关闭、engine_velocity 开启、overlay log_detail=1 / evaluate_stride=1 / log_frames=3、画质 Auto。"
+gui.settings_builtin_note:
+  en: "Feeder built-in defaults = stock add-on cfg (not your settings.json). Reset above copies those into this form; Save to persist."
+  zh-CN: "Feeder 内置默认值 = 附加组件出厂 cfg（不是你的 settings.json）。上方的「重置」会把这些值复制到此表单；点「保存」持久化。"
+gui.settings_file_fmt:
+  en: "File: %{path}"
+  zh-CN: "文件：%{path}"
+gui.settings_applied:
+  en: "Applied Settings defaults to this game"
+  zh-CN: "已将设置默认值应用到此游戏"
+
+# ── 关于页 ────────────────────────────────────────────────────
+gui.about_tagline:
+  en: "DLSS5oneclick v%{version} — one click for the leaked DLSS 5 neural-rendering build in any DX11/DX12 game."
+  zh-CN: "DLSS5oneclick v%{version} — 一键把泄露版 DLSS 5 神经渲染装进任何 DX11/DX12 游戏。"
+gui.about_credits:
+  en: "Everything it installs is downloaded from the projects that made it. Credits and sources:"
+  zh-CN: "它安装的所有内容均从相应项目的官方来源下载。致谢与来源："
+gui.about_renodx:
+  en: "clshortfuse and the RenoDX community"
+  zh-CN: "clshortfuse 与 RenoDX 社区"
+gui.about_rhi:
+  en: "RankFTW — rhi-repo (DLSS 5 add-on and NVIDIA runtimes)"
+  zh-CN: "RankFTW — rhi-repo（DLSS 5 附加组件与 NVIDIA 运行时）"
+gui.about_source:
+  en: "Source, issues and releases"
+  zh-CN: "源码、问题反馈与发布"
+gui.btn_check_updates:
+  en: "Check for updates"
+  zh-CN: "检查更新"
+gui.about_uptodate:
+  en: "You are on the newest release (v%{version})."
+  zh-CN: "您已在最新版本（v%{version}）。"
+
+# ── 更新条与提示 ──────────────────────────────────────────────
+gui.update_available:
+  en: "Version %{version} is available (you have %{current})."
+  zh-CN: "新版本 %{version} 可用（当前为 %{current}）。"
+gui.btn_update_now:
+  en: "Update"
+  zh-CN: "更新"
+gui.btn_later:
+  en: "Later"
+  zh-CN: "稍后"
+gui.btn_skip_version:
+  en: "Skip this version"
+  zh-CN: "跳过此版本"
+gui.link_release_notes:
+  en: "release notes"
+  zh-CN: "发布说明"
+gui.update_progress:
+  en: "Updating: %{pct}% %{msg}"
+  zh-CN: "正在更新：%{pct}% %{msg}"
+gui.update_restarting:
+  en: "Updated. Restarting..."
+  zh-CN: "已更新。正在重启…"
+gui.update_failed:
+  en: "Update failed: %{e}"
+  zh-CN: "更新失败：%{e}"
+gui.btn_dismiss:
+  en: "Dismiss"
+  zh-CN: "关闭"
+gui.update_starting:
+  en: "Starting"
+  zh-CN: "正在启动"
+gui.tip_title:
+  en: "Quick tip"
+  zh-CN: "小贴士"
+gui.tip_body:
+  en: "This tool installs ReShade + DLSS5-Feeder + neural DLSS for games that ship without DLSS. After Install: in-game press Home → Add-ons tab → enable DLSS 5 Neural Rendering. Use Settings to seed Feeder defaults on the next Install."
+  zh-CN: "本工具为不带 DLSS 的游戏安装 ReShade + DLSS5-Feeder + DLSS 神经渲染。安装后：游戏内按 Home → Add-ons 标签页 → 启用 DLSS 5 Neural Rendering。可在设置中预设 Feeder 默认值，供下次安装使用。"
+gui.btn_got_it:
+  en: "Got it"
+  zh-CN: "知道了"
+
+# ── 弹窗 ──────────────────────────────────────────────────────
+gui.remove_title:
+  en: "Remove DLSS 5 files"
+  zh-CN: "移除 DLSS 5 文件"
+gui.remove_body:
+  en: "Remove the DLSS 5 files from this game?\n\nRemove takes out what this tool added; ReShade stays.\nRemove incl. ReShade also deletes ReShade (dxgi.dll, ini/logs). Leftover shaders in reshade-shaders are kept; refused only if a foreign .addon64/.addon32 is still there. Never touches dgVoodoo d3d9.dll."
+  zh-CN: "从这款游戏中移除 DLSS 5 文件？\n\n「移除」只卸载本工具添加的内容；ReShade 保留。\n「移除（含 ReShade）」还会删除 ReShade（dxgi.dll、ini/日志）。reshade-shaders 中残留的着色器会保留；仅当仍存在外来的 .addon64/.addon32 时才会拒绝。绝不触碰 dgVoodoo 的 d3d9.dll。"
+gui.btn_remove_reshade:
+  en: "Remove incl. ReShade"
+  zh-CN: "移除（含 ReShade）"
+gui.btn_cancel:
+  en: "Cancel"
+  zh-CN: "取消"
+gui.btn_ok:
+  en: "OK"
+  zh-CN: "确定"
+
+# ── 安装/移除结果消息 ─────────────────────────────────────────
+gui.removed_fmt:
+  en: "Removed: %{list}"
+  zh-CN: "已移除：%{list}"
+gui.none:
+  en: "nothing"
+  zh-CN: "无"
+gui.err_remove_prev:
+  en: "Could not take the previous setup out: %{e}"
+  zh-CN: "无法移除上一套方案：%{e}"
+gui.step_done:
+  en: "ok: %{detail}"
+  zh-CN: "完成：%{detail}"
+gui.step_failed:
+  en: "FAILED: %{detail}"
+  zh-CN: "失败：%{detail}"
+gui.done_mfg_addon:
+  en: "Done. In game: turn on the game's own DLSS Frame Generation; Home opens ReShade → Add-ons tab → the MFG unlock."
+  zh-CN: "完成。游戏内：开启游戏自带的 DLSS 帧生成；按 Home 打开 ReShade → 附加组件选项卡 → MFG 解锁。"
+gui.done_mfg:
+  en: "Done. In game: turn on the game's own DLSS Frame Generation; Backspace opens the RTXMFG menu."
+  zh-CN: "完成。游戏内：开启游戏自带的 DLSS 帧生成；按 Backspace 打开 RTXMFG 菜单。"
+gui.done_opti:
+  en: "Done. In game: Insert opens the OptiScaler overlay → enable Neural Rendering."
+  zh-CN: "完成。游戏内：按 Insert 打开 OptiScaler 悬浮菜单 → 启用神经渲染。"
+gui.done_sf:
+  en: "Done. In game: Home opens ReShade → Add-ons tab → RenoDX DLSS → turn Neural Rendering on."
+  zh-CN: "完成。游戏内：按 Home 打开 ReShade → 附加组件选项卡 → RenoDX DLSS → 开启神经渲染。"
+gui.done_aio:
+  en: "Done. In game: turn the game's own upscaling, anti-aliasing and frame generation off, run windowed; Home opens ReShade → Add-ons tab → Standalone DLSS-NR + SR."
+  zh-CN: "完成。游戏内：关闭游戏自带的超分辨率、抗锯齿和帧生成，并以窗口模式运行；按 Home 打开 ReShade → 附加组件选项卡 → Standalone DLSS-NR + SR。"
+gui.done_reshade:
+  en: "Done. In game: Home opens ReShade → Add-ons tab → DLSS 5 Neural Rendering → enable. (Home tab saying \"no effect files\" is normal on games with their own DLSS.)"
+  zh-CN: "完成。游戏内：按 Home 打开 ReShade → 附加组件选项卡 → DLSS 5 神经渲染 → 启用。（Home 选项卡提示 \"no effect files\" 属正常现象，自带 DLSS 的游戏会这样。）"
+gui.err_setup_removed:
+  en: "%{e}\n\nThe previous setup was already taken out, so this game has none now. Press Install to set it up again from the top of its list, or open Show advanced options to choose one."
+  zh-CN: "%{e}\n\n上一套方案已被移除，该游戏现在没有任何方案。按“安装”从其方案列表顶部重新安装，或打开“显示高级选项”选择一套方案。"
+gui.err_foreign_addons:
+  en: "The next setup is %{setup}, a different engine, and switching takes ReShade out of this game, but it has ReShade add-ons this tool did not install (%{list}). Remove those by hand first, or choose a setup under Show advanced options."
+  zh-CN: "下一套方案是 %{setup}，属于不同的引擎，切换会把 ReShade 从该游戏中移除，但该游戏带有并非本工具安装的 ReShade 附加组件（%{list}）。请先手动移除这些组件，或在“显示高级选项”下选择一套方案。"
+gui.status_done:
+  en: "Done."
+  zh-CN: "完成。"
+gui.status_failed:
+  en: "Failed."
+  zh-CN: "失败。"
+gui.diag_ok:
+  en: "ok: %{text}"
+  zh-CN: "正常：%{text}"
+gui.diag_warn:
+  en: "warn: %{text}"
+  zh-CN: "警告：%{text}"
+gui.diag_fail:
+  en: "FAIL: %{text}"
+  zh-CN: "失败：%{text}"
+gui.report_written:
+  en: "Report written: %{path} — attach that zip to the GitHub issue."
+  zh-CN: "报告已写入：%{path} — 请把该 zip 作为附件上传到 GitHub issue。"
+
+# ── 组件磁贴（title/detail）───────────────────────────────────
+gui.tile_reshade.title:
+  en: "ReShade"
+  zh-CN: "ReShade"
+gui.tile_reshade.detail:
+  en: "add-on build · dxgi.dll"
+  zh-CN: "附加组件版 · dxgi.dll"
+gui.tile_shader_headers.title:
+  en: "Shader headers"
+  zh-CN: "着色器头文件"
+gui.tile_shader_headers.detail:
+  en: "ReShade.fxh · ReShadeUI.fxh · DrawText.fxh"
+  zh-CN: "ReShade.fxh · ReShadeUI.fxh · DrawText.fxh"
+gui.tile_feeder.title:
+  en: "DLSS5-Feeder"
+  zh-CN: "DLSS5-Feeder"
+gui.tile_feeder.detail:
+  en: "dlss5-feed.addon64 · DLSS5_Feed.fx"
+  zh-CN: "dlss5-feed.addon64 · DLSS5_Feed.fx"
+gui.tile_feeder_helper.title:
+  en: "DLSS5-Feeder"
+  zh-CN: "DLSS5-Feeder"
+gui.tile_feeder_helper.detail:
+  en: "dlss5-feed-helper.addon64 (64-bit helper mode) · DLSS5_Feed.fx"
+  zh-CN: "dlss5-feed-helper.addon64（64 位辅助模式）· DLSS5_Feed.fx"
+gui.tile_feeder32.title:
+  en: "DLSS5-Feeder"
+  zh-CN: "DLSS5-Feeder"
+gui.tile_feeder32.detail:
+  en: "dlss5-feed.addon32 · DLSS5_Feed.fx (detail residual + Optical Flow)"
+  zh-CN: "dlss5-feed.addon32 · DLSS5_Feed.fx（细节残差 + Optical Flow）"
+gui.tile_lumenite.title:
+  en: "LumeniteFX"
+  zh-CN: "LumeniteFX"
+gui.tile_lumenite.detail:
+  en: "motion vectors · Kernel 2.0"
+  zh-CN: "运动矢量 · Kernel 2.0"
+gui.tile_addon_leaked.title:
+  en: "DLSS 5 add-on · leaked"
+  zh-CN: "DLSS 5 附加组件 · 泄露版"
+gui.tile_addon_leaked.detail:
+  en: "renodx-dlss5.addon64 · nvngx_dlssnr.dll"
+  zh-CN: "renodx-dlss5.addon64 · nvngx_dlssnr.dll"
+gui.tile_dlss_runtime.title:
+  en: "nvngx_dlss.dll"
+  zh-CN: "nvngx_dlss.dll"
+gui.tile_dlss_runtime.detail:
+  en: "DLSS runtime · the Feeder's NGX session needs it"
+  zh-CN: "DLSS 运行时 · Feeder 的 NGX 会话需要它"
+gui.tile_aio.title:
+  en: "Standalone AIO · experimental"
+  zh-CN: "独立 AIO · 实验性"
+gui.tile_aio.detail:
+  en: "standalone-dlssnr.addon64 + nvngx.dll (kibblerz) · nvngx_dlssnr.dll"
+  zh-CN: "standalone-dlssnr.addon64 + nvngx.dll (kibblerz) · nvngx_dlssnr.dll"
+gui.tile_mfg_addon.title:
+  en: "RTX 40 MFG add-on"
+  zh-CN: "RTX 40 MFG 附加组件"
+gui.tile_mfg_addon.detail:
+  en: "renodx-mfgunlock.addon64 (mavismmg) · ReShade · no DLSS 5"
+  zh-CN: "renodx-mfgunlock.addon64（mavismmg）· ReShade · 不含 DLSS 5"
+gui.tile_rtxmfg.title:
+  en: "Universal RTXMFG · experimental"
+  zh-CN: "通用 RTXMFG · 实验性"
+gui.tile_rtxmfg.detail:
+  en: "RTXMFG.dll (dashdogy) under the game's proxy name · no ReShade, no DLSS 5"
+  zh-CN: "以游戏代理文件名部署的 RTXMFG.dll（dashdogy）· 无 ReShade、无 DLSS 5"
+gui.tile_nvidia_runtimes.title:
+  en: "NVIDIA runtimes"
+  zh-CN: "NVIDIA 运行时"
+gui.tile_nvidia_runtimes.detail:
+  en: "nvngx_dlss.dll · nvngx_dlssg.dll for frame generation"
+  zh-CN: "nvngx_dlss.dll · nvngx_dlssg.dll（帧生成用）"
+gui.tile_opti.title:
+  en: "OptiScaler + NR pass"
+  zh-CN: "OptiScaler + 神经渲染通道"
+gui.tile_opti.detail:
+  en: "Dagherbou fork as dxgi.dll · Insert opens its overlay"
+  zh-CN: "Dagherbou 分支，作为 dxgi.dll · 按 Insert 打开其悬浮菜单"
+gui.tile_opti_model.title:
+  en: "DLSS 5 model · leaked"
+  zh-CN: "DLSS 5 模型 · 泄露版"
+gui.tile_opti_model.detail:
+  en: "nvngx_dlssnr.dll · OptiScaler's own NR pass consumes it"
+  zh-CN: "nvngx_dlssnr.dll · 由 OptiScaler 自带的神经渲染通道使用"
+gui.tile_game_dlss.title:
+  en: "Game DLSS"
+  zh-CN: "游戏自带 DLSS"
+gui.tile_game_dlss.detail:
+  en: "nvngx_dlss.dll shipped by the game · add-on hooks it directly"
+  zh-CN: "游戏随附的 nvngx_dlss.dll · 附加组件直接挂接"
+gui.tile_bridge.title:
+  en: "DX11 bridge"
+  zh-CN: "DX11 桥接"
+gui.tile_bridge.detail:
+  en: "dlss5-bridge.addon64 (NIGos) · D3D11 games"
+  zh-CN: "dlss5-bridge.addon64（NIGos）· D3D11 游戏"
+gui.tile_upstream.title:
+  en: "Neural Upstream · experimental"
+  zh-CN: "Neural Upstream · 实验性"
+gui.tile_upstream.detail:
+  en: "nvngx.dll.addon64 (matiasLombo) · nvngx_dlssnr.dll"
+  zh-CN: "nvngx.dll.addon64 (matiasLombo) · nvngx_dlssnr.dll"
+gui.tile_sf.title:
+  en: "ShortFuse's DLSS add-on"
+  zh-CN: "ShortFuse 的 DLSS 附加组件"
+gui.tile_sf.detail:
+  en: "renodx-dlss.addon64 (ShortFuse) · nvngx_dlssnr.dll"
+  zh-CN: "renodx-dlss.addon64 (ShortFuse) · nvngx_dlssnr.dll"
+gui.tile_host.title:
+  en: "host64 helper (32-bit game or 64-bit DX10)"
+  zh-CN: "host64 辅助进程（32 位游戏或 64 位 DX10）"
+gui.tile_host.detail:
+  en: "dlss5-feed-host64.exe + 64-bit ReShade · add-on and models live in host64\\"
+  zh-CN: "dlss5-feed-host64.exe + 64 位 ReShade · 附加组件和模型都位于 host64\\"
+gui.tile_renodx.title:
+  en: "RenoDX HDR mod"
+  zh-CN: "RenoDX HDR 模组"
+gui.tile_renodx.detail:
+  en: "game-specific renodx-*.addon64 · Home → Add-ons → RenoDX"
+  zh-CN: "按游戏定制的 renodx-*.addon64 · Home → 附加组件 → RenoDX"
+gui.tile_reframework.title:
+  en: "REFramework"
+  zh-CN: "REFramework"
+gui.tile_reframework.detail:
+  en: "dinput8.dll · RE Engine games need it before ReShade"
+  zh-CN: "dinput8.dll · RE Engine 游戏需要在 ReShade 之前先装它"

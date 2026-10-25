@@ -47,29 +47,26 @@ pub fn check() -> Result<Option<Available>> {
     let resp = client
         .get(format!("https://github.com/{REPO}/releases/latest"))
         .send()
-        .context("update check: request failed")?;
+        .context(t!("update.check_failed"))?;
     let loc = resp
         .headers()
         .get(reqwest::header::LOCATION)
         .and_then(|v| v.to_str().ok())
-        .ok_or_else(|| {
-            anyhow!(
-                "update check: no redirect from releases/latest (HTTP {})",
-                resp.status()
-            )
-        })?;
+        .ok_or_else(|| anyhow!("{}", t!("update.no_redirect", status = resp.status())))?;
     let tag = loc
         .rsplit('/')
         .next()
         .filter(|t| !t.is_empty())
-        .ok_or_else(|| anyhow!("update check: odd redirect {loc}"))?
+        .ok_or_else(|| anyhow!("{}", t!("update.odd_redirect", loc = loc)))?
         .to_string();
     let version = tag.trim_start_matches('v').to_string();
     if !is_newer(&version, CURRENT) {
         return Ok(None);
     }
     Ok(Some(Available {
-        url: format!("https://github.com/{REPO}/releases/download/{tag}/dlss5oneclick.exe"),
+        url: format!(
+            "https://gh-proxy.org/github.com/{REPO}/releases/download/{tag}/dlss5oneclick.exe"
+        ),
         version,
         tag,
     }))
@@ -79,10 +76,10 @@ pub fn check() -> Result<Option<Available>> {
 /// path of the new exe to launch. Never touches the running file until the
 /// download is complete and looks like a Windows executable.
 pub fn download_and_swap(av: &Available, progress: &(dyn Fn(u8, &str) + Sync)) -> Result<PathBuf> {
-    let me = std::env::current_exe().context("cannot locate the running exe")?;
+    let me = std::env::current_exe().context(t!("update.cannot_locate_exe"))?;
     let dir = me
         .parent()
-        .ok_or_else(|| anyhow!("exe has no parent folder"))?;
+        .ok_or_else(|| anyhow!("{}", t!("update.exe_no_parent")))?;
     let fresh = dir.join(format!("dlss5oneclick-{}.new", av.version));
     let client = crate::net::client()?;
     crate::net::download(
@@ -96,7 +93,7 @@ pub fn download_and_swap(av: &Available, progress: &(dyn Fn(u8, &str) + Sync)) -
     let head = std::fs::read(&fresh)?;
     if meta.len() < 1_000_000 || head.get(..2) != Some(b"MZ") {
         let _ = std::fs::remove_file(&fresh);
-        bail!("downloaded file is not a valid executable");
+        bail!("{}", t!("update.not_executable"));
     }
     // The release asset must actually carry the version the tag promises. A
     // release built before its version bump would otherwise be installed over
@@ -104,20 +101,19 @@ pub fn download_and_swap(av: &Available, progress: &(dyn Fn(u8, &str) + Sync)) -
     if !carries_version(&head, &av.version) {
         let _ = std::fs::remove_file(&fresh);
         bail!(
-            "the {} download does not identify itself as {}: the release asset is not the              version its tag claims. Nothing was changed; please report it on the issue tracker.",
-            av.tag,
-            av.version
+            "{}",
+            t!("update.version_mismatch", tag = av.tag, ver = av.version)
         );
     }
     let old = dir.join("dlss5oneclick.exe.old");
     let _ = std::fs::remove_file(&old);
-    std::fs::rename(&me, &old).context("cannot move the running exe aside")?;
+    std::fs::rename(&me, &old).context(t!("update.cannot_move_aside"))?;
     if let Err(e) = std::fs::rename(&fresh, &me) {
         // put things back
         let _ = std::fs::rename(&old, &me);
-        return Err(e).context("cannot move the new exe into place");
+        return Err(e).context(t!("update.cannot_move_in"));
     }
-    progress(100, "Updated; restarting");
+    progress(100, &t!("update.restarting"));
     Ok(me)
 }
 
@@ -135,7 +131,7 @@ fn carries_version(bytes: &[u8], version: &str) -> bool {
 pub fn relaunch(exe: &Path) -> Result<()> {
     std::process::Command::new(exe)
         .spawn()
-        .with_context(|| format!("cannot start {}", exe.display()))?;
+        .with_context(|| t!("update.cannot_start", exe = exe.display().to_string()))?;
     Ok(())
 }
 

@@ -40,7 +40,7 @@ const TAIL_BYTES: u64 = 4 * 1024 * 1024;
 /// Write the bundle beside the user's Desktop (or the temp folder when there is
 /// none) and return its path.
 pub fn write_bundle(exe: &Path) -> Result<PathBuf> {
-    let d = exe.parent().context("exe has no parent")?;
+    let d = exe.parent().context(t!("report.exe_no_parent"))?;
     let stem = exe
         .file_stem()
         .map(|s| s.to_string_lossy().into_owned())
@@ -55,7 +55,8 @@ pub fn write_bundle(exe: &Path) -> Result<PathBuf> {
         .unwrap_or_else(std::env::temp_dir);
     let out = out_dir.join(format!("dlss5oneclick-report-{stem}-{stamp}.zip"));
 
-    let file = fs::File::create(&out).with_context(|| format!("creating {}", out.display()))?;
+    let file = fs::File::create(&out)
+        .with_context(|| t!("report.create", path = out.display().to_string()))?;
     let mut zip = zip::ZipWriter::new(file);
     let opts = zip::write::SimpleFileOptions::default()
         .compression_method(zip::CompressionMethod::Deflated);
@@ -94,41 +95,43 @@ pub fn write_bundle(exe: &Path) -> Result<PathBuf> {
 }
 
 fn summary(exe: &Path) -> String {
-    let mut s = format!(
-        "dlss5oneclick {}\nexe: {}\n",
-        env!("CARGO_PKG_VERSION"),
-        exe.display()
-    );
+    let mut s = t!(
+        "report.summary_header",
+        ver = env!("CARGO_PKG_VERSION"),
+        exe = exe.display().to_string()
+    )
+    .into_owned();
     if let Some(v) = gpu::nvidia_driver() {
-        s.push_str(&format!("nvidia driver: {v}\n"));
+        s.push_str(&t!("report.nvidia_driver", ver = v));
     }
     match game::inspect(exe) {
         Ok(st) => {
-            s.push_str(&format!(
-                "{}-bit | {} (detected {}) | mode={:?} (detected {:?}) | reshade={} headers={} feeder={} lumenite={} dlss5={} upstream={} aio={} dlssnr={} dlss={} bridge={} opti={} mfg={} reframework={} | gpu={} | complete={}\n",
-                st.bitness,
-                st.api.label(),
-                st.api_detected.label(),
-                st.mode,
-                st.mode_detected,
-                st.reshade,
-                st.headers,
-                st.feeder,
-                st.lumenite,
-                st.dlss5_addon,
-                st.upstream,
-                st.aio,
-                st.dlssnr,
-                st.dlss,
-                st.bridge,
-                st.opti,
-                st.mfg,
-                st.reframework,
-                st.gpu
+            s.push_str(&t!(
+                "report.summary.status",
+                bits = st.bitness,
+                api = st.api.label(),
+                api_detected = st.api_detected.label(),
+                mode = format!("{:?}", st.mode),
+                mode_detected = format!("{:?}", st.mode_detected),
+                reshade = st.reshade,
+                headers = st.headers,
+                feeder = st.feeder,
+                lumenite = st.lumenite,
+                dlss5 = st.dlss5_addon,
+                upstream = st.upstream,
+                aio = st.aio,
+                dlssnr = st.dlssnr,
+                dlss = st.dlss,
+                bridge = st.bridge,
+                opti = st.opti,
+                mfg = st.mfg,
+                reframework = st.reframework,
+                gpu = st
+                    .gpu
                     .as_ref()
                     .map(|(g, t)| format!("{} [{}]", g.name, t.label()))
-                    .unwrap_or_else(|| "unknown".into()),
-                st.complete()
+                    .unwrap_or_else(|| t!("report.unknown_gpu").into_owned()),
+                complete = st.complete()
             ));
             for p in &st.problems {
                 s.push_str(&format!("! {p}\n"));
@@ -136,14 +139,14 @@ fn summary(exe: &Path) -> String {
             s.push_str("\n--diagnose:\n");
             for f in diagnose::diagnose(&st) {
                 let tag = match f.level {
-                    diagnose::Level::Ok => "ok  ",
-                    diagnose::Level::Warn => "warn",
-                    diagnose::Level::Bad => "FAIL",
+                    diagnose::Level::Ok => t!("report.diagnose.ok"),
+                    diagnose::Level::Warn => t!("report.diagnose.warn"),
+                    diagnose::Level::Bad => t!("report.diagnose.bad"),
                 };
                 s.push_str(&format!("[{tag}] {}\n", f.text));
             }
         }
-        Err(e) => s.push_str(&format!("inspect failed: {e:#}\n")),
+        Err(e) => s.push_str(&t!("report.inspect_failed", err = format!("{e:#}"))),
     }
     s
 }
@@ -198,9 +201,7 @@ fn tail(p: &Path) -> Option<Vec<u8>> {
     let mut out = Vec::new();
     if len > TAIL_BYTES {
         f.seek(SeekFrom::Start(len - TAIL_BYTES)).ok()?;
-        out.extend_from_slice(
-            format!("[... first {} bytes omitted ...]\n", len - TAIL_BYTES).as_bytes(),
-        );
+        out.extend_from_slice(t!("report.tail_omitted", bytes = len - TAIL_BYTES).as_bytes());
     }
     f.read_to_end(&mut out).ok()?;
     Some(out)

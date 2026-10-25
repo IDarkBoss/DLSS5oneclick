@@ -1,0 +1,71 @@
+# game 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+game.err_open:
+  en: "cannot open %{path}"
+  zh-CN: "无法打开 %{path}"
+game.err_not_pe:
+  en: "%{path} is not a Windows executable"
+  zh-CN: "%{path} 不是 Windows 可执行文件"
+game.err_no_pe_header:
+  en: "%{path} has no PE header"
+  zh-CN: "%{path} 没有 PE 头"
+game.err_machine:
+  en: "%{path}: unsupported machine type %{machine}"
+  zh-CN: "%{path}：不支持的机器类型 %{machine}"
+game.api_dx9:
+  en: "DX9"
+  zh-CN: "DX9"
+game.api_dx10:
+  en: "DX10"
+  zh-CN: "DX10"
+game.api_dx11:
+  en: "DX11"
+  zh-CN: "DX11"
+game.api_dx12:
+  en: "DX12"
+  zh-CN: "DX12"
+game.api_vulkan:
+  en: "Vulkan"
+  zh-CN: "Vulkan"
+game.api_unknown:
+  en: "API unknown, assuming DX12"
+  zh-CN: "API 未知，按 DX12 处理"
+game.reshade_vulkan_problem:
+  en: "This is a Vulkan game, so the ReShade engine cannot reach it: ReShade hooks Vulkan through a registered layer, not through the dxgi.dll installed beside the exe, and nothing here would ever load. Use the OptiScaler engine, which does cover Vulkan. To use ReShade anyway, run its own setup, point it at this exe and choose Vulkan, then follow DLSS5-Feeder's Vulkan instructions."
+  zh-CN: "这是一款 Vulkan 游戏，ReShade 引擎无法接入：ReShade 通过注册的 Vulkan 层挂接 Vulkan，而不是通过安装在 exe 旁的 dxgi.dll，放在这里的任何东西都不会被加载。请改用同样支持 Vulkan 的 OptiScaler 引擎。如果仍要使用 ReShade，请运行它自己的安装程序，指向这个 exe 并选择 Vulkan，然后按照 DLSS5-Feeder 的 Vulkan 说明操作。"
+game.gamepass_native:
+  en: "The game itself ships DLSS (nvngx_dlss.dll is in its folder), so it supports DLSS natively; only this install cannot be modified."
+  zh-CN: "游戏本身自带 DLSS（其文件夹中有 nvngx_dlss.dll），因此它原生支持 DLSS；只是这份安装无法修改。"
+game.gamepass_no_dlss:
+  en: "No nvngx_dlss.dll anywhere in its folder, so this game has no DLSS of its own either."
+  zh-CN: "其文件夹中没有任何 nvngx_dlss.dll，因此这款游戏也没有自己的 DLSS。"
+game.gamepass_locked:
+  en: "Game Pass / Microsoft Store copy (%{path}): Windows protects this install — the executable is locked or the folder refuses writes — so DLSS 5 cannot be installed on this copy. Some Store games are installed unprotected and work; this one is not. The same game from Steam, Epic or GOG works. %{native}"
+  zh-CN: "Game Pass / Microsoft Store 版本（%{path}）：Windows 保护这份安装——可执行文件被锁定，或文件夹拒绝写入——因此无法在这份副本上安装 DLSS 5。有些商店游戏安装时未加保护、可以正常使用；这份不行。同一游戏从 Steam、Epic 或 GOG 购买的版本可以正常使用。%{native}"
+game.err_exe_not_found:
+  en: "game executable not found: %{path}"
+  zh-CN: "未找到游戏可执行文件：%{path}"
+game.err_no_parent:
+  en: "exe has no parent directory"
+  zh-CN: "exe 没有父目录"
+game.prob_anticheat:
+  en: "%{ac} anti-cheat found in this game. ReShade add-on injection is what it detects: kick at best, ban at worst. Refused."
+  zh-CN: "在这款游戏中检测到 %{ac} 反作弊。它检测的正是 ReShade 附加组件注入：轻则踢出对局，重则封号。已拒绝操作。"
+game.prob_gpu:
+  en: "GPU is %{name} (%{tier}): the DLSS 5 model runs on NVIDIA RTX only (it needs tensor cores and NGX). Misdetected, or running through Remote Desktop? Tick the box below, or set %{env}=1."
+  zh-CN: "GPU 为 %{name}（%{tier}）：DLSS 5 模型仅能在 NVIDIA RTX 上运行（它需要张量核心和 NGX）。检测有误，或是正在通过远程桌面连接？请勾选下方选项，或设置 %{env}=1。"
+game.prob_d3d9_proxy:
+  en: "A d3d9.dll proxy is present that is not dgVoodoo2. DirectX 9 itself is not a dead end -- DLSS 5 needs a D3D11/12 device, and dgVoodoo2 provides one, which is how a D3D9 game can work here (#17, #37) -- but this tool cannot install behind another wrapper. Replace it with dgVoodoo 2.87.5 (MS\\x86 or MS\\x64\\D3D9.dll plus dgVoodoo.conf, OutputAPI = d3d11_fl11_0, VRAM >= 4096) and run Install again."
+  zh-CN: "存在非 dgVoodoo2 的 d3d9.dll 代理。DirectX 9 本身并非死路——DLSS 5 需要 D3D11/12 设备，而 dgVoodoo2 能提供一个，D3D9 游戏正是这样在这里运行的（#17、#37）——但本工具无法安装到另一个包装器之后。请将其替换为 dgVoodoo 2.87.5（MS\\x86 或 MS\\x64\\D3D9.dll 加 dgVoodoo.conf，OutputAPI = d3d11_fl11_0，VRAM >= 4096），然后再次运行安装。"
+game.prob_32bit_dx12:
+  en: "32-bit game on Direct3D 12: DLSS5-Feeder's 32-bit add-on covers Direct3D 9 (through dgVoodoo2), 10 and 11, but not 12."
+  zh-CN: "32 位游戏运行于 Direct3D 12：DLSS5-Feeder 的 32 位附加组件支持 Direct3D 9（通过 dgVoodoo2）、10 和 11，但不支持 12。"
+game.err_no_exe:
+  en: "no 64-bit game executable found in %{path}"
+  zh-CN: "在 %{path} 中未找到 64 位游戏可执行文件"
+game.err_not_found:
+  en: "not found: %{path}"
+  zh-CN: "未找到：%{path}"
+game.prob_wrong_folder:
+  en: "ReShade/Feeder found in %{dir} but not next to %{exe} — Install on the Shipping exe"
+  zh-CN: "在 %{dir} 中发现了 ReShade/Feeder，但 %{exe} 旁边没有——请在 Shipping 版 exe 上执行安装"

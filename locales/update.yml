@@ -1,0 +1,35 @@
+# update 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+update.check_failed:
+  en: "update check: request failed"
+  zh-CN: "检查更新：请求失败"
+update.no_redirect:
+  en: "update check: no redirect from releases/latest (HTTP %{status})"
+  zh-CN: "检查更新：releases/latest 未返回重定向（HTTP %{status}）"
+update.odd_redirect:
+  en: "update check: odd redirect %{loc}"
+  zh-CN: "检查更新：异常重定向 %{loc}"
+update.cannot_locate_exe:
+  en: "cannot locate the running exe"
+  zh-CN: "无法定位正在运行的 exe"
+update.exe_no_parent:
+  en: "exe has no parent folder"
+  zh-CN: "exe 没有父文件夹"
+update.not_executable:
+  en: "downloaded file is not a valid executable"
+  zh-CN: "下载的文件不是有效的可执行文件"
+update.version_mismatch:
+  en: "the %{tag} download does not identify itself as %{ver}: the release asset is not the version its tag claims. Nothing was changed; please report it on the issue tracker."
+  zh-CN: "%{tag} 的下载未能表明自身为 %{ver}：该 release 资产并非其标签所声称的版本。未作任何更改；请到 issue 跟踪器报告。"
+update.cannot_move_aside:
+  en: "cannot move the running exe aside"
+  zh-CN: "无法移开正在运行的 exe"
+update.cannot_move_in:
+  en: "cannot move the new exe into place"
+  zh-CN: "无法将新 exe 移入位置"
+update.restarting:
+  en: "Updated; restarting"
+  zh-CN: "已更新，正在重启…"
+update.cannot_start:
+  en: "cannot start %{exe}"
+  zh-CN: "无法启动 %{exe}"

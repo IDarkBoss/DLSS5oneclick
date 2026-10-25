@@ -27,6 +27,7 @@
 
 use regex::Regex;
 use serde_json::Value;
+use std::borrow::Cow;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
@@ -44,15 +45,15 @@ pub enum Store {
 }
 
 impl Store {
-    pub fn label(self) -> &'static str {
+    pub fn label(self) -> Cow<'static, str> {
         match self {
-            Store::Steam => "Steam",
-            Store::Epic => "Epic Games",
-            Store::Gog => "GOG",
-            Store::Xbox => "Xbox",
-            Store::Ea => "EA app",
-            Store::Ubisoft => "Ubisoft Connect",
-            Store::Manual => "Added by you",
+            Store::Steam => t!("library.store_steam"),
+            Store::Epic => t!("library.store_epic"),
+            Store::Gog => t!("library.store_gog"),
+            Store::Xbox => t!("library.store_xbox"),
+            Store::Ea => t!("library.store_ea"),
+            Store::Ubisoft => t!("library.store_ubi"),
+            Store::Manual => t!("library.store_manual"),
         }
     }
 }

@@ -223,13 +223,14 @@ fn fetch(appid: u64) -> Result<Option<Api>> {
         .redirect(reqwest::redirect::Policy::none())
         .timeout(Duration::from_secs(8))
         .build()
-        .context("cannot build HTTP client")?;
+        // 与 net.rs 的客户端构建错误是同一句话，复用同一个 key。
+        .context(t!("net.err_client"))?;
     let r = client
         .get(format!(
             "https://www.pcgamingwiki.com/api/appid.php?appid={appid}"
         ))
         .send()
-        .context("PCGamingWiki is not reachable")?;
+        .context(t!("pcgw.err_unreachable"))?;
     let Some(loc) = r
         .headers()
         .get(reqwest::header::LOCATION)
@@ -249,13 +250,13 @@ fn fetch(appid: u64) -> Result<Option<Api>> {
             "https://www.pcgamingwiki.com/w/api.php?action=parse&format=json&prop=wikitext&page={page}"
         ))
         .send()
-        .context("PCGamingWiki page request failed")?
+        .context(t!("pcgw.err_page_request"))?
         .error_for_status()?
         .json()
-        .context("PCGamingWiki answered with something that is not JSON")?;
+        .context(t!("pcgw.err_bad_json"))?;
     let text = body["parse"]["wikitext"]["*"]
         .as_str()
-        .context("PCGamingWiki page has no wikitext")?;
+        .context(t!("pcgw.err_no_wikitext"))?;
     Ok(api_from_wikitext(text))
 }
 

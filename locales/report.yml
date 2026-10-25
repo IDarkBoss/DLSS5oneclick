@@ -1,0 +1,35 @@
+# report 的用户可见文案：写进 zip 报告、给用户看/贴 issue 的文本（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+report.exe_no_parent:
+  en: "exe has no parent"
+  zh-CN: "exe 没有父文件夹"
+report.create:
+  en: "creating %{path}"
+  zh-CN: "创建 %{path}"
+report.summary_header:
+  en: "dlss5oneclick %{ver}\nexe: %{exe}\n"
+  zh-CN: "dlss5oneclick %{ver}\nexe：%{exe}\n"
+report.nvidia_driver:
+  en: "nvidia driver: %{ver}\n"
+  zh-CN: "NVIDIA 驱动：%{ver}\n"
+report.summary.status:
+  en: "%{bits}-bit | %{api} (detected %{api_detected}) | mode=%{mode} (detected %{mode_detected}) | reshade=%{reshade} headers=%{headers} feeder=%{feeder} lumenite=%{lumenite} dlss5=%{dlss5} upstream=%{upstream} aio=%{aio} dlssnr=%{dlssnr} dlss=%{dlss} bridge=%{bridge} opti=%{opti} mfg=%{mfg} reframework=%{reframework} | gpu=%{gpu} | complete=%{complete}\n"
+  zh-CN: "%{bits} 位 | %{api}（检测到 %{api_detected}）| 模式=%{mode}（检测到 %{mode_detected}）| reshade=%{reshade} headers=%{headers} feeder=%{feeder} lumenite=%{lumenite} dlss5=%{dlss5} upstream=%{upstream} aio=%{aio} dlssnr=%{dlssnr} dlss=%{dlss} 桥接=%{bridge} opti=%{opti} mfg=%{mfg} reframework=%{reframework} | GPU=%{gpu} | complete=%{complete}\n"
+report.unknown_gpu:
+  en: "unknown"
+  zh-CN: "未知"
+report.diagnose.ok:
+  en: "ok  "
+  zh-CN: "正常"
+report.diagnose.warn:
+  en: "warn"
+  zh-CN: "警告"
+report.diagnose.bad:
+  en: "FAIL"
+  zh-CN: "失败"
+report.inspect_failed:
+  en: "inspect failed: %{err}\n"
+  zh-CN: "检查失败：%{err}\n"
+report.tail_omitted:
+  en: "[... first %{bytes} bytes omitted ...]\n"
+  zh-CN: "[... 已省略前 %{bytes} 字节 ...]\n"

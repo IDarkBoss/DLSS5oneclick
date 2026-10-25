@@ -1,0 +1,256 @@
+# diagnose 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+# 只含诊断结论与给用户的建议；匹配上游日志的关键字（feature ready、
+# 0xBAD00001、stopped: 等）留在代码里，不进翻译。
+_version: 2
+diagnose.ngx_init_hybrid_vendors:
+  en: "More than one GPU vendor on this machine (%{vendors}), and Windows decides which one a process starts on. Started on the integrated GPU, NGX does not exist and every Init answers 0xBAD00001 — this is the most likely cause here%{note}. Settings ▸ System ▸ Display ▸ Graphics ▸ Add a desktop app ▸ pick the game's exe (and, for a 32-bit game, host64\\dlss5-feed-host64.exe) ▸ Options ▸ High performance. Install sets that for you from this version on."
+  zh-CN: "这台机器上有不止一家 GPU 厂商（%{vendors}），而由 Windows 决定进程从哪一块启动。一旦启动在集成显卡上，NGX 在那里并不存在，每次 Init 都返回 0xBAD00001——这就是这里最可能的原因%{note}。设置 ▸ 系统 ▸ 屏幕 ▸ 显卡 ▸ 添加桌面应用 ▸ 选择游戏的 exe（32 位游戏还要选 host64\\dlss5-feed-host64.exe）▸ 选项 ▸ 高性能。从这个版本起，安装会自动替你设好。"
+diagnose.ngx_init_hybrid_pref_set:
+  en: ", though the preference is already set to high performance for that exe"
+  zh-CN: "（不过该 exe 的 GPU 首选项已经设为高性能）"
+diagnose.ngx_init_advice_healthy:
+  en: "Your NGX runtime and driver are fine, so this is NGX refusing the Feeder's private D3D12 device inside the game process, which has been reported on several machines. Worth doing: install into a game that ships its own DLSS (that path opens no private device) to confirm NGX works for you, then report this log at github.com/jlrouzies-fr/DLSS5-Feeder, where that device is created."
+  zh-CN: "你的 NGX 运行时和驱动都正常，所以这是 NGX 拒绝了 Feeder 在游戏进程内打开的私有 D3D12 设备，已有多台机器报告过这个问题。值得一试：安装到一个自带 DLSS 的游戏（那条路径不会打开私有设备）以确认 NGX 在你机器上可用，然后带着这份日志到 github.com/jlrouzies-fr/DLSS5-Feeder 反馈，那个设备正是在那里创建的。"
+diagnose.ngx_init_advice_fix_first:
+  en: "Fix that first, then run Install again: reinstall the NVIDIA driver with a Custom install that keeps every component (616.56 or newer)."
+  zh-CN: "先修复它，然后再次运行安装：以自定义安装的方式重装 NVIDIA 驱动，并保留全部组件（616.56 或更新）。"
+diagnose.ngx_init_refused:
+  en: "NGX refused to initialise: %{line}. 0xBAD00001 is FeatureNotSupported, which NGX also answers when its runtime is not on the system — not a ReShade, shader or add-on problem. %{system}. %{advice}"
+  zh-CN: "NGX 拒绝初始化：%{line}。0xBAD00001 是 FeatureNotSupported，当系统里没有 NGX 运行时它也会返回这个值——这不是 ReShade、着色器或附加组件的问题 %{system}。%{advice}"
+diagnose.game_own_dlss:
+  en: "The game created a DLSS session of its own (%{rw}x%{rh} rendered to %{ow}x%{oh}) while DLSS5-Feeder is feeding frames, and two DLSS sessions in one game can crash it (Kingdom Come: Deliverance II when a save loaded, #118). A game that creates its own DLSS belongs on the setup for games with their own DLSS: on the Setup page set the dropdown next to the game name to \"Force native DLSS\" and press Install."
+  zh-CN: "游戏自己创建了一个 DLSS 会话（%{rw}x%{rh} 渲染到 %{ow}x%{oh}）， 而 DLSS5-Feeder 正在送帧——一个游戏里两个 DLSS 会话可能让它崩溃 （Kingdom Come: Deliverance II 读档时崩溃，#118）。会自建 DLSS 的游戏 应使用针对自带 DLSS 游戏的方案：在 Setup 页面 把游戏名旁的下拉框设为 \"Force native DLSS\"，然后按安装。"
+diagnose.launcher_log_note:
+  en: "ReShade.log is %{loaded}'s session (a launcher in the game folder loads dxgi.dll too, and it ran last); the game's own session is ReShade.log1, which is what the findings below read."
+  zh-CN: "ReShade.log 是 %{loaded} 的会话（游戏文件夹里的启动器也会加载 dxgi.dll，而它最后运行）；游戏自己的会话在 ReShade.log1， 下面的诊断读的正是它。"
+diagnose.compat_layer:
+  en: "Windows runs this exe under a compatibility layer (%{layer}). A shimmed process reports an older Windows to NGX, and NGX then refuses before it touches a device (SuperSampling -> 0xBAD00002 / Init -> 0xBAD00001; Watch Dogs 1 in #62). Right-click the exe ▸ Properties ▸ Compatibility ▸ untick everything (and the same for the launcher if it set it), then try again."
+  zh-CN: "Windows 在兼容层下运行这个 exe（%{layer}）。被垫接的进程会向 NGX 报告一个更旧的 Windows，NGX 随即在碰到任何设备之前就拒绝（SuperSampling -> 0xBAD00002 / Init -> 0xBAD00001；#62 里的 Watch Dogs 1）。右键 exe ▸ 属性 ▸ 兼容性 ▸ 取消全部勾选（启动器若也设置了，同样处理），然后再试一次。"
+diagnose.unknown_version:
+  en: "unknown"
+  zh-CN: "未知"
+diagnose.shipped_compiler:
+  en: "The game ships its own d3dcompiler_47.dll (%{ver}), which Windows loads instead of System32's. If it predates shader model 5.1 the DLSS 5 pass cannot compile (error X3506). Rename it to d3dcompiler_47.dll.bak and start the game again; almost every game runs fine on the system copy. On Wine/Proton, leave it: a copy of Microsoft's compiler beside the game, loaded through a WINEDLLOVERRIDES entry, is what got DLSS 5 compiling there at all (#76)."
+  zh-CN: "游戏自带了一份 d3dcompiler_47.dll（%{ver}），Windows 会优先加载它而不是 System32 的。如果它早于 shader model 5.1，DLSS 5 通道就编译不了（error X3506）。把它改名为 d3dcompiler_47.dll.bak 再启动游戏；几乎所有游戏用系统副本都运行正常。在 Wine/Proton 上则别动它：一份放在游戏旁边、经 WINEDLLOVERRIDES 条目加载的微软编译器副本，正是让 DLSS 5 在那里编译成功的关键（#76）。"
+diagnose.dgvoodoo_vram:
+  en: "dgVoodoo reports %{vram} MB of video memory and this game reads that number to size its own memory pools, but commandline.txt does not set -availablevidmem. Add \"-availablevidmem %{vidmem}\" to commandline.txt — slightly below the dgVoodoo figure on purpose, which is what the dgVoodoo guides for this engine call for. Without it the game sizes for one number and allocates against another, which shows up as a black screen after loading or as TEXP60 / TEXP70 at startup."
+  zh-CN: "dgVoodoo 报告了 %{vram} MB 显存，而这个游戏会按那个数字 规划自己的内存池，但 commandline.txt 没有设置 -availablevidmem。往 commandline.txt 里加 \"-availablevidmem %{vidmem}\"——特意 略低于 dgVoodoo 的数字，这也是该引擎的 dgVoodoo 指南 所要求的。没有它，游戏按一个数字规划、按另一个数字分配， 表现为加载后黑屏，或启动时 TEXP60 / TEXP70。"
+diagnose.model_note:
+  en: "DLSS 5 model %{place}: %{ver} — %{build}"
+  zh-CN: "DLSS 5 模型（%{place}）：%{ver} — %{build}"
+diagnose.model_beside_exe:
+  en: "beside the exe"
+  zh-CN: "位于 exe 旁"
+diagnose.model_in_host64:
+  en: "in host64"
+  zh-CN: "位于 host64"
+diagnose.no_reshade_beside_exe:
+  en: "No ReShade beside the game exe: %{proxy} is missing or is not ReShade, so the Home key opens nothing and the feeder never loads. That is upstream of anything in host64\\. Run Remove and then Install again, and if it comes back missing, check antivirus history for %{proxy}."
+  zh-CN: "游戏 exe 旁没有 ReShade：%{proxy} 缺失或不是 ReShade，因此 Home 键打不开任何东西，feeder 也永远不会加载。这排在 host64\\ 里一切问题的上游。先运行移除再重新安装；如果它再次消失，去杀毒软件历史记录里查有没有 %{proxy}。"
+diagnose.no_host64_reshade_log:
+  en: "No host64\\ReShade.log: the 64-bit helper's ReShade never loaded, which is what \"host lost: pipe never appeared\" in dlss5-feed.log means. Look in host64\\dlss5-feed-host.log for the reason, and check antivirus did not remove anything from host64\\."
+  zh-CN: "没有 host64\\ReShade.log：64 位 helper 的 ReShade 从未加载，dlss5-feed.log 里 \"host lost: pipe never appeared\" 说的正是这件事。去 host64\\dlss5-feed-host.log 里找原因，并确认杀毒软件没有从 host64\\ 里删走任何东西。"
+diagnose.no_reshade_log:
+  en: "No ReShade.log next to the game exe: ReShade never loaded. Either the game was not started since the install, or it does not load dxgi.dll (wrong exe picked, or a launcher starts a different one). Check the exe with --check."
+  zh-CN: "游戏 exe 旁没有 ReShade.log：ReShade 从未加载。要么安装后还没启动过游戏，要么游戏不加载 dxgi.dll（选错了 exe，或启动器启动的是另一个）。用 --check 检查 exe。"
+diagnose.reshade_loaded:
+  en: "ReShade loaded into the game."
+  zh-CN: "ReShade 已加载进游戏。"
+diagnose.addon_refused_unsigned:
+  en: " (0x80090006 = the process refuses unsigned DLLs; nothing can be done)"
+  zh-CN: "（0x80090006 = 进程拒绝未签名的 DLL；无能为力）"
+diagnose.addon_refused_entry_point:
+  en: " (the add-on's DLL entry point failed; usually a CPU without AVX2 or a mismatched ReShade version)"
+  zh-CN: "（附加组件的 DLL 入口点失败；通常是 CPU 不带 AVX2，或 ReShade 版本不匹配）"
+diagnose.addon_refused:
+  en: "ReShade refused to load renodx-dlss5.addon64, error code %{code}%{extra}."
+  zh-CN: "ReShade 拒绝加载 renodx-dlss5.addon64，错误码 %{code}%{extra}。"
+diagnose.addon_registered:
+  en: "The DLSS 5 Neural Rendering add-on registered."
+  zh-CN: "DLSS 5 Neural Rendering 附加组件已注册。"
+diagnose.addon_never_registered:
+  en: "The DLSS 5 add-on never registered. renodx-dlss5.addon64 is missing from %{place}, disabled in ReShade's Add-ons tab, or quarantined by antivirus."
+  zh-CN: "DLSS 5 附加组件从未注册。renodx-dlss5.addon64 缺失于 %{place}、在 ReShade 的 Add-ons 标签页里被禁用，或被杀毒软件隔离。"
+diagnose.addon_never_registered_host64:
+  en: "host64\\ (where the add-on lives when the game is 32-bit or on the Feeder's helper mode)"
+  zh-CN: "host64\\（32 位游戏或 Feeder 的 helper 模式下，附加组件位于那里）"
+diagnose.addon_never_registered_game_folder:
+  en: "the game folder"
+  zh-CN: "游戏文件夹"
+diagnose.nr_toggled_on:
+  en: "Neural rendering was toggled ON (F6)."
+  zh-CN: "神经渲染已开启（F6）。"
+diagnose.nr_toggled_off_maybe:
+  en: "The log's last F6 state may be OFF — press F6 in game and watch the add-on's panel."
+  zh-CN: "日志里最后一次 F6 的状态可能是关闭——在游戏里按 F6，并盯着附加组件的面板。"
+diagnose.nr_churn:
+  en: "The neural pass is being torn down and re-created instead of running: the feature was created %{created} times and the add-on opened %{worksets} worksets in this session. Each re-creation resets the model and costs GPU time, and almost no frame is evaluated — FPS drops, picture unchanged. This happens in games that drive DLSS from several threads or several NGX features (Cyberpunk 2077 with Ray Reconstruction, #95). Try Model Resolution 100% first; if it persists, the OptiScaler engine runs the pass inside the upscaler and is not affected."
+  zh-CN: "神经渲染通道在被反复销毁重建，而不是持续运行：本次会话里 feature 被创建了 %{created} 次，附加组件打开了 %{worksets} 个 workset。每次重建都会重置模型、消耗 GPU 时间，几乎没有任何一帧被评估——FPS 下降、画面不变。这种情况出现在从多个线程或多个 NGX feature 驱动 DLSS 的游戏里（如开了 Ray Reconstruction 的 Cyberpunk 2077，#95）。先试 Model Resolution 100%；若依旧，OptiScaler 引擎在超分辨率器内部运行该通道，不受影响。"
+diagnose.nr_ran:
+  en: "Neural rendering ran: the add-on evaluated the DLSS 5 model on real frames. If the picture still looks unchanged, raise NR Intensity / Local Structure in its panel — the default is subtle."
+  zh-CN: "神经渲染已运行：附加组件在真实帧上评估了 DLSS 5 模型。如果画面看起来仍无变化，在它的面板里调高 NR Intensity / Local Structure——默认效果很含蓄。"
+diagnose.dlss_seen_not_evaluated:
+  en: "The add-on saw the game's DLSS but has not evaluated the model yet (feature 18 never created). Enable DLSS in the game's own graphics settings and enable neural rendering in the add-on panel."
+  zh-CN: "附加组件看到了游戏的 DLSS，但还没有评估过模型（feature 18 从未创建）。在游戏自己的图形设置里开启 DLSS，并在附加组件面板里开启神经渲染。"
+diagnose.native_feeder_leftover:
+  en: "Mode is Native DLSS (game ships its own DLSS), but dlss5-feed.addon64 is still present. Feeder Optimize does not apply here — NR is game/renodx. Run Remove (incl. Feeder leftovers) or Install again so Native cleanup drops the Feeder."
+  zh-CN: "模式是 Native DLSS（游戏自带 DLSS），但 dlss5-feed.addon64 还在。Feeder Optimize 在这里不适用——NR 走的是游戏/renodx。运行移除（含 Feeder 残留）或重新安装，让 Native 清理把 Feeder 去掉。"
+diagnose.no_ngx_call_needs_bridge:
+  en: "No NGX call was intercepted, and this is a Direct3D 11 game with its own DLSS: the add-on hooks the D3D12 NGX entry points, but the game calls the D3D11 ones, so it can never see them. The DX11 bridge covers exactly this and is not installed here — run Install on this exe."
+  zh-CN: "没有 NGX 调用被拦截，而这是一个自带 DLSS 的 Direct3D 11 游戏：附加组件挂钩的是 D3D12 的 NGX 入口点，游戏调用的却是 D3D11 的，因此它永远看不到。DX11 桥接正是为这种情况准备的，而这里没有安装——在这个 exe 上运行安装。"
+diagnose.no_ngx_call_intercepted:
+  en: "No NGX call was intercepted: this game's own DLSS never ran. Turn DLSS on in the game's graphics settings (the add-on hooks the game's DLSS calls; without them it has nothing to work with)."
+  zh-CN: "没有 NGX 调用被拦截：这个游戏自带的 DLSS 从未运行。在游戏的图形设置里打开 DLSS（附加组件挂钩游戏的 DLSS 调用；没有这些调用它无事可做）。"
+diagnose.wine_hlsl:
+  en: "The effects failed to compile in Wine/Proton's own HLSL compiler: %{line} That message comes from vkd3d-shader, which Wine's d3dcompiler_47.dll uses; ReShade emits attributes it has not implemented. What a reporter measured working (#76, Proton 10.0-4, Elden Ring, no launch options at all): put a copy of Microsoft's real d3dcompiler_47.dll in the game folder, beside the executable. The feed then reports it as \"not System32, but it accepts cs_5_1 -- fine\" and the effects compile. If the prefix still loads Wine's copy instead, add WINEDLLOVERRIDES=\"d3dcompiler_47=n\" %command% to the launch options; protontricks <appid> d3dcompiler_47 (or winetricks d3dcompiler_47) puts the real one in the prefix if you do not have a copy to hand."
+  zh-CN: "效果在 Wine/Proton 自带的 HLSL 编译器里编译失败：%{line} 这条消息来自 vkd3d-shader（Wine 的 d3dcompiler_47.dll 用的就是它）；ReShade 生成了它尚未实现的属性。一位报告者实测可行的做法（#76，Proton 10.0-4，Elden Ring，完全不带启动项）：把微软真正的 d3dcompiler_47.dll 副本放进游戏文件夹、可执行文件旁边。feed 随后会报告 \"not System32, but it accepts cs_5_1 -- fine\"，效果即可编译。如果 prefix 仍加载 Wine 的副本，就把 WINEDLLOVERRIDES=\"d3dcompiler_47=n\" %command% 加进启动项；protontricks <appid> d3dcompiler_47（或 winetricks d3dcompiler_47）会把真正的编译器装进 prefix，手头没有副本时可用。"
+diagnose.x3506:
+  en: "%{line} — the HLSL compiler in this process is too old for the DLSS 5 pass. That is a d3dcompiler_47.dll shipped with the game, loaded in preference to System32's. Rename it (d3dcompiler_47.dll.bak) and start the game again."
+  zh-CN: "%{line} —— 本进程里的 HLSL 编译器太旧，编不了 DLSS 5 通道。那是游戏自带的 d3dcompiler_47.dll，被优先于 System32 的加载了。把它改名（d3dcompiler_47.dll.bak）再启动游戏。"
+diagnose.wrong_exe:
+  en: "ReShade loaded into %{loaded}, but this install was set up for %{ours}. Those are different executables, and the install is tuned to the one you picked (the DX11 bridge in particular). Point the tool at %{loaded} and run Install again."
+  zh-CN: "ReShade 加载进了 %{loaded}，但这次安装是为 %{ours} 准备的。这是两个不同的可执行文件，而安装针对你选中的那一个做了调校（尤其是 DX11 桥接）。把工具指向 %{loaded} 再重新安装。"
+diagnose.bridge_stopped:
+  en: "The DX11 bridge stopped: %{line}"
+  zh-CN: "DX11 桥接已停止：%{line}"
+diagnose.agility_redist_here:
+  en: "The copy in force here is %{path} (%{ver}). Rename it and start the game again: it falls back to the Windows runtime, which every device in the process can match. If the game will not start without it, verify the game files instead -- a D3D12Core.dll replaced or truncated by another tool gives exactly this error."
+  zh-CN: "这里生效的副本是 %{path}（%{ver}）。把它改名再启动游戏：会回退到 Windows 运行时，进程里的每个设备都能匹配它。如果游戏离开它就启动不了，改为校验游戏文件：被其他工具替换或截断的 D3D12Core.dll 给出的正是这个错误。"
+diagnose.agility_redist_missing:
+  en: "No D3D12Core.dll is next to the exe or in a D3D12 folder here, so the declaration points somewhere else or the file is missing outright. Verify the game files."
+  zh-CN: "exe 旁和这里的 D3D12 文件夹里都没有 D3D12Core.dll，说明声明指向了别处，或文件整个缺失。校验游戏文件。"
+diagnose.agility_invalid_redist:
+  en: "%{line} — 0x887E0003 is D3D12_ERROR_INVALID_REDIST: the executable declares its own DirectX 12 Agility SDK (D3D12SDKVersion/D3D12SDKPath exports), and until that declaration is satisfied no D3D12 device can be created in this process at all -- not the bridge's, not the game's. Not something this tool sets. %{at}"
+  zh-CN: "%{line} —— 0x887E0003 是 D3D12_ERROR_INVALID_REDIST：可执行文件声明了自带的 DirectX 12 Agility SDK（D3D12SDKVersion/D3D12SDKPath 导出），在这份声明被满足之前，本进程里任何 D3D12 设备都创建不出来——桥接的不行，游戏的也不行。这不是本工具设置的东西。%{at}"
+diagnose.bridge_ok:
+  en: "The DX11 bridge opened its D3D12 session and is delivering frames."
+  zh-CN: "DX11 桥接已打开它的 D3D12 会话，正在送出帧。"
+diagnose.no_feed_log:
+  en: "No dlss5-feed.log: DLSS5-Feeder never started. Its add-on is missing or disabled in ReShade's Add-ons tab."
+  zh-CN: "没有 dlss5-feed.log：DLSS5-Feeder 从未启动。它的附加组件缺失，或在 ReShade 的 Add-ons 标签页里被禁用。"
+diagnose.feeder_feature_ready:
+  en: "DLSS5-Feeder built its DLSS feature (feature ready … DLAA)."
+  zh-CN: "DLSS5-Feeder 已构建它的 DLSS feature（feature ready … DLAA）。"
+diagnose.frames_delivered:
+  en: "Frames were delivered to the model."
+  zh-CN: "已有帧送入模型。"
+diagnose.feed_technique_missing:
+  en: "DLSS5_Feed.fx is not compiling. Its shader files are missing from reshade-shaders\\Shaders — re-run Install."
+  zh-CN: "DLSS5_Feed.fx 编译不过。它的着色器文件不在 reshade-shaders\\Shaders 里——重新运行安装。"
+diagnose.mv_provider_not_enabled:
+  en: "The motion-vector provider is not enabled. In ReShade's Home tab enable \"LUMENITE: Kernel 2.0\" ABOVE \"DLSS5_Feed\", then reload effects."
+  zh-CN: "运动矢量提供器没有启用。在 ReShade 的 Home 标签页里，把 \"LUMENITE: Kernel 2.0\" 放在 \"DLSS5_Feed\" 的上方启用，然后重载效果。"
+diagnose.helper_api_unsupported:
+  en: "The Feeder's 64-bit helper add-on reports this game's API as unsupported."
+  zh-CN: "Feeder 的 64 位 helper 附加组件报告这个游戏的 API 不受支持。"
+diagnose.normal_api_unsupported:
+  en: "The Feeder's normal 64-bit add-on stopped itself: this game does not use Direct3D 11/12, Vulkan or OpenGL. A DirectX 9 game needs dgVoodoo2 (Install adds it); a DirectX 10 game, Crysis for one, belongs on the Feeder's helper mode: update the tool, press Install again, and check the Setup line says \"helper mode\" (#114)."
+  zh-CN: "Feeder 的常规 64 位附加组件自行停止了：这个游戏不使用 Direct3D 11/12、Vulkan 或 OpenGL。DirectX 9 游戏需要 dgVoodoo2（安装会自动加上）；DirectX 10 游戏（比如 Crysis）属于 Feeder 的 helper 模式：更新工具、再按一次安装，并确认 Setup 一栏显示 \"helper 模式\"（#114）。"
+diagnose.host_feature_ready:
+  en: "The host64 helper built its DLSS feature (feature ready … DLAA)."
+  zh-CN: "host64 helper 已构建它的 DLSS feature（feature ready … DLAA）。"
+diagnose.no_host_log_yet:
+  en: "No host64\\dlss5-feed-host.log yet: the 64-bit helper has not started. It is spawned by the first fed frame, so enable Lumenite_Kernel + DLSS5_Feed in ReShade's Home tab and play a moment first."
+  zh-CN: "还没有 host64\\dlss5-feed-host.log：64 位 helper 尚未启动。它由第一帧送入时拉起，所以先在 ReShade 的 Home 标签页里启用 Lumenite_Kernel + DLSS5_Feed，先玩一小会儿。"
+diagnose.stale_feeder:
+  en: "DLSS5-Feeder %{ver} in the log is older than %{current}; re-run Install to refresh it (since 0.9.1 an existing Feeder is updated)."
+  zh-CN: "日志里的 DLSS5-Feeder %{ver} 旧于 %{current}；重新运行安装来刷新它（自 0.9.1 起，已存在的 Feeder 会被更新）。"
+diagnose.mv_all_zero:
+  en: "Motion vectors are all zero at the last probe: the provider is enabled but writes nothing. Check that Lumenite_Kernel sits above DLSS5_Feed in the technique list, and that ReShade's Generic Depth is on the right buffer."
+  zh-CN: "最后一次探测时运动矢量全为零：提供器已启用却什么都没写。检查 technique 列表里 Lumenite_Kernel 是否位于 DLSS5_Feed 之上，以及 ReShade 的 Generic Depth 是否选对了缓冲区。"
+diagnose.depth_flat:
+  en: "Depth is flat at the last probe: ReShade's Generic Depth add-on is not on the game's depth buffer, so the Lumenite motion vectors have nothing to work from. In game: Home → Add-ons → Generic Depth → pick the buffer at the render resolution with the most draw calls, and tick \"Copy depth buffer before clear operations\" (Prey, #99)."
+  zh-CN: "最后一次探测时深度是平的：ReShade 的 Generic Depth 附加组件没有落在游戏的深度缓冲上，Lumenite 运动矢量便无从下手。游戏内：Home → Add-ons → Generic Depth → 选渲染分辨率下绘制调用最多的那个缓冲区，并勾选 \"Copy depth buffer before clear operations\"（Prey，#99）。"
+diagnose.dlss_unavailable:
+  en: "NGX reported DLSS unavailable. nvngx_dlss.dll must sit next to the game exe — re-run Install, and make sure antivirus did not remove it."
+  zh-CN: "NGX 报告 DLSS 不可用。nvngx_dlss.dll 必须位于游戏 exe 旁——重新运行安装，并确认杀毒软件没有删掉它。"
+diagnose.protocol_mismatch:
+  en: "The two halves of the 32-bit install are from different releases: %{line} Run Install again — since 0.13.4 both halves are taken from one download and each records the release it came from, so this cannot happen silently."
+  zh-CN: "32 位安装的两半来自不同的版本：%{line}。重新运行安装——自 0.13.4 起两半取自同一次下载，各自记录来源版本，因此这种事不会无声发生。"
+diagnose.measured_fail_already_classic:
+  en: "The host warns that this add-on build and your driver are a combination it measured failing. You are already on the classic build it recommends (%{tag}) — every build of that add-on reports the same FileVersion, so the host cannot tell them apart and warns either way. Nothing to do here."
+  zh-CN: "host 警告这个附加组件构建与你的驱动是它实测会失败的组合。你已经用上了它推荐的 classic 构建（%{tag}）——该附加组件的所有构建都报告同一个 FileVersion，因此 host 无法区分它们，于是两边都警告。这里无需任何操作。"
+diagnose.measured_fail_pin_classic:
+  en: "The host measured this add-on build failing on your driver. Run Install again: it reads that verdict out of this log and pins the classic build (%{tag}) by itself."
+  zh-CN: "host 实测这个附加组件构建在你的驱动上会失败。重新运行安装：它会从这份日志里读出该判定，并自行固定到 classic 构建（%{tag}）。"
+diagnose.feature_create_fault:
+  en: "The DLSS feature create faulted inside the driver (access violation), and the feed stopped: it cannot safely call back in, because the neural consumer's own code was on the faulting stack and its locks were skipped by the unwind."
+  zh-CN: "DLSS feature 的创建在驱动内部发生了故障（访问冲突），feed 因此停止：它无法安全地回调进去，因为神经消费者自己的代码就在故障栈上，其锁在栈展开时被跳过了。"
+diagnose.fault_stack:
+  en: " Fault stack: %{stack}."
+  zh-CN: " 故障栈：%{stack}。"
+diagnose.nvngx_advice_proton:
+  en: " On Windows the usual next step is moving the game-local nvngx_dlss.dll aside, because two copies of the NGX module are loaded and the add-on hooks both. Do NOT do that here: this is Wine/Proton, where the driver's own NGX does not provide DLSS, and removing the game-local copy has been measured to leave DLSS unavailable entirely."
+  zh-CN: " 在 Windows 上，通常的下一步是把游戏本地的 nvngx_dlss.dll 移开，因为加载着两份 NGX 模块，而附加组件两份都挂钩。在这里千万不要这么做：这是 Wine/Proton，驱动自己的 NGX 并不提供 DLSS，实测移除游戏本地副本会让 DLSS 彻底不可用。"
+diagnose.nvngx_advice_windows:
+  en: " The log names the most likely cause: two copies of the DLSS NGX module are loaded — the game-local nvngx_dlss.dll and the driver's own _nvngx.dll — and the add-on hooks both. Try moving nvngx_dlss.dll out of the game folder (to nvngx_dlss.dll.off) and starting the game again WITHOUT re-running Install, which would put it back."
+  zh-CN: " 日志点出了最可能的原因：加载了两份 DLSS NGX 模块——游戏本地的 nvngx_dlss.dll 和驱动自己的 _nvngx.dll——而附加组件两份都挂钩。试着把 nvngx_dlss.dll 移出游戏文件夹（改成 nvngx_dlss.dll.off）再启动游戏，不要重新运行安装，那会把它放回去。"
+diagnose.work_res_below_100:
+  en: "below 100%"
+  zh-CN: "低于 100%"
+diagnose.work_res_srv_failed:
+  en: "The feed could not build its textures at %{pct} of the frame: \"work-resolution staging SRV failed\", three times, and then it stopped. This game does not accept the reduced work-resolution path. Set it back to full size — Settings ▸ Feeder knobs ▸ work_resolution = 100 and work_upscale = 0, or pick the High quality preset — and start the game again. Everything downstream of this (no DLSS create, the in-game toggle doing nothing) follows from it."
+  zh-CN: "feed 无法在帧的 %{pct} 尺寸下构建纹理：\"work-resolution staging SRV failed\" 出现三次后它就停了。这个游戏不接受降低工作分辨率的路径。把它设回完整尺寸——设置 ▸ Feeder knobs ▸ work_resolution = 100 且 work_upscale = 0，或选 High quality 画质档位——再启动游戏。此后的一切（没有 DLSS 创建、游戏内开关没反应）都由此而来。"
+diagnose.feed_stopped:
+  en: "The feed stopped itself: %{line}"
+  zh-CN: "feed 自行停止了：%{line}"
+diagnose.crash_recorded:
+  en: "The feed recorded a crash inside the DLSS 5 add-on (upstream issue #16). Play in borderless/windowed rather than exclusive fullscreen, and raise create_delay in dlss5-feed.cfg."
+  zh-CN: "feed 记录到 DLSS 5 附加组件内部的一次崩溃（上游 issue #16）。请用无边框 / 窗口化而不是独占全屏游玩，并调高 dlss5-feed.cfg 里的 create_delay。"
+diagnose.sf_refused:
+  en: "ReShade refused to load renodx-dlss.addon64 (ShortFuse's add-on), error code %{code}."
+  zh-CN: "ReShade 拒绝加载 renodx-dlss.addon64（ShortFuse 的附加组件），错误码 %{code}。"
+diagnose.sf_not_registered:
+  en: "ShortFuse's add-on loaded but could not register with ReShade."
+  zh-CN: "ShortFuse 的附加组件已加载，但无法在 ReShade 注册。"
+diagnose.sf_attached:
+  en: "ShortFuse's DLSS add-on attached."
+  zh-CN: "ShortFuse 的 DLSS 附加组件已挂接。"
+diagnose.sf_never_attached:
+  en: "ShortFuse's add-on never attached. renodx-dlss.addon64 is missing from the game folder, disabled in ReShade's Add-ons tab, or quarantined by antivirus."
+  zh-CN: "ShortFuse 的附加组件从未挂接。renodx-dlss.addon64 缺失于游戏文件夹、在 ReShade 的 Add-ons 标签页里被禁用，或被杀毒软件隔离。"
+diagnose.sf_model_missing:
+  en: "ShortFuse's add-on could not load the DLSS 5 model (nvngx_dlssnr.dll). Install again to put it back beside the game."
+  zh-CN: "ShortFuse 的附加组件无法加载 DLSS 5 模型（nvngx_dlssnr.dll）。重新安装，把它放回游戏旁边。"
+diagnose.sf_device_init_failed:
+  en: "The neural rendering feature failed to start in ShortFuse's add-on. The driver must be recent (616 or later) and the card an RTX one."
+  zh-CN: "神经渲染 feature 在 ShortFuse 的附加组件里启动失败。驱动必须较新（616 或更新），显卡必须是 RTX。"
+diagnose.sf_ran:
+  en: "Neural rendering ran: %{ran} successful evaluations in the last session."
+  zh-CN: "神经渲染已运行：上个会话完成 %{ran} 次成功评估。"
+diagnose.sf_failed_count:
+  en: "Neural rendering evaluation failed %{failed} times in ShortFuse's add-on."
+  zh-CN: "神经渲染评估在 ShortFuse 的附加组件里失败了 %{failed} 次。"
+diagnose.sf_no_eval:
+  en: "No finished evaluation in the log yet. Turn the pass on in ShortFuse's panel (Home, Add-ons tab), play a minute, close the game, and run Diagnose again."
+  zh-CN: "日志里还没有完成的评估。在 ShortFuse 的面板（Home，Add-ons 标签页）里打开该通道，玩一分钟，关掉游戏，再运行一次诊断。"
+diagnose.upstream_refused:
+  en: "ReShade refused to load nvngx.dll.addon64 (Neural Upstream), error code %{code}."
+  zh-CN: "ReShade 拒绝加载 nvngx.dll.addon64（Neural Upstream），错误码 %{code}。"
+diagnose.upstream_registered:
+  en: "The Neural Upstream add-on (DLSS5 NR Pre-Upscale) registered."
+  zh-CN: "Neural Upstream 附加组件（DLSS5 NR Pre-Upscale）已注册。"
+diagnose.upstream_never_registered:
+  en: "The Neural Upstream add-on never registered. nvngx.dll.addon64 is missing from the game folder, disabled in ReShade's Add-ons tab, or quarantined by antivirus."
+  zh-CN: "Neural Upstream 附加组件从未注册。nvngx.dll.addon64 缺失于游戏文件夹、在 ReShade 的 Add-ons 标签页里被禁用，或被杀毒软件隔离。"
+diagnose.upstream_no_evaluate_hook:
+  en: "Neural Upstream could not hook the game's NGX evaluate: the game's DLSS runtime was not loaded when the add-on looked for it. Turn DLSS on in the game's graphics settings and restart the game."
+  zh-CN: "Neural Upstream 无法挂钩游戏的 NGX evaluate：附加组件去找它时，游戏的 DLSS 运行时还没有加载。在游戏的图形设置里打开 DLSS，然后重启游戏。"
+diagnose.upstream_ran:
+  en: "Neural rendering ran: Neural Upstream evaluated the DLSS 5 model at render resolution on real frames. If the picture looks unchanged, raise EffectStrength (F6) in the add-on's ReShade panel."
+  zh-CN: "神经渲染已运行：Neural Upstream 在真实帧上以渲染分辨率评估了 DLSS 5 模型。如果画面看起来没有变化，在附加组件的 ReShade 面板里调高 EffectStrength（F6）。"
+diagnose.upstream_eval_failed:
+  en: "Neural Upstream created its network but evaluating it fails: %{line}"
+  zh-CN: "Neural Upstream 创建了自己的网络，但评估失败：%{line}"
+diagnose.upstream_snippet_failed:
+  en: "Neural Upstream could not create the DLSS 5 network: %{line}"
+  zh-CN: "Neural Upstream 无法创建 DLSS 5 网络：%{line}"
+diagnose.upstream_exports_missing:
+  en: "nvngx_dlssnr.dll beside the game is not the build Neural Upstream expects (its NGX exports are missing). Run Install again to refresh the model."
+  zh-CN: "游戏旁的 nvngx_dlssnr.dll 不是 Neural Upstream 期望的构建（缺少它的 NGX 导出）。重新运行安装来刷新模型。"
+diagnose.upstream_no_network:
+  en: "The game's DLSS is running frames through the add-on, but the DLSS 5 network was never created. Press F7 in game (DLSS-NR on/off) and check the add-on's panel; if it stays off, attach this log."
+  zh-CN: "游戏的 DLSS 正把帧送过附加组件，但 DLSS 5 网络从未创建。在游戏里按 F7（DLSS-NR 开/关）并查看附加组件的面板；若仍是关的，附上这份日志反馈。"
+diagnose.upstream_never_rendered:
+  en: "The game created its DLSS feature but never rendered a frame through it: the session ended at a menu or loading screen. Load into gameplay, play for a minute, then run this again."
+  zh-CN: "游戏创建了自己的 DLSS feature，却没有用它渲染过任何一帧：会话结束在菜单或加载画面。进入实际游戏玩一分钟，再运行一次。"

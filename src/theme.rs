@@ -2,6 +2,9 @@
 //!
 //! Fonts are bundled (all SIL OFL, licences in assets/fonts):
 //! Sora Bold for the title, IBM Plex Sans for UI text, JetBrains Mono for paths and the log.
+//! Noto Sans SC (subset, Regular weight only) rides at the tail of the proportional and
+//! monospace chains so the CJK half of the Chinese UI and Chinese game titles rasterise;
+//! the Latin faces stay first so their glyphs keep winning.
 
 use eframe::egui::{
     self, Color32, CornerRadius, FontData, FontDefinitions, FontFamily, FontId, Stroke, TextStyle,
@@ -77,6 +80,13 @@ pub fn install(ctx: &egui::Context) {
         "jbmono",
         include_bytes!("../assets/fonts/JetBrainsMono-Regular.ttf"),
     );
+    // 中日韩回退字体：无汉字字形的西文字体排在前，缺字时落到这里。
+    // 完整官方版（noto-cjk 的 SubsetOTF/SC，OTF/CFF 格式，全量简中字形）。
+    add(
+        &mut fonts,
+        "notosc",
+        include_bytes!("../assets/fonts/NotoSansSC-Regular.otf"),
+    );
 
     fonts
         .families
@@ -88,6 +98,14 @@ pub fn install(ctx: &egui::Context) {
         .entry(FontFamily::Monospace)
         .or_default()
         .insert(0, "jbmono".to_owned());
+    // 汉字字形只存在于 Noto Sans SC，挂在两个家族链尾做回退。
+    for family in [FontFamily::Proportional, FontFamily::Monospace] {
+        fonts
+            .families
+            .entry(family)
+            .or_default()
+            .push("notosc".to_owned());
+    }
     for name in [SORA, PLEX_MEDIUM, PLEX_SEMIBOLD] {
         // Fall back to the regular proportional chain for glyphs the face lacks.
         let mut chain = vec![name.to_owned()];
@@ -156,4 +174,33 @@ pub fn install(ctx: &egui::Context) {
         w.open.bg_stroke = Stroke::new(1.0, BORDER_STRONG);
         w.open.fg_stroke = Stroke::new(1.0, TEXT);
     });
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Noto Sans SC 必须真的携带汉字字形：沿 Proportional 链光栅化一个
+    /// "中"字，拿到非零步进宽度才算挂载成功（防止字体文件被误替换或
+    /// 加载失败后，中文界面静默变成一排方块）。
+    #[test]
+    fn chinese_glyph_rasterises() {
+        let mut defs = FontDefinitions::default();
+        defs.font_data.insert(
+            "notosc".to_owned(),
+            Arc::new(FontData::from_static(include_bytes!(
+                "../assets/fonts/NotoSansSC-Regular.otf"
+            ))),
+        );
+        defs.families
+            .entry(FontFamily::Proportional)
+            .or_default()
+            .push("notosc".to_owned());
+        let mut fonts = egui::epaint::Fonts::new(Default::default(), defs);
+        assert!(
+            fonts.has_glyph(&plex(13.0), '中'),
+            "Noto Sans SC 里没有可用的汉字字形"
+        );
+        assert!(fonts.has_glyphs(&plex(13.0), "安装神经渲染"));
+    }
 }

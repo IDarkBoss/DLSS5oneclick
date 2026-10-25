@@ -135,9 +135,10 @@ fn fx_b(ini: &Ini, key: &str, default: bool) -> bool {
 pub fn load(game_dir: &Path) -> Result<FeederKnobs> {
     let path = cfg_path(game_dir);
     if !path.is_file() {
-        bail!("not installed: {} missing", CFG_NAME);
+        bail!("{}", t!("feeder_cfg.not_installed", cfg = CFG_NAME));
     }
-    let text = fs::read_to_string(&path).with_context(|| format!("read {}", path.display()))?;
+    let text = fs::read_to_string(&path)
+        .with_context(|| t!("feeder_cfg.read", path = path.display().to_string()))?;
     let kv = parse_kv(&text);
     let preset = Ini::load(&game_dir.join("ReShadePreset.ini"));
     let mut k = FeederKnobs::default();
@@ -234,7 +235,8 @@ pub fn save(game_dir: &Path, k: &FeederKnobs) -> Result<()> {
     if !out.ends_with('\n') {
         out.push('\n');
     }
-    fs::write(&path, out).with_context(|| format!("write {}", path.display()))?;
+    fs::write(&path, out)
+        .with_context(|| t!("feeder_cfg.write", path = path.display().to_string()))?;
 
     let fx = vec![
         (

@@ -38,6 +38,10 @@ pub struct Settings {
     /// path, lower-cased), so a forced choice survives closing the app (#137).
     #[serde(default)]
     pub game_overrides: std::collections::BTreeMap<String, GameOverride>,
+    /// Interface language (`en` / `zh-CN`) as chosen in the Settings page.
+    /// `None` = follow the Windows UI language, picked fresh every start.
+    #[serde(default)]
+    pub language: Option<String>,
 }
 
 /// What the Setup page's "Force ..." dropdowns were set to for one game:
@@ -134,6 +138,7 @@ impl Default for Settings {
             renodx_stable_only: false,
             sort_newest: false,
             game_overrides: Default::default(),
+            language: None,
         }
     }
 }
@@ -177,6 +182,7 @@ impl Settings {
             renodx_stable_only: false,
             sort_newest: false,
             game_overrides: Default::default(),
+            language: None,
         }
     }
 
@@ -184,10 +190,11 @@ impl Settings {
     pub fn reset_to_feeder_defaults(&mut self) {
         // Only the Feeder values: whether advanced options are shown is a
         // window preference, not a Feeder default.
-        let (advanced_open, renodx_stable_only, sort_newest) = (
+        let (advanced_open, renodx_stable_only, sort_newest, language) = (
             self.advanced_open,
             self.renodx_stable_only,
             self.sort_newest,
+            self.language.take(),
         );
         let game_overrides = std::mem::take(&mut self.game_overrides);
         *self = Self::feeder_stock();
@@ -195,6 +202,7 @@ impl Settings {
         self.advanced_open = advanced_open;
         self.renodx_stable_only = renodx_stable_only;
         self.sort_newest = sort_newest;
+        self.language = language;
     }
 
     pub fn path() -> PathBuf {
@@ -215,10 +223,11 @@ impl Settings {
     pub fn save(&self) -> Result<()> {
         let p = Self::path();
         if let Some(parent) = p.parent() {
-            fs::create_dir_all(parent).with_context(|| format!("create {}", parent.display()))?;
+            fs::create_dir_all(parent)
+                .with_context(|| t!("settings.create_dir", path = parent.display().to_string()))?;
         }
         let t = serde_json::to_string_pretty(self)?;
-        fs::write(&p, t).with_context(|| format!("write {}", p.display()))?;
+        fs::write(&p, t).with_context(|| t!("settings.write", path = p.display().to_string()))?;
         Ok(())
     }
 

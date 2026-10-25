@@ -1,0 +1,50 @@
+# setup 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+setup.label.opti:
+  en: "OptiScaler with its built-in neural rendering pass"
+  zh-CN: "OptiScaler 及其内置神经渲染通道"
+setup.label.aio:
+  en: "ReShade + standalone AIO"
+  zh-CN: "ReShade + 独立 AIO"
+setup.label.mfg:
+  en: "Universal RTXMFG only (no DLSS 5)"
+  zh-CN: "仅 Universal RTXMFG（不含 DLSS 5）"
+setup.label.mfg_addon:
+  en: "RTX 40 MFG add-on only (no DLSS 5)"
+  zh-CN: "仅 RTX 40 MFG 附加组件（不含 DLSS 5）"
+setup.label.sf:
+  en: "ReShade + ShortFuse's DLSS add-on"
+  zh-CN: "ReShade + ShortFuse 的 DLSS 附加组件"
+setup.label.dlss5_newest:
+  en: "ReShade + DLSS 5 add-on (newest build)"
+  zh-CN: "ReShade + DLSS 5 附加组件（最新构建）"
+setup.label.dlss5_tag:
+  en: "ReShade + DLSS 5 add-on %{tag}"
+  zh-CN: "ReShade + DLSS 5 附加组件 %{tag}"
+setup.hand_label.upstream:
+  en: "ReShade + Neural Upstream"
+  zh-CN: "ReShade + Neural Upstream"
+setup.profile.cyberpunk:
+  en: "Cyberpunk 2077 works on the OptiScaler engine (#95)"
+  zh-CN: "Cyberpunk 2077 在 OptiScaler 引擎上可用（#95）"
+setup.profile.dd2:
+  en: "Dragon's Dogma 2 crashed on newer DLSS 5 add-on builds (#96)"
+  zh-CN: "Dragon's Dogma 2 在较新的 DLSS 5 附加组件构建上会崩溃（#96）"
+setup.stale.shortfuse_to_dlss5:
+  en: "ShortFuse's add-on → DLSS 5 add-on %{tag} (the new default)"
+  zh-CN: "ShortFuse 的附加组件 → DLSS 5 附加组件 %{tag}（新的默认方案）"
+setup.newest_build:
+  en: "newest build"
+  zh-CN: "最新构建"
+setup.reason.native:
+  en: "the game has its own DLSS"
+  zh-CN: "游戏自带 DLSS"
+setup.reason.feeder:
+  en: "the game has no DLSS of its own (the Feeder supplies it)"
+  zh-CN: "游戏没有自己的 DLSS（由 Feeder 提供）"
+setup.reason.bitness32:
+  en: "32-bit"
+  zh-CN: "32 位"
+setup.reason.helper:
+  en: "64-bit DirectX 10: the Feeder's helper mode (beta, not yet run in a game)"
+  zh-CN: "64 位 DirectX 10：Feeder 的 helper 模式（beta，尚未在游戏中运行过）"

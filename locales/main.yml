@@ -1,0 +1,194 @@
+# main 的用户可见文案：headless CLI 输出与 panic 弹窗（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+main.error:
+  en: "error: %{err}"
+  zh-CN: "错误：%{err}"
+main.fetch.usage:
+  en: "usage: --fetch <url> <file>"
+  zh-CN: "用法：--fetch <url> <file>"
+main.fetch.label:
+  en: "fetch"
+  zh-CN: "下载"
+main.fetch.done:
+  en: "ok"
+  zh-CN: "完成"
+main.list_games.poster:
+  en: "poster"
+  zh-CN: "封面"
+main.posters.ok:
+  en: "ok   %{w}x%{h} %{title} [%{poster}]"
+  zh-CN: "正常 %{w}x%{h} %{title} [%{poster}]"
+main.posters.fail:
+  en: "FAIL %{title} [%{poster}]"
+  zh-CN: "失败 %{title} [%{poster}]"
+main.posters.summary:
+  en: "%{ok} decoded, %{bad} failed"
+  zh-CN: "%{ok} 个解码成功，%{bad} 个失败"
+main.imports.needs_target:
+  en: "error: --imports needs a game exe or folder"
+  zh-CN: "错误：--imports 需要一个游戏 exe 或文件夹"
+main.imports.api_read:
+  en: "  api read as: %{api}"
+  zh-CN: "  API 检测为：%{api}"
+main.imports.imports:
+  en: "  imports: %{list}"
+  zh-CN: "  导入：%{list}"
+main.imports.from_dll:
+  en: "  from %{dll}: %{list}"
+  zh-CN: "  来自 %{dll}：%{list}"
+main.err.mode:
+  en: "error: --mode must be feeder or native"
+  zh-CN: "错误：--mode 必须是 feeder 或 native"
+main.err.consumer:
+  en: "error: --consumer must be sf or dlss5"
+  zh-CN: "错误：--consumer 必须是 sf 或 dlss5"
+main.err.api:
+  en: "error: --api must be dx11 or dx12"
+  zh-CN: "错误：--api 必须是 dx11 或 dx12"
+main.err.next_setup:
+  en: "error: --next-setup picks the setup itself; drop --engine=, --consumer=, --addon=, --upstream, --check, --remove, --diagnose and --report, and unset DLSS5ONECLICK_RENODX_TAG / DLSS5ONECLICK_CONSUMER."
+  zh-CN: "错误：--next-setup 自行挑选方案；请去掉 --engine=、--consumer=、--addon=、--upstream、--check、--remove、--diagnose 和 --report，并取消设置 DLSS5ONECLICK_RENODX_TAG / DLSS5ONECLICK_CONSUMER。"
+main.gui_error:
+  en: "gui error: %{msg}"
+  zh-CN: "GUI 错误：%{msg}"
+main.gui_error_box:
+  en: "DLSS5oneclick could not open its window.\n\n%{msg}\n\nWritten to %{log}\nAttach that file to a GitHub issue."
+  zh-CN: "DLSS5oneclick 无法打开窗口。\n\n%{msg}\n\n已写入 %{log}\n请将该文件附到 GitHub issue。"
+main.update.latest:
+  en: "DLSS5oneclick %{ver} is the latest version."
+  zh-CN: "DLSS5oneclick %{ver} 已是最新版本。"
+main.update.available:
+  en: "%{from} -> %{to} available. Downloading..."
+  zh-CN: "%{from} -> %{to} 有可用更新。正在下载…"
+main.update.updated_to:
+  en: "Updated to %{ver} at %{path}"
+  zh-CN: "已更新到 %{ver}，位于 %{path}"
+main.using:
+  en: "using %{exe}"
+  zh-CN: "使用 %{exe}"
+main.using_with_others:
+  en: "using %{exe} (other candidates: %{others})"
+  zh-CN: "使用 %{exe}（其他候选：%{others}）"
+main.err.hand_chosen:
+  en: "error: this game's setup was chosen by hand (Neural Upstream, the AIO, or a build its list does not carry); pick the next one with --engine= / --consumer= / --addon=."
+  zh-CN: "错误：此游戏的方案是手动选择的（Neural Upstream、AIO，或其列表未收录的版本）；请用 --engine= / --consumer= / --addon= 选择下一个。"
+main.setup_kept:
+  en: "setup: %{label} (chosen by hand, kept)"
+  zh-CN: "方案：%{label}（手动选择，保留）"
+main.err.no_fit:
+  en: "error: none of this tool's setups fits this game."
+  zh-CN: "错误：本工具的方案均不适合此游戏。"
+main.err.nothing_installed:
+  en: "error: nothing from this tool is installed in this game yet; run it without --next-setup first."
+  zh-CN: "错误：此游戏尚未安装本工具的任何组件；请先不带 --next-setup 运行一次。"
+main.err.last_setup:
+  en: "error: this game is on the last setup there is (%{label}); nothing further to try."
+  zh-CN: "错误：此游戏已处在最后一个方案（%{label}）；没有更多可试的了。"
+main.err.foreign_addons:
+  en: "error: the next setup is %{label}, a different engine, and switching takes ReShade out of this game, but it has ReShade add-ons this tool did not install (%{list}). Remove those first, or pick a setup with --engine= / --consumer=."
+  zh-CN: "错误：下一套方案是 %{label}，属于不同的引擎，切换会把 ReShade 从该游戏中移除，但该游戏带有并非本工具安装的 ReShade 附加组件（%{list}）。请先移除这些组件，或用 --engine= / --consumer= 选择一套方案。"
+main.setup_rung:
+  en: "setup: %{label} (step %{n} of %{total}) - %{reason}"
+  zh-CN: "方案：%{label}（第 %{n}/%{total} 级）- %{reason}"
+main.report_written:
+  en: "Report written: %{path}\nAttach that zip to the GitHub issue."
+  zh-CN: "报告已写入：%{path}\n请将该 zip 附到 GitHub issue。"
+main.diagnose.ok:
+  en: "ok  "
+  zh-CN: "正常"
+main.diagnose.warn:
+  en: "warn"
+  zh-CN: "警告"
+main.diagnose.bad:
+  en: "FAIL"
+  zh-CN: "失败"
+main.check.status:
+  en: "%{exe} | %{bits}-bit | %{api} | mode=%{mode} | reshade=%{reshade} headers=%{headers} feeder=%{feeder} lumenite=%{lumenite} dlss5=%{dlss5} dlssnr=%{dlssnr} dlss=%{dlss} bridge=%{bridge} opti=%{opti} | gpu=%{gpu} | complete=%{complete}"
+  zh-CN: "%{exe} | %{bits} 位 | %{api} | 模式=%{mode} | reshade=%{reshade} headers=%{headers} feeder=%{feeder} lumenite=%{lumenite} dlss5=%{dlss5} dlssnr=%{dlssnr} dlss=%{dlss} 桥接=%{bridge} opti=%{opti} | GPU=%{gpu} | complete=%{complete}"
+main.unknown_gpu:
+  en: "unknown"
+  zh-CN: "未知"
+main.check.plan:
+  en: "  plan: %{names}"
+  zh-CN: "  计划：%{names}"
+main.check.re_engine:
+  en: "  RE Engine game: REFramework (dinput8.dll) %{state}"
+  zh-CN: "  RE Engine 游戏：REFramework (dinput8.dll) %{state}"
+main.check.reframework_present:
+  en: "present"
+  zh-CN: "已存在"
+main.check.reframework_missing:
+  en: "missing, will be installed"
+  zh-CN: "缺失，将安装"
+main.check.hybrid:
+  en: "  hybrid machine (%{adapters}) · Windows GPU preference for %{exe}: %{pref}"
+  zh-CN: "  混合显卡机器（%{adapters}）· Windows 对 %{exe} 的 GPU 首选项：%{pref}"
+main.check.gpu_pref_unset:
+  en: "not set"
+  zh-CN: "未设置"
+main.check.all_current:
+  en: "  installed by this tool · everything current"
+  zh-CN: "  本工具安装 · 全部为最新"
+main.check.out_of_date:
+  en: "  installed by this tool · out of date:"
+  zh-CN: "  本工具安装 · 已过时："
+main.check.renodx_installed:
+  en: "  RenoDX mod installed: %{mod_name}"
+  zh-CN: "  已安装 RenoDX 模组：%{mod_name}"
+main.check.renodx_foreign:
+  en: "  RenoDX mod present (not installed by this tool): %{list}"
+  zh-CN: "  存在 RenoDX 模组（非本工具安装）：%{list}"
+main.check.renodx_available:
+  en: "  RenoDX HDR mod available: %{title} -> %{file} (%{status}, from %{source})%{note}"
+  zh-CN: "  有可用的 RenoDX HDR 模组：%{title} -> %{file}（%{status}，来自 %{source}）%{note}"
+main.check.renodx_none:
+  en: "  RenoDX HDR mod: none for this game"
+  zh-CN: "  RenoDX HDR 模组：此游戏没有"
+main.check.renodx_failed:
+  en: "  RenoDX lookup failed: %{err}"
+  zh-CN: "  RenoDX 查询失败：%{err}"
+main.removed:
+  en: "removed %{file}"
+  zh-CN: "已移除 %{file}"
+main.step.ok:
+  en: "ok: %{detail}"
+  zh-CN: "完成：%{detail}"
+main.step.failed:
+  en: "FAILED: %{detail}"
+  zh-CN: "失败：%{detail}"
+main.removed_previous:
+  en: "removed the previous setup: %{list}"
+  zh-CN: "已移除上一个方案：%{list}"
+main.err.remove_previous:
+  en: "error: could not remove the previous setup: %{err}"
+  zh-CN: "错误：无法移除上一个方案：%{err}"
+main.done.opti:
+  en: "Done. In game: Insert opens the OptiScaler overlay -> enable Neural Rendering (off by default)."
+  zh-CN: "完成。游戏内：Insert 打开 OptiScaler 悬浮层 -> 启用神经渲染（默认关闭）。"
+main.done.mfg_addon:
+  en: "Done. In game: turn on the game's own DLSS Frame Generation; Home opens ReShade -> Add-ons tab -> the MFG unlock."
+  zh-CN: "完成。游戏内：打开游戏自带的 DLSS 帧生成；Home 打开 ReShade -> 附加组件（Add-ons）标签页 -> MFG 解锁。"
+main.done.mfg:
+  en: "Done. In game: turn on the game's own DLSS Frame Generation; Backspace opens the RTXMFG menu."
+  zh-CN: "完成。游戏内：打开游戏自带的 DLSS 帧生成；Backspace 打开 RTXMFG 菜单。"
+main.done.aio:
+  en: "Done. In game: turn the game's own upscaling, anti-aliasing and frame generation off, run windowed; Home opens ReShade -> Add-ons tab -> Standalone DLSS-NR + SR."
+  zh-CN: "完成。游戏内：关闭游戏自带的超分辨率、抗锯齿和帧生成，并以窗口模式运行；Home 打开 ReShade -> 附加组件（Add-ons）标签页 -> Standalone DLSS-NR + SR。"
+main.done.shortfuse:
+  en: "Done. In game: Home opens ReShade -> Add-ons tab -> RenoDX DLSS -> turn Neural Rendering on. (Home tab saying no effect files is normal on games with their own DLSS.)"
+  zh-CN: "完成。游戏内：Home 打开 ReShade -> 附加组件（Add-ons）标签页 -> RenoDX DLSS -> 打开神经渲染。（自带 DLSS 的游戏里，Home 标签页提示没有效果文件属正常现象。）"
+main.done.default:
+  en: "Done. In game: Home opens ReShade -> Add-ons tab -> DLSS 5 Neural Rendering -> enable. (Home tab saying no effect files is normal on games with their own DLSS.)"
+  zh-CN: "完成。游戏内：Home 打开 ReShade -> 附加组件（Add-ons）标签页 -> DLSS 5 神经渲染 -> 启用。（自带 DLSS 的游戏里，Home 标签页提示没有效果文件属正常现象。）"
+main.err.previous_removed:
+  en: "The previous setup was already taken out, so this game has none now. Run the same command without --next-setup to set it up again from the top of its list."
+  zh-CN: "上一个方案已被移除，此游戏现在没有任何方案。请不带 --next-setup 运行同一命令，从其列表顶端重新安装。"
+main.panic.unknown_location:
+  en: "unknown location"
+  zh-CN: "未知位置"
+main.panic.msg:
+  en: "panic at %{loc}: %{what}"
+  zh-CN: "panic 于 %{loc}：%{what}"
+main.panic.box:
+  en: "DLSS5oneclick stopped unexpectedly.\n\n%{msg}\n\nWritten to %{log}\nAttach that file to a GitHub issue."
+  zh-CN: "DLSS5oneclick 意外停止。\n\n%{msg}\n\n已写入 %{log}\n请将该文件附到 GitHub issue。"

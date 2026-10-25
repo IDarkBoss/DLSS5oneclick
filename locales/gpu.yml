@@ -1,0 +1,20 @@
+# gpu 的用户可见文案（zh-CN = 汉化版文本；en = 上游 HEAD 原文）。
+_version: 2
+gpu.tier_rtx50:
+  en: "RTX 50 · full speed"
+  zh-CN: "RTX 50 · 全速运行"
+gpu.tier_rtx40:
+  en: "RTX 40 · patched build, moderate cost"
+  zh-CN: "RTX 40 · 补丁版本，开销中等"
+gpu.tier_rtx2030:
+  en: "RTX 20/30 · FP16 path, heavy cost"
+  zh-CN: "RTX 20/30 · FP16 路径，开销很大"
+gpu.tier_no_tensor:
+  en: "no tensor cores"
+  zh-CN: "无张量核心"
+gpu.tier_not_nvidia:
+  en: "not NVIDIA"
+  zh-CN: "非 NVIDIA"
+gpu.tier_unknown:
+  en: "GPU unknown"
+  zh-CN: "GPU 未知"

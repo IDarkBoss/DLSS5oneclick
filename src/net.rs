@@ -14,7 +14,7 @@ pub fn client() -> Result<Client> {
         .user_agent(concat!("DLSS5oneclick/", env!("CARGO_PKG_VERSION")))
         .timeout(Duration::from_secs(120))
         .build()
-        .context("cannot build HTTP client")
+        .context(t!("net.err_client"))
 }
 
 /// GitHub API calls are capped at 60/hour per IP without a token. Honour
@@ -30,15 +30,19 @@ pub fn get_json_github(client: &Client, url: &str) -> Result<serde_json::Value> 
         }
     }
     if std::env::var("DLSS5ONECLICK_NO_API").is_ok() {
-        bail!("API disabled by DLSS5ONECLICK_NO_API");
+        bail!("{}", t!("net.err_api_disabled"));
     }
     let resp = req
         .send()
-        .with_context(|| format!("request failed: {url}"))?;
+        .with_context(|| t!("net.err_request", target = url))?;
     if !resp.status().is_success() {
-        bail!("{url}: HTTP {}", resp.status());
+        bail!(
+            "{}",
+            t!("net.err_http", target = url, status = resp.status())
+        );
     }
-    resp.json().with_context(|| format!("bad JSON from {url}"))
+    resp.json()
+        .with_context(|| t!("net.err_bad_json", url = url))
 }
 
 /// Release tags of `owner/repo` starting with `prefix`, read from the HTML
@@ -119,11 +123,14 @@ fn asset_url_from_html(html: &str, repo: &str, tag: &str, name_re: &str) -> Resu
         name_re
     ))
     .unwrap();
-    let m = re
-        .captures(html)
-        .ok_or_else(|| anyhow!("no asset matching {name_re} in {repo} {tag}"))?;
+    let m = re.captures(html).ok_or_else(|| {
+        anyhow!(
+            "{}",
+            t!("net.err_no_asset", repo = repo, tag = tag, re = name_re)
+        )
+    })?;
     Ok(format!(
-        "https://github.com/{}/releases/download/{tag}/{}",
+        "https://gh-proxy.org/github.com/{}/releases/download/{tag}/{}",
         &m["repo"], &m["name"]
     ))
 }
@@ -136,11 +143,15 @@ pub fn get_text(client: &Client, url: &str) -> Result<String> {
         let resp = client
             .get(url)
             .send()
-            .with_context(|| format!("request failed: {url}"))?;
+            .with_context(|| t!("net.err_request", target = url))?;
         if !resp.status().is_success() {
-            bail!("{url}: HTTP {}", resp.status());
+            bail!(
+                "{}",
+                t!("net.err_http", target = url, status = resp.status())
+            );
         }
-        resp.text().with_context(|| format!("bad body from {url}"))
+        resp.text()
+            .with_context(|| t!("net.err_bad_body", url = url))
     })
 }
 
@@ -149,19 +160,23 @@ pub fn get_text(client: &Client, url: &str) -> Result<String> {
 /// would hand out pre-releases (DLSS5-Feeder 0.12.1-beta.1).
 pub fn latest_tag(client: &Client, repo: &str) -> Result<String> {
     with_retry(&|_, _| {}, repo, || {
+        let target = format!("{repo} releases/latest");
         let resp = client
             .get(format!("https://github.com/{repo}/releases/latest"))
             .send()
-            .with_context(|| format!("request failed: {repo} releases/latest"))?;
+            .with_context(|| t!("net.err_request", target = &target))?;
         if !resp.status().is_success() {
-            bail!("{repo} releases/latest: HTTP {}", resp.status());
+            bail!(
+                "{}",
+                t!("net.err_http", target = &target, status = resp.status())
+            );
         }
         let url = resp.url().as_str().to_owned();
         url.rsplit("/tag/")
             .next()
             .filter(|t| !t.is_empty() && !t.contains('/'))
             .map(str::to_owned)
-            .ok_or_else(|| anyhow!("{repo}: releases/latest did not land on a tag ({url})"))
+            .ok_or_else(|| anyhow!("{}", t!("net.err_latest_no_tag", repo = repo, url = url)))
     })
 }
 
@@ -201,9 +216,12 @@ pub fn remote_len(client: &Client, url: &str) -> Result<Option<u64>> {
         let resp = client
             .head(url)
             .send()
-            .with_context(|| format!("request failed: {url}"))?;
+            .with_context(|| t!("net.err_request", target = url))?;
         if !resp.status().is_success() {
-            bail!("{url}: HTTP {}", resp.status());
+            bail!(
+                "{}",
+                t!("net.err_http", target = url, status = resp.status())
+            );
         }
         Ok(resp.content_length())
     })
@@ -226,7 +244,7 @@ fn with_retry<T>(progress: Progress, label: &str, f: impl Fn() -> Result<T>) -> 
                 if !retryable || attempt == 4 {
                     return Err(e);
                 }
-                progress(0, &format!("{label}: retrying ({attempt}/3)"));
+                progress(0, &t!("net.retrying", label = label, attempt = attempt));
                 std::thread::sleep(std::time::Duration::from_secs(2 * attempt as u64));
                 attempt += 1;
             }
@@ -260,7 +278,7 @@ pub fn download(
                 fs::create_dir_all(p)?;
             }
             if fs::copy(&cached, dest).is_ok() {
-                progress(100, &format!("{label} (cached)"));
+                progress(100, &t!("net.cached", label = label));
                 return Ok(());
             }
             // A cache entry that cannot be copied is not worth keeping.
@@ -376,9 +394,12 @@ fn download_once(
     let mut resp = client
         .get(url)
         .send()
-        .with_context(|| format!("download failed: {label}"))?;
+        .with_context(|| t!("net.err_download", label = label))?;
     if !resp.status().is_success() {
-        bail!("{label}: HTTP {}", resp.status());
+        bail!(
+            "{}",
+            t!("net.err_http", target = label, status = resp.status())
+        );
     }
     if let Some(p) = dest.parent() {
         fs::create_dir_all(p)?;
@@ -403,10 +424,18 @@ fn download_once(
                 let pct = (done as f64 / total as f64 * 100.0).min(99.0) as u8;
                 progress(
                     pct,
-                    &format!("{label}: {} / {}", fmt_bytes(done), fmt_bytes(total)),
+                    &t!(
+                        "net.progress_of",
+                        label = label,
+                        done = fmt_bytes(done),
+                        total = fmt_bytes(total)
+                    ),
                 );
             } else {
-                progress(0, &format!("{label}: {}", fmt_bytes(done)));
+                progress(
+                    0,
+                    &t!("net.progress", label = label, done = fmt_bytes(done)),
+                );
             }
         }
         out.flush()?;
@@ -414,7 +443,7 @@ fn download_once(
     })();
     if let Err(e) = result {
         let _ = fs::remove_file(&part);
-        return Err(e).with_context(|| format!("download failed: {label}"));
+        return Err(e).with_context(|| t!("net.err_download", label = label));
     }
     fs::rename(&part, dest)?;
     Ok(())
@@ -431,7 +460,7 @@ pub fn extract_member<R: Read + Seek>(
     }
     let mut f = zip
         .by_name(member)
-        .with_context(|| format!("zip member missing: {member}"))?;
+        .with_context(|| t!("net.err_zip_member", member = member))?;
     let mut out = fs::File::create(dest)?;
     std::io::copy(&mut f, &mut out)?;
     Ok(())
@@ -469,7 +498,7 @@ mod tests {
         .unwrap();
         assert_eq!(
             url,
-            "https://github.com/dashdogy/MFG-Unlocker/releases/download/v1.5.0/MFGUnlocker-v1.5.0.zip"
+            "https://gh-proxy.org/github.com/dashdogy/MFG-Unlocker/releases/download/v1.5.0/MFGUnlocker-v1.5.0.zip"
         );
         assert!(super::asset_url_from_html(html, "o/r", "v9", r#"[^"]+\.zip"#).is_err());
     }

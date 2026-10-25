@@ -1,11 +1,18 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+// 翻译表编译期嵌入：locales/ 下所有 .yml（en / zh-CN），缺失 key 回退 en。
+#[macro_use]
+extern crate rust_i18n;
+
+i18n!("locales", fallback = "en");
+
 mod diagnose;
 mod feeder_cfg;
 mod game;
 mod gpu;
 mod gpupref;
 mod gui;
+mod i18n;
 mod installer;
 mod library;
 mod logo;
@@ -25,7 +32,7 @@ mod update;
 use std::io::Write;
 use std::path::PathBuf;
 
-/// `dlss5oneclick <GAME.exe | game folder> [--remove | --remove-all | --check | --diagnose | --report | --engine=opti|aio|mfg|mfgaddon | --renodx | --upstream | --imports | --ignore-anticheat | --mode=feeder|native | --api=dx11|dx12 | --addon=latest|rc|stable|4.55|<tag> | --rtxmfg | --ampere-mfg | --opti-tag=<tag>] | --update` runs headless; no args opens the GUI.
+/// `dlss5oneclick <GAME.exe | game folder> [--remove | --remove-all | --check | --diagnose | --report | --engine=opti|aio|mfg|mfgaddon | --renodx | --upstream | --imports | --ignore-anticheat | --mode=feeder|native | --api=dx11|dx12 | --addon=latest|rc|stable|4.55|<tag> | --rtxmfg | --ampere-mfg | --opti-tag=<tag> | --lang=en|zh-CN] | --update` runs headless; no args opens the GUI.
 /// Read by the NVIDIA and AMD drivers from this exe's export table to choose
 /// the discrete GPU for the whole process. Exported by the linker flags in
 /// build.rs; the values themselves are what the drivers read (#32).
@@ -43,30 +50,31 @@ fn main() {
     install_panic_handler();
     update::cleanup_old();
     let args: Vec<String> = std::env::args().skip(1).collect();
+    i18n::init(&args);
     if args.first().map(String::as_str) == Some("--fetch") {
         attach_parent_console();
         let (Some(url), Some(dest)) = (args.get(1), args.get(2)) else {
-            eprintln!("usage: --fetch <url> <file>");
+            eprintln!("{}", t!("main.fetch.usage"));
             std::process::exit(2);
         };
         let code = match net::client().and_then(|c| {
-            net::download(&c, url, std::path::Path::new(dest), "fetch", &|p, m| {
-                print!("\r{p:3}% {m:<72}");
-                let _ = std::io::stdout().flush();
-            })
+            net::download(
+                &c,
+                url,
+                std::path::Path::new(dest),
+                &t!("main.fetch.label"),
+                &|p, m| {
+                    print!("\r{p:3}% {m:<72}");
+                    let _ = std::io::stdout().flush();
+                },
+            )
         }) {
             Ok(()) => {
-                println!(
-                    "
-ok"
-                );
+                println!("\n{}", t!("main.fetch.done"));
                 0
             }
             Err(e) => {
-                eprintln!(
-                    "
-error: {e:#}"
-                );
+                eprintln!("\n{}", t!("main.error", err = format!("{e:#}")));
                 1
             }
         };
@@ -81,11 +89,12 @@ error: {e:#}"
                 .map(|d| d.as_secs())
                 .unwrap_or(0);
             println!(
-                "{:<10} {:<12} {:<50} {} poster={:?}",
+                "{:<10} {:<12} {:<50} {} {}={:?}",
                 when,
                 g.store.label(),
                 g.title.chars().take(50).collect::<String>(),
                 g.dir.display(),
+                t!("main.list_games.poster"),
                 g.poster
             );
         }
@@ -101,20 +110,30 @@ error: {e:#}"
                 Some(img) => {
                     ok += 1;
                     println!(
-                        "ok   {}x{} {} [{:?}]",
-                        img.width(),
-                        img.height(),
-                        g.title,
-                        g.poster
+                        "{}",
+                        t!(
+                            "main.posters.ok",
+                            w = img.width(),
+                            h = img.height(),
+                            title = g.title.as_str(),
+                            poster = format!("{:?}", g.poster)
+                        )
                     );
                 }
                 None => {
                     bad += 1;
-                    println!("FAIL {} [{:?}]", g.title, g.poster);
+                    println!(
+                        "{}",
+                        t!(
+                            "main.posters.fail",
+                            title = g.title.as_str(),
+                            poster = format!("{:?}", g.poster)
+                        )
+                    );
                 }
             }
         }
-        println!("{ok} decoded, {bad} failed");
+        println!("{}", t!("main.posters.summary", ok = ok, bad = bad));
         std::process::exit(0);
     }
     if args.iter().any(|a| a == "--update") {
@@ -124,25 +143,34 @@ error: {e:#}"
     if args.iter().any(|a| a == "--imports") {
         attach_parent_console();
         let Some(first) = args.first().filter(|a| !a.starts_with('-')) else {
-            eprintln!("error: --imports needs a game exe or folder");
+            eprintln!("{}", t!("main.imports.needs_target"));
             std::process::exit(1);
         };
         match game::resolve_target(&PathBuf::from(first)) {
             Ok((exe, _)) => {
                 println!("{}", exe.display());
-                println!("  api read as: {}", game::detect_api(&exe).label());
+                println!(
+                    "{}",
+                    t!(
+                        "main.imports.api_read",
+                        api = game::detect_api(&exe).label()
+                    )
+                );
                 let imports = game::pe_imports(&exe);
-                println!("  imports: {}", imports.join(", "));
+                println!("{}", t!("main.imports.imports", list = imports.join(", ")));
                 for dll in ["d3d9.dll", "d3d11.dll", "d3d12.dll", "dxgi.dll"] {
                     let fns = game::pe_import_fns(&exe, dll);
                     if !fns.is_empty() {
-                        println!("  from {dll}: {}", fns.join(", "));
+                        println!(
+                            "{}",
+                            t!("main.imports.from_dll", dll = dll, list = fns.join(", "))
+                        );
                     }
                 }
                 std::process::exit(0);
             }
             Err(e) => {
-                eprintln!("error: {e:#}");
+                eprintln!("{}", t!("main.error", err = format!("{e:#}")));
                 std::process::exit(1);
             }
         }
@@ -162,7 +190,7 @@ error: {e:#}"
     if let Some(m) = args.iter().find_map(|a| a.strip_prefix("--mode=")) {
         std::env::set_var(game::MODE_ENV, m);
         if game::mode_override().is_none() {
-            eprintln!("error: --mode must be feeder or native");
+            eprintln!("{}", t!("main.err.mode"));
             std::process::exit(1);
         }
     }
@@ -194,7 +222,7 @@ error: {e:#}"
             .iter()
             .any(|v| c.eq_ignore_ascii_case(v))
         {
-            eprintln!("error: --consumer must be sf or dlss5");
+            eprintln!("{}", t!("main.err.consumer"));
             std::process::exit(1);
         }
         std::env::set_var(installer::CONSUMER_ENV, c);
@@ -202,7 +230,7 @@ error: {e:#}"
     if let Some(a) = args.iter().find_map(|a| a.strip_prefix("--api=")) {
         std::env::set_var(game::API_ENV, a);
         if game::api_override().is_none() {
-            eprintln!("error: --api must be dx11 or dx12");
+            eprintln!("{}", t!("main.err.api"));
             std::process::exit(1);
         }
     }
@@ -225,7 +253,7 @@ error: {e:#}"
                 || std::env::var_os(installer::CONSUMER_ENV).is_some())
     {
         attach_parent_console();
-        eprintln!("error: --next-setup picks the setup itself; drop --engine=, --consumer=, --addon=, --upstream, --check, --remove, --diagnose and --report, and unset DLSS5ONECLICK_RENODX_TAG / DLSS5ONECLICK_CONSUMER.");
+        eprintln!("{}", t!("main.err.next_setup"));
         std::process::exit(1);
     }
     if let Some(first) = args.first().filter(|a| !a.starts_with('-')) {
@@ -273,16 +301,12 @@ error: {e:#}"
     if let Err(e) = gui::run() {
         // The release build has no console: say it in a box and leave a file (#23).
         let msg = format!("{e:#}");
-        eprintln!("gui error: {msg}");
+        eprintln!("{}", t!("main.gui_error", msg = msg.as_str()));
         let log = write_error_log(&msg);
-        report_gui_error(&format!(
-            "DLSS5oneclick could not open its window.
-
-{msg}
-
-Written to {}
-Attach that file to a GitHub issue.",
-            log.display()
+        report_gui_error(&t!(
+            "main.gui_error_box",
+            msg = msg.as_str(),
+            log = log.display().to_string()
         ));
         std::process::exit(2);
     }
@@ -291,14 +315,17 @@ Attach that file to a GitHub issue.",
 fn cli_update() -> i32 {
     match update::check() {
         Ok(None) => {
-            println!("DLSS5oneclick {} is the latest version.", update::CURRENT);
+            println!("{}", t!("main.update.latest", ver = update::CURRENT));
             0
         }
         Ok(Some(av)) => {
             println!(
-                "{} -> {} available. Downloading...",
-                update::CURRENT,
-                av.version
+                "{}",
+                t!(
+                    "main.update.available",
+                    from = update::CURRENT,
+                    to = av.version.as_str()
+                )
             );
             let progress = |pct: u8, msg: &str| {
                 print!("\r{pct:3}% {msg:<72}");
@@ -306,17 +333,24 @@ fn cli_update() -> i32 {
             };
             match update::download_and_swap(&av, &progress) {
                 Ok(exe) => {
-                    println!("\nUpdated to {} at {}", av.version, exe.display());
+                    println!(
+                        "{}",
+                        t!(
+                            "main.update.updated_to",
+                            ver = av.version.as_str(),
+                            path = exe.display().to_string()
+                        )
+                    );
                     0
                 }
                 Err(e) => {
-                    eprintln!("\nerror: {e:#}");
+                    eprintln!("\n{}", t!("main.error", err = format!("{e:#}")));
                     1
                 }
             }
         }
         Err(e) => {
-            eprintln!("error: {e:#}");
+            eprintln!("{}", t!("main.error", err = format!("{e:#}")));
             1
         }
     }
@@ -352,7 +386,7 @@ fn cli(
     let (exe, candidates) = match game::resolve_target(&target) {
         Ok(v) => v,
         Err(e) => {
-            eprintln!("error: {e:#}");
+            eprintln!("{}", t!("main.error", err = format!("{e:#}")));
             return 1;
         }
     };
@@ -367,12 +401,15 @@ fn cli(
             })
             .collect();
         println!(
-            "using {} (other candidates: {})",
-            exe.display(),
-            others.join(", ")
+            "{}",
+            t!(
+                "main.using_with_others",
+                exe = exe.display().to_string(),
+                others = others.join(", ")
+            )
         );
     } else if !candidates.is_empty() {
-        println!("using {}", exe.display());
+        println!("{}", t!("main.using", exe = exe.display().to_string()));
     }
     // The setup picker: the rung matching what is in the folder (the top one
     // when nothing is), or the next one down.
@@ -386,9 +423,7 @@ fn cli(
             let ladder = setup::ladder(&st);
             if setup::hand_chosen(&st) {
                 if next {
-                    eprintln!(
-                        "error: this game's setup was chosen by hand (Neural Upstream, the AIO, or a build its list does not carry); pick the next one with --engine= / --consumer= / --addon=."
-                    );
+                    eprintln!("{}", t!("main.err.hand_chosen"));
                     return 1;
                 }
                 // Refresh what is there rather than replace it.
@@ -404,20 +439,21 @@ fn cli(
                     engine = setup::apply(&s, false);
                 }
                 println!(
-                    "setup: {} (chosen by hand, kept)",
-                    setup::hand_label(&st).unwrap_or_default()
+                    "{}",
+                    t!(
+                        "main.setup_kept",
+                        label = setup::hand_label(&st).unwrap_or_default()
+                    )
                 );
             } else if ladder.is_empty() {
                 setup::clear();
                 if next {
-                    eprintln!("error: none of this tool's setups fits this game.");
+                    eprintln!("{}", t!("main.err.no_fit"));
                     return 1;
                 }
             }
             if next && !setup::hand_chosen(&st) && setup::installed(&st).is_none() {
-                eprintln!(
-                    "error: nothing from this tool is installed in this game yet; run it without --next-setup first."
-                );
+                eprintln!("{}", t!("main.err.nothing_installed"));
                 return 1;
             }
             let pick = if setup::hand_chosen(&st) {
@@ -427,8 +463,13 @@ fn cli(
                     Some(p) => Some(p),
                     None => {
                         eprintln!(
-                            "error: this game is on the last setup there is ({}); nothing further to try.",
-                            setup::current(&st).map(|s| setup::label(&s)).unwrap_or_default()
+                            "{}",
+                            t!(
+                                "main.err.last_setup",
+                                label = setup::current(&st)
+                                    .map(|s| setup::label(&s))
+                                    .unwrap_or_default()
+                            )
                         );
                         return 1;
                     }
@@ -445,9 +486,12 @@ fn cli(
                     let foreign = installer::foreign_addons(st.game_dir());
                     if !foreign.is_empty() {
                         eprintln!(
-                            "error: the next setup is {}, a different engine, and switching takes ReShade out of this game, but it has ReShade add-ons this tool did not install ({}). Remove those first, or pick a setup with --engine= / --consumer=.",
-                            setup::label(&s),
-                            foreign.join(", ")
+                            "{}",
+                            t!(
+                                "main.err.foreign_addons",
+                                label = setup::label(&s),
+                                list = foreign.join(", ")
+                            )
                         );
                         return 1;
                     }
@@ -457,11 +501,14 @@ fn cli(
                 engine = setup::apply(&s, true);
                 rung = Some((n, ladder.len()));
                 println!(
-                    "setup: {} (step {} of {}) - {}",
-                    setup::label(&s),
-                    n + 1,
-                    ladder.len(),
-                    setup::reason(&st)
+                    "{}",
+                    t!(
+                        "main.setup_rung",
+                        label = setup::label(&s),
+                        n = n + 1,
+                        total = ladder.len(),
+                        reason = setup::reason(&st)
+                    )
                 );
             }
         }
@@ -470,14 +517,13 @@ fn cli(
         return match report::write_bundle(&exe) {
             Ok(p) => {
                 println!(
-                    "Report written: {}
-Attach that zip to the GitHub issue.",
-                    p.display()
+                    "{}",
+                    t!("main.report_written", path = p.display().to_string())
                 );
                 0
             }
             Err(e) => {
-                eprintln!("error: {e:#}");
+                eprintln!("{}", t!("main.error", err = format!("{e:#}")));
                 1
             }
         };
@@ -487,9 +533,9 @@ Attach that zip to the GitHub issue.",
             Ok(findings) => {
                 for f in &findings {
                     let tag = match f.level {
-                        diagnose::Level::Ok => "ok  ",
-                        diagnose::Level::Warn => "warn",
-                        diagnose::Level::Bad => "FAIL",
+                        diagnose::Level::Ok => t!("main.diagnose.ok"),
+                        diagnose::Level::Warn => t!("main.diagnose.warn"),
+                        diagnose::Level::Bad => t!("main.diagnose.bad"),
                     };
                     println!("[{tag}] {}", text::tidy(&f.text));
                 }
@@ -500,7 +546,7 @@ Attach that zip to the GitHub issue.",
                 }
             }
             Err(e) => {
-                eprintln!("error: {e:#}");
+                eprintln!("{}", t!("main.error", err = format!("{e:#}")));
                 1
             }
         };
@@ -510,13 +556,29 @@ Attach that zip to the GitHub issue.",
         return match game::inspect(&exe) {
             Ok(st) => {
                 println!(
-                    "{} | {}-bit | {} | mode={:?} | reshade={} headers={} feeder={} lumenite={} dlss5={} dlssnr={} dlss={} bridge={} opti={} | gpu={} | complete={}",
-                    exe.display(), st.bitness, st.api.label(), st.mode, st.reshade, st.headers, st.feeder,
-                    st.lumenite, st.dlss5_addon, st.dlssnr, st.dlss,
-                    st.bridge,
-                    st.opti,
-                    st.gpu.as_ref().map(|(g, t)| format!("{} [{}]", g.name, t.label())).unwrap_or_else(|| "unknown".into()),
-                    st.complete()
+                    "{}",
+                    t!(
+                        "main.check.status",
+                        exe = exe.display().to_string(),
+                        bits = st.bitness,
+                        api = st.api.label(),
+                        mode = format!("{:?}", st.mode),
+                        reshade = st.reshade,
+                        headers = st.headers,
+                        feeder = st.feeder,
+                        lumenite = st.lumenite,
+                        dlss5 = st.dlss5_addon,
+                        dlssnr = st.dlssnr,
+                        dlss = st.dlss,
+                        bridge = st.bridge,
+                        opti = st.opti,
+                        gpu = st
+                            .gpu
+                            .as_ref()
+                            .map(|(g, t)| format!("{} [{}]", g.name, t.label()))
+                            .unwrap_or_else(|| t!("main.unknown_gpu").into_owned()),
+                        complete = st.complete()
+                    )
                 );
                 for p in &st.problems {
                     println!("  ! {}", text::tidy(p));
@@ -538,29 +600,36 @@ Attach that zip to the GitHub issue.",
                     }
                     e => e,
                 };
-                let names: Vec<&str> = installer::plan_with(&st, engine, with_renodx, upstream)
+                let names: Vec<String> = installer::plan_with(&st, engine, with_renodx, upstream)
                     .iter()
-                    .map(|s| s.name)
+                    .map(|s| s.title().into_owned())
                     .collect();
-                println!("  plan: {}", names.join(" -> "));
+                println!("{}", t!("main.check.plan", names = names.join(" -> ")));
                 if st.re_engine {
                     println!(
-                        "  RE Engine game: REFramework (dinput8.dll) {}",
-                        if st.reframework {
-                            "present"
-                        } else {
-                            "missing, will be installed"
-                        }
+                        "{}",
+                        t!(
+                            "main.check.re_engine",
+                            state = if st.reframework {
+                                t!("main.check.reframework_present")
+                            } else {
+                                t!("main.check.reframework_missing")
+                            }
+                        )
                     );
                 }
                 if gpupref::hybrid() {
                     // Which GPU Windows starts the process on decides whether NGX
                     // exists in it at all (#25).
                     println!(
-                        "  hybrid machine ({}) · Windows GPU preference for {}: {}",
-                        gpupref::real_adapters().join(", "),
-                        exe.file_name().unwrap_or_default().to_string_lossy(),
-                        gpupref::get(&exe).unwrap_or_else(|| "not set".into())
+                        "{}",
+                        t!(
+                            "main.check.hybrid",
+                            adapters = gpupref::real_adapters().join(", "),
+                            exe = exe.file_name().unwrap_or_default().to_string_lossy(),
+                            pref = gpupref::get(&exe)
+                                .unwrap_or_else(|| t!("main.check.gpu_pref_unset").into_owned())
+                        )
                     );
                 }
                 if game::installed_by_tool(st.game_dir()) {
@@ -570,9 +639,9 @@ Attach that zip to the GitHub issue.",
                         .map(|c| installer::Latest::fetch(&c))
                         .unwrap_or_default();
                     match setup::stale(&st, &latest).as_slice() {
-                        [] => println!("  installed by this tool · everything current"),
+                        [] => println!("{}", t!("main.check.all_current")),
                         stale => {
-                            println!("  installed by this tool · out of date:");
+                            println!("{}", t!("main.check.out_of_date"));
                             for s in stale {
                                 println!("    {s}");
                             }
@@ -580,34 +649,42 @@ Attach that zip to the GitHub issue.",
                     }
                 }
                 if let Some(m) = &st.renodx_mod {
-                    println!("  RenoDX mod installed: {m}");
+                    println!("{}", t!("main.check.renodx_installed", mod_name = m));
                 }
                 if !st.foreign_renodx.is_empty() {
                     println!(
-                        "  RenoDX mod present (not installed by this tool): {}",
-                        st.foreign_renodx.join(", ")
+                        "{}",
+                        t!(
+                            "main.check.renodx_foreign",
+                            list = st.foreign_renodx.join(", ")
+                        )
                     );
                 }
                 match net::client().and_then(|c| renodx::lookup(&c, &exe)) {
                     Ok(Some(m)) => println!(
-                        "  RenoDX HDR mod available: {} -> {} ({}, from {}){}",
-                        m.title,
-                        m.file,
-                        m.status_label(),
-                        m.source_label(),
-                        if m.note.is_empty() {
-                            String::new()
-                        } else {
-                            format!(" | {}", m.note)
-                        }
+                        "{}",
+                        t!(
+                            "main.check.renodx_available",
+                            title = m.title,
+                            file = m.file,
+                            status = m.status_label(),
+                            source = m.source_label(),
+                            note = if m.note.is_empty() {
+                                String::new()
+                            } else {
+                                format!(" | {}", m.note)
+                            }
+                        )
                     ),
-                    Ok(None) => println!("  RenoDX HDR mod: none for this game"),
-                    Err(e) => println!("  RenoDX lookup failed: {e:#}"),
+                    Ok(None) => println!("{}", t!("main.check.renodx_none")),
+                    Err(e) => {
+                        println!("{}", t!("main.check.renodx_failed", err = format!("{e:#}")))
+                    }
                 }
                 0
             }
             Err(e) => {
-                eprintln!("error: {e:#}");
+                eprintln!("{}", t!("main.error", err = format!("{e:#}")));
                 1
             }
         };
@@ -616,7 +693,7 @@ Attach that zip to the GitHub issue.",
         return match installer::uninstall_all(&exe) {
             Ok((list, kept)) => {
                 for f in list {
-                    println!("removed {f}");
+                    println!("{}", t!("main.removed", file = f));
                 }
                 if let Some(k) = kept {
                     println!("{k}");
@@ -624,7 +701,7 @@ Attach that zip to the GitHub issue.",
                 0
             }
             Err(e) => {
-                eprintln!("error: {e:#}");
+                eprintln!("{}", t!("main.error", err = format!("{e:#}")));
                 1
             }
         };
@@ -633,12 +710,12 @@ Attach that zip to the GitHub issue.",
         return match installer::uninstall(&exe) {
             Ok(list) => {
                 for f in list {
-                    println!("removed {f}");
+                    println!("{}", t!("main.removed", file = f));
                 }
                 0
             }
             Err(e) => {
-                eprintln!("error: {e:#}");
+                eprintln!("{}", t!("main.error", err = format!("{e:#}")));
                 1
             }
         };
@@ -650,17 +727,17 @@ Attach that zip to the GitHub issue.",
     let step = move |i: usize, n: usize, name: &str, state: installer::StepState, detail: &str| {
         use installer::StepState::*;
         match state {
-            Start => println!("\n[{}/{n}] {name}", i + 1),
-            Done => println!("\n      ok: {detail}"),
-            Error => println!("\n      FAILED: {detail}"),
+            Start => println!("\n[{}/{}] {name}", i + 1, n),
+            Done => println!("\n      {}", t!("main.step.ok", detail = detail)),
+            Error => println!("\n      {}", t!("main.step.failed", detail = detail)),
         }
     };
     if switching_engine {
         // ReShade and OptiScaler both load as dxgi.dll: the old one goes first.
         match installer::uninstall_all(&exe) {
-            Ok((list, _)) => println!("removed the previous setup: {}", list.join(", ")),
+            Ok((list, _)) => println!("{}", t!("main.removed_previous", list = list.join(", "))),
             Err(e) => {
-                eprintln!("error: could not remove the previous setup: {e:#}");
+                eprintln!("{}", t!("main.err.remove_previous", err = format!("{e:#}")));
                 return 1;
             }
         }
@@ -680,40 +757,26 @@ Attach that zip to the GitHub issue.",
     ) {
         Ok(_) => {
             if engine == installer::Engine::Opti {
-                println!(
-                    "
-Done. In game: Insert opens the OptiScaler overlay -> enable Neural Rendering (off by default)."
-                );
+                println!("\n{}", t!("main.done.opti"));
             } else if engine == installer::Engine::MfgAddon {
-                println!(
-                    "
-Done. In game: turn on the game's own DLSS Frame Generation; Home opens ReShade -> Add-ons tab -> the MFG unlock."
-                );
+                println!("\n{}", t!("main.done.mfg_addon"));
             } else if engine == installer::Engine::Mfg {
-                println!(
-                    "
-Done. In game: turn on the game's own DLSS Frame Generation; Backspace opens the RTXMFG menu."
-                );
+                println!("\n{}", t!("main.done.mfg"));
             } else if engine == installer::Engine::Aio {
-                println!(
-                    "
-Done. In game: turn the game's own upscaling, anti-aliasing and frame generation off, run windowed; Home opens ReShade -> Add-ons tab -> Standalone DLSS-NR + SR."
-                );
+                println!("\n{}", t!("main.done.aio"));
             } else if installer::consumer() == installer::Consumer::ShortFuse
                 && game::inspect(&exe).is_ok_and(|s| s.sf)
             {
-                println!("
-Done. In game: Home opens ReShade -> Add-ons tab -> RenoDX DLSS -> turn Neural Rendering on. (Home tab saying no effect files is normal on games with their own DLSS.)");
+                println!("\n{}", t!("main.done.shortfuse"));
             } else {
-                println!("
-Done. In game: Home opens ReShade -> Add-ons tab -> DLSS 5 Neural Rendering -> enable. (Home tab saying no effect files is normal on games with their own DLSS.)");
+                println!("\n{}", t!("main.done.default"));
             }
             0
         }
         Err(e) => {
-            eprintln!("\nerror: {e:#}");
+            eprintln!("\n{}", t!("main.error", err = format!("{e:#}")));
             if switching_engine {
-                eprintln!("The previous setup was already taken out, so this game has none now. Run the same command without --next-setup to set it up again from the top of its list.");
+                eprintln!("{}", t!("main.err.previous_removed"));
             }
             1
         }
@@ -755,24 +818,25 @@ fn install_panic_handler() {
         let where_ = info
             .location()
             .map(|l| format!("{}:{}", l.file(), l.line()))
-            .unwrap_or_else(|| "unknown location".into());
+            .unwrap_or_else(|| t!("main.panic.unknown_location").into_owned());
         let what = info
             .payload()
             .downcast_ref::<&str>()
             .map(|s| (*s).to_owned())
             .or_else(|| info.payload().downcast_ref::<String>().cloned())
             .unwrap_or_else(|| "panic".into());
-        let msg = format!("panic at {where_}: {what}");
+        let msg = t!(
+            "main.panic.msg",
+            loc = where_.as_str(),
+            what = what.as_str()
+        )
+        .into_owned();
         eprintln!("{msg}");
         let log = write_error_log(&msg);
-        report_gui_error(&format!(
-            "DLSS5oneclick stopped unexpectedly.
-
-{msg}
-
-Written to {}
-Attach that file to a GitHub issue.",
-            log.display()
+        report_gui_error(&t!(
+            "main.panic.box",
+            msg = msg.as_str(),
+            log = log.display().to_string()
         ));
     }));
 }
