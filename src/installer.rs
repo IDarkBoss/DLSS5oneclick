@@ -4007,6 +4007,11 @@ pub fn uninstall(exe: &Path) -> Result<Vec<String>> {
     removed.extend(remove_rtxmfg(d));
     uninstall_opti(d, &mut removed)?;
     uninstall_aio(d, &mut removed)?;
+    // Files first, markers last: a delete that fails (a file the game still
+    // holds open) must leave the marker that lets the next Remove take it. With
+    // the marker gone first, a ShortFuse add-on was left behind that no later
+    // Remove would touch, because it no longer looked like this tool's.
+    targets.sort_by_key(|t| t.extension().is_some_and(|e| e == "dlss5oneclick"));
     for t in targets {
         if t.is_file() {
             fs::remove_file(&t)?;
@@ -4977,6 +4982,30 @@ mod tests {
         let removed = uninstall(&exe).unwrap();
         assert!(removed.contains(&"renodx-dlss5.addon64".to_string()));
         assert!(t.path().join(game::DLSS_DLL).is_file());
+    }
+
+    /// A file the game still holds makes Remove fail; the marker must survive
+    /// so that Remove run again still takes the file.
+    #[cfg(windows)]
+    #[test]
+    fn a_failed_remove_keeps_the_marker_for_the_next_one() {
+        use std::os::windows::fs::OpenOptionsExt;
+        let t = tempfile::tempdir().unwrap();
+        let exe = make_pe(&t.path().join("game.exe"), game::PE_X64);
+        let addon = t.path().join(game::SF_ADDON);
+        fs::write(&addon, b"addon").unwrap();
+        fs::write(t.path().join(game::SF_ADDON_MARKER), b"renodx-dlss-SF-1").unwrap();
+        let held = fs::OpenOptions::new()
+            .read(true)
+            .share_mode(0)
+            .open(&addon)
+            .unwrap();
+        assert!(uninstall(&exe).is_err());
+        assert!(t.path().join(game::SF_ADDON_MARKER).is_file());
+        drop(held);
+        let removed = uninstall(&exe).unwrap();
+        assert!(removed.contains(&game::SF_ADDON.to_string()));
+        assert!(!addon.is_file());
     }
 
     #[test]
