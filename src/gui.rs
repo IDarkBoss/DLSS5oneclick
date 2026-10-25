@@ -3776,7 +3776,15 @@ impl eframe::App for App {
                         }
                         if let Some(ac) = ok_status.as_ref().and_then(|s| s.anticheat) {
                             let mut on = game::ignore_anticheat();
-                            let label = t!("gui.anticheat_fmt", ac = ac);
+                            let label = if ac == "Easy Anti-Cheat" {
+                                t!(
+                                    "gui.anticheat_fmt_eac",
+                                    ac = ac,
+                                    env = game::EAC_NULL_CLIENT_ENV
+                                )
+                            } else {
+                                t!("gui.anticheat_fmt", ac = ac)
+                            };
                             let cb = egui::Checkbox::new(
                                 &mut on,
                                 RichText::new(label).font(t::plex(11.5)).color(t::TEXT_SOFT),

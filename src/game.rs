@@ -1249,6 +1249,17 @@ pub(crate) fn stub_status(mode: Mode, api: Api) -> GameStatus {
 }
 
 pub const IGNORE_ANTICHEAT_ENV: &str = "DLSS5ONECLICK_IGNORE_ANTICHEAT";
+
+/// Epic's own switch: with this set, every game that uses Easy Anti-Cheat on
+/// Epic Online Services starts with a null anti-cheat client, so nothing
+/// polices the DLLs it loads. Gears of War: E-Day works with ReShade where it is
+/// set and fails to start (0xc000007b) where it is not.
+pub const EAC_NULL_CLIENT_ENV: &str = "EOS_USE_ANTICHEATCLIENTNULL";
+
+/// True when `ac` is Easy Anti-Cheat and the null-client variable is set.
+fn eac_switched_off(ac: &str, var: Option<&std::ffi::OsStr>) -> bool {
+    ac == "Easy Anti-Cheat" && var.is_some_and(|v| !v.is_empty() && v != "0")
+}
 /// `feeder` or `native`: override the DLSS detection (a stray `nvngx_dlss.dll`
 /// makes a game without DLSS look native; some games load DLSS from elsewhere).
 pub const MODE_ENV: &str = "DLSS5ONECLICK_MODE";
@@ -1510,10 +1521,17 @@ pub fn inspect(exe: &Path) -> Result<GameStatus> {
     let shaders = d.join("reshade-shaders").join("Shaders");
     let textures = d.join("reshade-shaders").join("Textures");
     let mut problems = Vec::new();
-    let anticheat = detect_anticheat(d).or_else(|| known_anticheat_exe(exe));
+    let anticheat = detect_anticheat(d)
+        .or_else(|| known_anticheat_exe(exe))
+        .filter(|ac| !eac_switched_off(ac, std::env::var_os(EAC_NULL_CLIENT_ENV).as_deref()));
     if let Some(ac) = anticheat {
         if !ignore_anticheat() {
-            problems.push(t!("game.prob_anticheat", ac = ac).into_owned());
+            let hint = if ac == "Easy Anti-Cheat" {
+                t!("game.hint_eac_off", env = EAC_NULL_CLIENT_ENV).into_owned()
+            } else {
+                String::new()
+            };
+            problems.push(t!("game.prob_anticheat", ac = ac, hint = hint.as_str()).into_owned());
         }
     }
     let gpu = gpu::best();
@@ -2954,6 +2972,19 @@ mod tests {
         // Arknights: Endfield's layout (#113).
         fs::create_dir_all(d.join("AntiCheatExpert")).unwrap();
         assert_eq!(detect_anticheat(d), Some("Anti-Cheat Expert (ACE)"));
+    }
+
+    /// Epic's null-client variable switches Easy Anti-Cheat off, and only that
+    /// one (Gears of War: E-Day, which crashed at start without it).
+    #[test]
+    fn eac_null_client_variable_switches_only_easy_anti_cheat_off() {
+        use std::ffi::OsStr;
+        let on = Some(OsStr::new("1"));
+        assert!(eac_switched_off("Easy Anti-Cheat", on));
+        assert!(!eac_switched_off("Easy Anti-Cheat", None));
+        assert!(!eac_switched_off("Easy Anti-Cheat", Some(OsStr::new(""))));
+        assert!(!eac_switched_off("Easy Anti-Cheat", Some(OsStr::new("0"))));
+        assert!(!eac_switched_off("BattlEye", on));
     }
 
     /// Neural Upstream stands in for the RenoDX add-on, so an install that has

@@ -49,8 +49,11 @@ game.err_no_parent:
   en: "exe has no parent directory"
   zh-CN: "exe 没有父目录"
 game.prob_anticheat:
-  en: "%{ac} anti-cheat found in this game. ReShade add-on injection is what it detects: kick at best, ban at worst. Refused."
-  zh-CN: "在这款游戏中检测到 %{ac} 反作弊。它检测的正是 ReShade 附加组件注入：轻则踢出对局，重则封号。已拒绝操作。"
+  en: "%{ac} anti-cheat found in this game. ReShade add-on injection is what it detects: kick at best, ban at worst. Refused.%{hint}"
+  zh-CN: "在这款游戏中检测到 %{ac} 反作弊。它检测的正是 ReShade 附加组件注入：轻则踢出对局，重则封号。已拒绝操作。%{hint}"
+game.hint_eac_off:
+  en: " Easy Anti-Cheat can be switched off for single-player: set the Windows user variable %{env}=1, restart the game launcher, and open this again. Never go online with it off."
+  zh-CN: " Easy Anti-Cheat 可在单机模式下关闭：将 Windows 用户变量 %{env} 设为 1，重启游戏启动器，然后重新打开此工具。关闭期间切勿联机。"
 game.prob_gpu:
   en: "GPU is %{name} (%{tier}): the DLSS 5 model runs on NVIDIA RTX only (it needs tensor cores and NGX). Misdetected, or running through Remote Desktop? Tick the box below, or set %{env}=1."
   zh-CN: "GPU 为 %{name}（%{tier}）：DLSS 5 模型仅能在 NVIDIA RTX 上运行（它需要张量核心和 NGX）。检测有误，或是正在通过远程桌面连接？请勾选下方选项，或设置 %{env}=1。"

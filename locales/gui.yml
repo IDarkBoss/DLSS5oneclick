@@ -265,6 +265,9 @@ gui.ada_mfg:
 gui.anticheat_fmt:
   en: "%{ac} is switched off for offline play in this game (GTA V: BattlEye unticked in the Rockstar Games Launcher, or -nobattleye) — install anyway, at my own risk"
   zh-CN: "%{ac} 已在此游戏中为离线游玩关闭（GTA V：在 Rockstar Games Launcher 里取消勾选 BattlEye，或使用 -nobattleye）—— 仍要安装，风险自负"
+gui.anticheat_fmt_eac:
+  en: "%{ac} is switched off for single-player (%{env}=1 set as a Windows user variable, game started again after) — install anyway, at my own risk"
+  zh-CN: "%{ac} 已为单机模式关闭（已将 %{env}=1 设为 Windows 用户变量并重启过游戏）—— 仍要安装，风险自负"
 
 # ── 安装页：多帧生成 ──────────────────────────────────────────
 gui.mfg_head:
