@@ -3674,9 +3674,16 @@ impl eframe::App for App {
                 }
                 if let Some(ac) = ok_status.as_ref().and_then(|s| s.anticheat) {
                     let mut on = game::ignore_anticheat();
-                    let label = format!(
-                        "{ac} is switched off for offline play in this game (GTA V: BattlEye unticked in the Rockstar Games Launcher, or -nobattleye) — install anyway, at my own risk"
-                    );
+                    let label = if ac == "Easy Anti-Cheat" {
+                        format!(
+                            "{ac} is switched off for single-player ({}=1 set as a Windows user variable, game started again after) — install anyway, at my own risk",
+                            game::EAC_NULL_CLIENT_ENV
+                        )
+                    } else {
+                        format!(
+                            "{ac} is switched off for offline play in this game (GTA V: BattlEye unticked in the Rockstar Games Launcher, or -nobattleye) — install anyway, at my own risk"
+                        )
+                    };
                     let cb = egui::Checkbox::new(&mut on, RichText::new(label).font(t::plex(11.5)).color(t::TEXT_SOFT));
                     if ui.add_enabled(!self.running, cb).changed() {
                         game::set_ignore_anticheat(on);
